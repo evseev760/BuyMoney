@@ -1,16 +1,27 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const config = require("config");
-const authRouter = require("./authRouter");
 const path = require("path");
 const PORT = process.env.PORT || 3000;
 
+const authRouter = require("./sections/auth/authRouter");
+const chatRouter = require("./sections/chat/chatRouter");
+
 const app = express();
+
+// const http = require("http").createServer(app);
+// const io = require("socket.io")(http);
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  /* options */
+});
 
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
+app.use("/chat", chatRouter);
 
 const start = async () => {
   try {
@@ -29,4 +40,14 @@ const start = async () => {
   }
 };
 
+io.on("connection", (socked) => {
+  socked.on("addMessage", (data) => {
+    io.emit("addMessage", data);
+  });
+  socked.on("chatCreated", (data) => {
+    io.emit("chatCreated", data);
+  });
+});
+
 start();
+httpServer.listen(3002);

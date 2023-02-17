@@ -3,7 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import MainContainer from "../components/Containers/MainContainer";
 import Registration from "../pages/Auth/Registration";
 import Login from "../pages/Auth/Login";
+import Chats from "../pages/Chat/Chats";
 import { useAppSelector } from "../hooks/redux";
+import { Chat } from "../pages/Chat/Chat";
 
 export enum RouteNames {
   MAIN = "/",
@@ -23,20 +25,16 @@ export const Router = () => {
             path={RouteNames.MAIN}
             element={
               <MainContainer>
-                <div style={{ width: "min-content", marginTop: "50px" }}>
-                  MAIN
-                </div>
+                <Chats />
               </MainContainer>
             }
           />
           <Route
-            path={RouteNames.NEWS}
+            path={`${RouteNames.MAIN}/:id`}
             element={
-              <MainContainer>
-                <div style={{ width: "min-content", marginTop: "50px" }}>
-                  🅽🅴🆆🆂
-                </div>
-              </MainContainer>
+              // <MainContainer>
+              <Chat />
+              // </MainContainer>
             }
           />
         </Routes>

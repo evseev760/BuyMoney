@@ -18,9 +18,9 @@ const initialState: AuthState = {
   message: "",
   isAuth: false,
   currentUser: {
-    id: "",
+    _id: "",
     username: "",
-    email: "",
+    roles: [],
   },
 };
 
