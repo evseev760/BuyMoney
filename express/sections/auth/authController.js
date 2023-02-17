@@ -1,14 +1,15 @@
-const User = require("./models/User");
-const Role = require("./models/Role");
+const User = require("../../models/User");
+const Role = require("../../models/Role");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const { validationResult } = require("express-validator");
 
-const generateAccessToken = (id, name) => {
+const generateAccessToken = (id, name, roles) => {
   const payload = {
     id,
     name,
+    roles,
   };
   return jwt.sign(payload, config.get("secretKey"), { expiresIn: "24h" });
 };
@@ -57,13 +58,13 @@ class authController {
       if (!validPassword) {
         return res.status(400).json({ message: `Введен неверный пароль` });
       }
-      const token = generateAccessToken(user._id, user.name);
-      const userData = { user };
+      const token = generateAccessToken(user._id, user.name, user.roles);
+
       return res.json({
         token,
         user: {
           username: user.username,
-          id: user._id,
+          _id: user._id,
           roles: user.roles,
         },
       });
@@ -75,12 +76,12 @@ class authController {
   async auth(req, res) {
     try {
       const user = await User.findOne({ _id: req.user.id });
-      const token = generateAccessToken(user._id, user.name);
+      const token = generateAccessToken(user._id, user.name, user.roles);
       return res.json({
         token,
         user: {
           username: user.username,
-          id: user._id,
+          _id: user._id,
           roles: user.roles,
         },
       });
@@ -91,7 +92,7 @@ class authController {
   }
   async getUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find({}, { password: false });
       res.json(users);
     } catch (e) {
       console.log(e);

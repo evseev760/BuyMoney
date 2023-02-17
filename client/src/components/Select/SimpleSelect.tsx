@@ -6,7 +6,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Tooltip from "@material-ui/core/Tooltip";
 import Avatar from "@material-ui/core/Avatar";
-import { IReferenceCurrency } from "../../models/IReferenceCurrencies";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,7 +29,7 @@ interface ISimpleSelect {
   tooltipKey?: string;
   prefix?: string;
   value?: any;
-  onChange: (value: IReferenceCurrency) => void;
+  onChange: (value: any) => void;
 }
 
 export default function SimpleSelect(props: ISimpleSelect) {

@@ -11,7 +11,7 @@ import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1,
+    display: "flex",
   },
   button: {
     marginLeft: "auto",
@@ -37,12 +37,12 @@ export default function CenteredTabs() {
         indicatorColor="primary"
         textColor="primary"
       >
-        <Tab label="Cryptocurrencies" value={RouteNames.MAIN} />
-        <Tab label="News" value={RouteNames.NEWS} />
-        <Button className={classes.button} variant="contained" onClick={logout}>
-          Logout
-        </Button>
+        <Tab label="Chats" value={RouteNames.MAIN} />
+        {/*<Tab label="News" value={RouteNames.NEWS} />*/}
       </Tabs>
+      <Button className={classes.button} variant="contained" onClick={logout}>
+        Logout
+      </Button>
     </Paper>
   );
 }
