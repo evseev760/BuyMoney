@@ -13,6 +13,7 @@ import { IMessage } from "../../models/IMessage";
 const auth = () => ({
   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 });
+
 export const fetchUsers = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(userSlice.actions.usersFetching());
@@ -39,6 +40,7 @@ export const fetchAuth = (navigate: any) => async (dispatch: AppDispatch) => {
     navigate("/login");
   }
 };
+
 export const fetchRegistration =
   (data: { username: string; password: string }, navigate: any) =>
   async (dispatch: AppDispatch) => {
@@ -92,6 +94,7 @@ export const fetchChats = () => async (dispatch: AppDispatch) => {
     dispatch(chatSlice.actions.chatsError(e.response.data.message));
   }
 };
+
 export const createChat =
   (data: IChatCreateData, callback: () => void) =>
   async (dispatch: AppDispatch) => {
@@ -109,6 +112,7 @@ export const createChat =
       dispatch(chatSlice.actions.createChatError(e.response.data.message));
     }
   };
+
 export const fetchChat = (id: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(chatSlice.actions.chatFetching());
@@ -121,9 +125,12 @@ export const fetchChat = (id: string) => async (dispatch: AppDispatch) => {
     dispatch(chatSlice.actions.chatError(e.response.data.message));
   }
 };
+
+export const leaveTheChat = () => (dispatch: AppDispatch) => {
+  dispatch(chatSlice.actions.leaveTheChat());
+};
 export const fetchMessages =
   (id: string, callBack?: () => void) => async (dispatch: AppDispatch) => {
-    console.log(5555, id);
     try {
       dispatch(chatSlice.actions.messagesFetching());
       const response = await axios.get<IMessage[]>(

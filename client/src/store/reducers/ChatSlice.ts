@@ -13,6 +13,14 @@ interface IChatState {
   currentChatData: IChat;
   message: string;
 }
+const emptyChatData = {
+  chatName: "",
+  description: "",
+  mainUser: {},
+  messages: [],
+  users: [],
+  _id: "",
+};
 
 const initialState: IChatState = {
   chats: [],
@@ -22,14 +30,7 @@ const initialState: IChatState = {
   currentChat: window.location.pathname.split("/")[1] || "",
   error: "",
   message: "",
-  currentChatData: {
-    chatName: "",
-    description: "",
-    mainUser: {},
-    messages: [],
-    users: [],
-    _id: "",
-  },
+  currentChatData: emptyChatData,
 };
 
 export const chatSlice = createSlice({
@@ -100,6 +101,10 @@ export const chatSlice = createSlice({
     addMessageError: (state, action: PayloadAction<string>) => {
       // state.chatIsLoading = false;
       // state.error = action.payload;
+    },
+
+    leaveTheChat: (state) => {
+      state.currentChatData = emptyChatData;
     },
   },
 });

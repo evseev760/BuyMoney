@@ -1,11 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { Button, Container, TextField } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { addMessage, fetchMessages } from "../../store/reducers/ActionCreators";
+import {
+  addMessage,
+  fetchMessages,
+  leaveTheChat,
+} from "../../store/reducers/ActionCreators";
 import { Message } from "./Message";
 import { Circular } from "../../components/Loading/Circular";
 import { WS_URL } from "../../config";
@@ -90,6 +100,7 @@ export const Chat = () => {
     socket.current.on("disconnect", () => {});
 
     return () => {
+      dispatch(leaveTheChat());
       socket.current.disconnect();
     };
   }, []);
@@ -118,18 +129,6 @@ export const Chat = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.header}>
-        <div>
-          <div>{currentChatData.chatName}</div>
-          <span>{currentChatData.description}</span>
-        </div>
-        <ExitToAppIcon
-          fontSize={"large"}
-          onClick={exit}
-          className={classes.exit}
-          color="primary"
-        />
-      </div>
       <>
         <Container className={classes.cardGrid} maxWidth="lg">
           {!chatIsLoading ? (
@@ -148,11 +147,24 @@ export const Chat = () => {
         </Container>
         <div ref={(element) => (messagesEnd.current = element)} />
       </>
+      <div className={classes.header}>
+        <div>
+          <div>{currentChatData.chatName}</div>
+          <span>{currentChatData.description}</span>
+        </div>
+        <ExitToAppIcon
+          fontSize={"large"}
+          onClick={exit}
+          className={classes.exit}
+          color="primary"
+        />
+      </div>
       <div className={classes.controllers}>
         <TextField
           className={classes.textField}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
+          onKeyDown={(event) => event.code === "Enter" && send()}
         />
         <Button variant="contained" color="primary" onClick={send}>
           Send
