@@ -86,6 +86,7 @@ export default function Login() {
             id="password"
             autoComplete="current-password"
             onChange={onPasswordChange}
+            onKeyDown={(event) => event.code === "Enter" && onSubmit()}
           />
 
           <Button

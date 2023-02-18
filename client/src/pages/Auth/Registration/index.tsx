@@ -98,6 +98,7 @@ export default function Registration() {
             type="password"
             onChange={onPasswordChange}
             value={formData.password}
+            onKeyDown={(event) => event.code === "Enter" && onSubmit()}
           />
 
           <Button
