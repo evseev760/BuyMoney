@@ -12,7 +12,7 @@ const useStyles = makeStyles(() =>
     },
   })
 );
-export default ({ ...props }) => {
+export const MainContainer = ({ ...props }) => {
   const classes = useStyles();
   const { children } = props;
   return (

@@ -1,16 +1,22 @@
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
+import cn from "classnames";
 
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
       width: "100%",
       marginTop: "15px",
-
-      "& > div": {
-        position: "relative",
-      },
+    },
+    messageLayout: {
+      borderRadius: "15px",
+      background: "#3f51b5",
+      display: "inline-block",
+      position: "relative",
+      minWidth: "200px",
+      maxWidth: "calc(100% - 75px)",
+      wordWrap: "break-word",
     },
     rightMessage: {
       marginLeft: "auto",
@@ -21,10 +27,6 @@ const useStyles = makeStyles(() =>
     },
     messageContainer: {
       width: "100%",
-      "& > div": {
-        display: "flex",
-        justifyContent: "space-between",
-      },
     },
     timeRight: {
       position: "absolute",
@@ -36,30 +38,41 @@ const useStyles = makeStyles(() =>
       top: 10,
       left: 10,
     },
+    textMessage: {},
   })
 );
 export const Message = ({ ...props }) => {
   const { textMessage, currentUser, user, username, createdAt } = props;
   const classes = useStyles();
-  console.log(333, moment(createdAt).format("HH:mm"));
   const thatMine = currentUser._id === user;
   return (
-    <div className={classes.root}>
+    <div className={cn({ [classes.root]: true, [classes.right]: thatMine })}>
       <SnackbarContent
         color="primary"
-        className={thatMine ? classes.rightMessage : undefined}
+        className={cn(
+          { [classes.rightMessage]: thatMine },
+          { [classes.messageLayout]: true }
+        )}
         message={
           <div className={classes.messageContainer}>
             <div className={thatMine ? classes.right : undefined}>
               <span
-                className={!thatMine ? classes.timeRight : classes.timeLeft}
+                className={cn({
+                  [classes.timeRight]: !thatMine,
+                  [classes.timeLeft]: thatMine,
+                })}
               >
-                {moment(createdAt).format("HH:mm")}
+                {moment.unix(createdAt).format("HH:mm")}
               </span>
 
               <span>{username}</span>
             </div>
-            <div className={thatMine ? classes.right : undefined}>
+            <div
+              className={cn({
+                [classes.right]: thatMine,
+                [classes.textMessage]: true,
+              })}
+            >
               {textMessage}
             </div>
           </div>

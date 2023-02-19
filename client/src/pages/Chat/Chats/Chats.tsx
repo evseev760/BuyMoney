@@ -1,24 +1,15 @@
 import React, { useEffect, useRef } from "react";
-
-import {
-  Card,
-  CardActions,
-  makeStyles,
-  Container,
-  Typography,
-  Grid,
-  CardContent,
-  Button,
-} from "@material-ui/core";
-
-import { fetchChats, fetchChat } from "../../store/reducers/ActionCreators";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { IChat } from "../../models/IChat";
-import { CreateChatModal } from "./CreateChatModal";
-import { Circular } from "../../components/Loading/Circular";
-import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { WS_URL } from "../../config";
+import { useNavigate } from "react-router-dom";
+import { Card, makeStyles, Container, Grid } from "@material-ui/core";
+import { Circular } from "../../../components/Loading/Circular";
+import { CreateChatModal } from "./CreateChatModal";
+import { ChatView } from "./ChatView";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { RouteNames } from "../../../router";
+import { IChat } from "../../../models/IChat";
+import { WS_URL } from "../../../config";
+import { fetchChats } from "../../../store/reducers/ActionCreators";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -33,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardMedia: {
     paddingTop: "56.25%", // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
   },
 }));
 
@@ -62,16 +50,13 @@ export default function Chats() {
     };
   }, []);
   const joinChat = (id: string) => {
-    dispatch(fetchChat(id)).then(() => navigate(id, { replace: true }));
-    navigate(`/${id}`, { replace: true });
+    navigate(`${RouteNames.CHAT}/${id}`, { replace: true });
   };
 
   const onChatCreated = () => {
-    {
-      socket.current.emit("chatCreated", {
-        userId: currentUser._id,
-      });
-    }
+    socket.current.emit("chatCreated", {
+      userId: currentUser._id,
+    });
   };
 
   return (
@@ -83,23 +68,12 @@ export default function Chats() {
               <Grid item key={chat?._id || 1} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   {chat ? (
-                    <>
-                      <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {chat.chatName}
-                        </Typography>
-                        <Typography>{chat.description}</Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button
-                          onClick={() => joinChat(chat?._id)}
-                          size="small"
-                          color="primary"
-                        >
-                          Join
-                        </Button>
-                      </CardActions>
-                    </>
+                    <ChatView
+                      classes={classes}
+                      chat={chat}
+                      user={currentUser}
+                      joinChat={joinChat}
+                    />
                   ) : (
                     <>
                       <CreateChatModal onChatCreated={onChatCreated} />

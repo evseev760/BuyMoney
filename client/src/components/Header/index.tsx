@@ -1,13 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import { RouteNames } from "../../router";
 import { useAppDispatch } from "../../hooks/redux";
 import { logOut } from "../../store/reducers/ActionCreators";
-import { Button } from "@material-ui/core";
+import { Button, Tab, Tabs, Paper } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {

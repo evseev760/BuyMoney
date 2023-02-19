@@ -13,10 +13,10 @@ interface IChatState {
   currentChatData: IChat;
   message: string;
 }
-const emptyChatData = {
+const emptyChatData: IChat = {
   chatName: "",
   description: "",
-  mainUser: {},
+  mainUser: { username: "", _id: "", roles: [] },
   messages: [],
   users: [],
   _id: "",
@@ -81,27 +81,15 @@ export const chatSlice = createSlice({
       state.error = action.payload;
     },
 
-    messagesFetching: (state) => {
-      // state.chatIsLoading = true;
-    },
+    messagesFetching: (state) => {},
     messagesSuccess: (state, action: PayloadAction<IMessage[]>) => {
       state.currentChatData.messages = action.payload;
     },
-    messagesError: (state, action: PayloadAction<string>) => {
-      // state.chatIsLoading = false;
-      // state.error = action.payload;
-    },
+    messagesError: (state, action: PayloadAction<string>) => {},
 
-    addMessageFetching: (state) => {
-      // state.chatIsLoading = true;
-    },
-    addMessageSuccess: (state, action: PayloadAction<any>) => {
-      // state.currentChatData.messages = action.payload;
-    },
-    addMessageError: (state, action: PayloadAction<string>) => {
-      // state.chatIsLoading = false;
-      // state.error = action.payload;
-    },
+    addMessageFetching: (state) => {},
+    addMessageSuccess: (state, action: PayloadAction<any>) => {},
+    addMessageError: (state, action: PayloadAction<string>) => {},
 
     leaveTheChat: (state) => {
       state.currentChatData = emptyChatData;

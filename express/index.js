@@ -2,15 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const PORT = process.env.PORT || 3000;
+const config = require("config");
+const PORT = process.env.PORT || config.get("PORT");
 
 const authRouter = require("./sections/auth/authRouter");
 const chatRouter = require("./sections/chat/chatRouter");
 
 const app = express();
 
-// const http = require("http").createServer(app);
-// const io = require("socket.io")(http);
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);
@@ -25,9 +24,7 @@ app.use("/chat", chatRouter);
 
 const start = async () => {
   try {
-    await mongoose.connect(
-      `mongodb+srv://admin:***REMOVED***@cluster0.rx50cdv.mongodb.net/test?retryWrites=true&w=majority`
-    );
+    await mongoose.connect(config.get("dbUrl"));
     app.use(express.static(__dirname));
     app.use(express.static(path.resolve(__dirname, "../client/build")));
 
@@ -50,4 +47,4 @@ io.on("connection", (socked) => {
 });
 
 start();
-httpServer.listen(3002);
+httpServer.listen(config.get("WS_PORT"));
