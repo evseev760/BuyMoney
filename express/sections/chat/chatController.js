@@ -14,9 +14,6 @@ class authController {
           .json({ message: "Ошибка при создании чата", errors });
       }
       const { chatName, users = [], description } = req.body;
-      // const description = "Ddescription CHAT!!!!!";
-      // const chatName = "newChat32";
-      // const users = ["63e92bf646acb84204b38e5d"];
 
       const candidate = await Chat.findOne({ chatName });
       if (candidate) {
@@ -24,9 +21,10 @@ class authController {
           .status(400)
           .json({ message: "Чат с таким названием уже существует" });
       }
-
+      const user = await User.findOne({ _id: req.user.id });
       const chat = new Chat({
         mainUser: req.user.id,
+        mainUsername: user.username,
         chatName,
         description,
         users: [...users, req.user.id],
@@ -71,10 +69,16 @@ class authController {
             $or: chat.messages.map((id) => ({ _id: id })),
           })
         : [];
+      if (!chat.users.includes(req.user.id)) {
+        await Chat.updateOne(
+          { _id: req.params.chatId },
+          { $push: { users: req.user.id } }
+        );
+      }
       const users = chat.users.length
         ? await User.find(
             {
-              $or: chat.users.map((id) => ({ _id: id })),
+              $or: [...chat.users, req.user.id].map((id) => ({ _id: id })),
             },
             { password: false }
           )
@@ -83,12 +87,7 @@ class authController {
         { _id: chat.mainUser },
         { password: false }
       );
-      if (!chat.users.includes(req.user.id)) {
-        await Chat.updateOne(
-          { _id: req.params.chatId },
-          { $push: { users: req.user.id } }
-        );
-      }
+
       res.json({
         chatName: chat.chatName,
         description: chat.description,
@@ -126,19 +125,16 @@ class authController {
           .status(400)
           .json({ message: "Ошибка при создании чата", errors });
       }
-      const { chatId, textMessage } = req.body;
-
-      // const chat = "63ed15f6e2aab04f8c3360ee";
-      // const textMessage = "Texteees !!!!!?";
+      const { chatId, textMessage, createdAt } = req.body;
 
       const user = await User.findOne({ _id: req.user.id });
-      // const chat = await Chats.findOne({ _id: chatId });
 
       const message = new Message({
         user: user._id,
         username: user.username,
         textMessage,
         chat: chatId,
+        createdAt: createdAt,
       });
       await message.save();
 

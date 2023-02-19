@@ -5,6 +5,7 @@ const Chat = new Schema(
     chatName: { type: String, unique: true, required: true },
     description: { type: String },
     mainUser: { type: String, ref: "User" },
+    mainUsername: { type: String },
     messages: [{ type: String, ref: "Message" }],
     users: [{ type: String, ref: "User" }],
   }

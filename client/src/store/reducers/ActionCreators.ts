@@ -1,13 +1,13 @@
 import { AppDispatch } from "../";
 import axios from "axios";
-import api from "../api";
+import { api } from "../api";
 import { userSlice } from "./UserSlice";
 import { authSlice } from "./AuthSlice";
 import { chatSlice } from "./ChatSlice";
 
 import { API_URL } from "../../config";
 import { IChat } from "../../models/IChat";
-import { IChatCreateData } from "../../pages/Chat/CreateChatModal";
+import { IChatCreateData } from "../../pages/Chat/Chats/CreateChatModal";
 import { IMessage } from "../../models/IMessage";
 
 const auth = () => ({
@@ -34,7 +34,8 @@ export const fetchAuth = (navigate: any) => async (dispatch: AppDispatch) => {
     const response = await axios.get<any>(`${API_URL}${api.auth.auth}`, auth());
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
-    navigate("/");
+    const path = window.location.pathname;
+    navigate(path);
   } catch (e: any) {
     dispatch(authSlice.actions.authError(""));
     navigate("/login");
@@ -145,7 +146,10 @@ export const fetchMessages =
   };
 
 export const addMessage =
-  (data: { chatId: string; textMessage: string }, callBack?: () => void) =>
+  (
+    data: { chatId: string; textMessage: string; createdAt: number },
+    callBack?: () => void
+  ) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(chatSlice.actions.addMessageFetching());

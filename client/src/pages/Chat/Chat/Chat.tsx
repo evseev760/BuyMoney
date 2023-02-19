@@ -1,24 +1,22 @@
-import React, {
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import moment from "moment";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import { Button, Container, TextField } from "@material-ui/core";
+import { Button, Container, TextField, Tooltip } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import StarRateIcon from "@material-ui/icons/StarRate";
+import { Circular } from "../../../components/Loading/Circular";
+
+import { WS_URL } from "../../../config";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
   addMessage,
+  fetchChat,
   fetchMessages,
   leaveTheChat,
-} from "../../store/reducers/ActionCreators";
+} from "../../../store/reducers/ActionCreators";
 import { Message } from "./Message";
-import { Circular } from "../../components/Loading/Circular";
-import { WS_URL } from "../../config";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,12 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       minHeight: "calc( 100vh - 25px)",
-    },
-    container: {
-      "& > * > *": {
-        background: "#3f51b5",
-        maxWidth: 600,
-      },
     },
     textField: {
       width: "calc( 100% - 80px)",
@@ -65,14 +57,33 @@ const useStyles = makeStyles((theme: Theme) =>
         opacity: 0.6,
       },
     },
-    exit: {
+    headerControllers: {
+      display: "flex",
       marginLeft: "auto",
+      "& span": {
+        display: "inline-flex",
+      },
+    },
+    exit: {
       cursor: "pointer",
+      padding: "0 15px",
     },
     cardGrid: {
       paddingTop: theme.spacing(8),
       paddingBottom: theme.spacing(8),
       height: "100%",
+    },
+    usersTooltipItem: {
+      fontSize: "16px",
+      padding: "10px",
+    },
+    manUser: {
+      paddingTop: "8px",
+
+      "& svg": {
+        position: "relative",
+        top: "-2px",
+      },
     },
   })
 );
@@ -81,6 +92,7 @@ export const Chat = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  let { id } = useParams();
   const socket = useRef<any>();
   const messagesEnd = useRef<any>();
   const { currentChatData, chatIsLoading } = useAppSelector(
@@ -92,6 +104,7 @@ export const Chat = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    id && dispatch(fetchChat(id));
     socket.current = io(WS_URL, { transports: ["websocket"] });
     socket.current.on("connect", () => {});
     socket.current.on("addMessage", (data: any) => {
@@ -104,18 +117,27 @@ export const Chat = () => {
       socket.current.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    id && dispatch(fetchChat(id));
+  }, [id]);
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
 
   const send = () => {
+    const createdAt = moment().unix();
     dispatch(
-      addMessage({ chatId: currentChatData._id, textMessage: message }, () => {
-        socket.current.emit("addMessage", {
-          chatId: currentChatData._id,
-          userId: currentUser._id,
-        });
-      })
+      addMessage(
+        { chatId: currentChatData._id, textMessage: message, createdAt },
+        () => {
+          socket.current.emit("addMessage", {
+            chatId: currentChatData._id,
+            userId: currentUser._id,
+            createdAt,
+          });
+        }
+      )
     );
     setMessage("");
   };
@@ -132,15 +154,13 @@ export const Chat = () => {
       <>
         <Container className={classes.cardGrid} maxWidth="lg">
           {!chatIsLoading ? (
-            <div className={classes.container}>
-              {messages.map((message) => (
-                <Message
-                  key={message._id}
-                  {...message}
-                  currentUser={currentUser}
-                />
-              ))}
-            </div>
+            messages.map((message) => (
+              <Message
+                key={message._id}
+                {...message}
+                currentUser={currentUser}
+              />
+            ))
           ) : (
             <Circular />
           )}
@@ -150,14 +170,30 @@ export const Chat = () => {
       <div className={classes.header}>
         <div>
           <div>{currentChatData.chatName}</div>
+
           <span>{currentChatData.description}</span>
         </div>
-        <ExitToAppIcon
-          fontSize={"large"}
-          onClick={exit}
-          className={classes.exit}
-          color="primary"
-        />
+        <div className={classes.headerControllers}>
+          <Tooltip
+            title={currentChatData.users.map((user) => (
+              <div className={classes.usersTooltipItem}>{user.username}</div>
+            ))}
+            disableHoverListener={currentChatData.users.length <= 1}
+            placement="bottom"
+          >
+            <span className={classes.manUser}>
+              <StarRateIcon color="primary" />
+              {currentChatData.mainUser?.username}
+            </span>
+          </Tooltip>
+
+          <ExitToAppIcon
+            fontSize={"large"}
+            onClick={exit}
+            className={classes.exit}
+            color="primary"
+          />
+        </div>
       </div>
       <div className={classes.controllers}>
         <TextField

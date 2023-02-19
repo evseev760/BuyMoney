@@ -5,6 +5,6 @@ const Message = new Schema({
   user: { type: String, required: true, ref: "User" },
   username: { type: String, required: true },
   chat: { type: String, required: true, ref: "Chats" },
-  createdAt: { type: Date, default: Date.now() },
+  createdAt: { type: Number, required: true },
 });
 module.exports = model("Message", Message);

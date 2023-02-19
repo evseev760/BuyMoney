@@ -1,14 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import MainContainer from "../components/Containers/MainContainer";
+import { MainContainer } from "../components/Containers/MainContainer";
 import Registration from "../pages/Auth/Registration";
 import Login from "../pages/Auth/Login";
-import Chats from "../pages/Chat/Chats";
+import Chats from "../pages/Chat/Chats/Chats";
 import { useAppSelector } from "../hooks/redux";
-import { Chat } from "../pages/Chat/Chat";
+import { Chat } from "../pages/Chat/Chat/Chat";
 
 export enum RouteNames {
   MAIN = "/",
+  CHAT = "/chat",
   NEWS = "/news",
   REGISTRATION = "/registration",
   LOGIN = "/login",
@@ -29,14 +30,7 @@ export const Router = () => {
               </MainContainer>
             }
           />
-          <Route
-            path={`${RouteNames.MAIN}/:id`}
-            element={
-              // <MainContainer>
-              <Chat />
-              // </MainContainer>
-            }
-          />
+          <Route path={`${RouteNames.CHAT}/:id`} element={<Chat />} />
         </Routes>
       ) : (
         <Routes>

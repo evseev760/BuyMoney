@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { Fade, Backdrop, Modal, Button } from "@material-ui/core";
+import { Fade, Backdrop, Modal, Button, TextField } from "@material-ui/core";
 import ForumIcon from "@material-ui/icons/Forum";
-import TextField from "@material-ui/core/TextField";
-import { createChat } from "../../store/reducers/ActionCreators";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { ProgressLine } from "../../components/Loading/ProgressLine";
-import { CustomizedSnackbars } from "../../components/SnackBar";
+
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { ProgressLine } from "../../../components/Loading/ProgressLine";
+import { CustomizedSnackbars } from "../../../components/SnackBar";
+import { createChat } from "../../../store/reducers/ActionCreators";
 
 export interface IChatCreateData {
   chatName: string;
@@ -131,6 +131,7 @@ export const CreateChatModal = ({ ...props }) => {
                 fullWidth
                 label="Chat name"
                 onChange={onChatNameChange}
+                onKeyDown={(event) => event.code === "Enter" && onSubmit()}
               />
               <TextField
                 variant="filled"
@@ -139,6 +140,7 @@ export const CreateChatModal = ({ ...props }) => {
                 fullWidth
                 label="Description"
                 onChange={onDescriptionChange}
+                onKeyDown={(event) => event.code === "Enter" && onSubmit()}
               />
               <Button
                 className={classes.submitButton}

@@ -13,7 +13,7 @@ interface IApi {
     getMessages: string;
   };
 }
-export default <IApi>{
+export const api: IApi = {
   auth: {
     auth: "auth/auth",
     registration: "auth/registration",
