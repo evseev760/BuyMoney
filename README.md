@@ -1,8 +1,8 @@
 Simple Chat Forum
-To run in a file, change the IP and DB to your own or local
+First, change the IP and database to your own here:
 ### client/src/config.ts
-###
+### express/config/default.json
 After in the "client" folder, run the command:
 ### npm run build
-After in the folder "express" run
+After in the folder "express" run:
 ### npm run server
