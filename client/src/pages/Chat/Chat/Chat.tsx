@@ -108,7 +108,11 @@ export const Chat = () => {
     socket.current = io(WS_URL, { transports: ["websocket"] });
     socket.current.on("connect", () => {});
     socket.current.on("addMessage", (data: any) => {
-      if (data.userId !== currentUser._id) dispatch(fetchMessages(data.chatId));
+      if (
+        data.userId !== currentUser._id &&
+        data.chatId === currentChatData._id
+      )
+        dispatch(fetchMessages(data.chatId));
     });
     socket.current.on("disconnect", () => {});
 
@@ -126,6 +130,7 @@ export const Chat = () => {
   }, [messages.length]);
 
   const send = () => {
+    if (!message) return;
     const createdAt = moment().unix();
     dispatch(
       addMessage(
