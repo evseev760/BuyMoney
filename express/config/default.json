@@ -1,6 +1,6 @@
 {
   "dbUrl": "mongodb+srv://admin:***REMOVED***@cluster0.rx50cdv.mongodb.net/test?retryWrites=true&w=majority",
   "secretKey": "***REMOVED***",
-  "PORT": "3000",
+  "PORT": "443",
   "WS_PORT" : "3002"
 }
