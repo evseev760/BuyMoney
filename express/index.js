@@ -102,12 +102,12 @@ bot.onText(/\/start/, (msg) => {
 app.post("/bot7048530034:AAHBxVCmGKbg2bBgZrTsKzRzt3Wk_6xoMUY", (req, res) => {
   const { message } = req.body;
 
-  if (message && message.text === "/start") {
-    // Логика обработки команды /start
-    bot.sendMessage(message.chat.id, "Привет! Добро пожаловать!");
-  } else {
-    // Обработка других типов сообщений
-  }
+  // if (message && message.text === "/start") {
+  //   // Логика обработки команды /start
+  //   // bot.sendMessage(message.chat.id, "Привет! Добро пожаловать!");
+  // } else {
+  //   // Обработка других типов сообщений
+  // }
 
   res.sendStatus(200); // Отправляем статус успеха
 });
