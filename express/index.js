@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const token = "bot***REMOVED***";
+const token = "***REMOVED***";
 const bot = new Telegraf(token);
 
 bot.telegram.setWebhook(`${webhookUrl}/bot${token}`);
