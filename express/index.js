@@ -99,6 +99,19 @@ bot.onText(/\/start/, (msg) => {
   });
 });
 
+app.post("/bot***REMOVED***", (req, res) => {
+  const { message } = req.body;
+
+  if (message && message.text === "/start") {
+    // Логика обработки команды /start
+    bot.sendMessage(message.chat.id, "Привет! Добро пожаловать!");
+  } else {
+    // Обработка других типов сообщений
+  }
+
+  res.sendStatus(200); // Отправляем статус успеха
+});
+
 bot.on("inline_query", (query) => {
   const url = webhookUrl;
   const inlineKeyboardMarkup = {
