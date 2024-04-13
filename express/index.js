@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const token = "bot7048530034:AAHBxVCmGKbg2bBgZrTsKzRzt3Wk_6xoMUY";
+const token = "7048530034:AAHBxVCmGKbg2bBgZrTsKzRzt3Wk_6xoMUY";
 const bot = new Telegraf(token);
 
 bot.telegram.setWebhook(`${webhookUrl}/bot${token}`);
