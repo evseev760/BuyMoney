@@ -65,9 +65,17 @@ const bot = new Telegraf(token);
 
 bot.telegram.setWebhook(`${webhookUrl}/bot${token}`);
 
-bot.on("message", (msg) => {
-  const chatId = msg.chat.id;
-  console.log(111111, chatId, msg);
+bot.on("message", (ctx) => {
+  const { message } = ctx;
+  const chatId = message.chat.id;
+  const url = "https://pocketmoneytg.ru"; // Ссылка на ваш фронтенд
+
+  // Отправляем сообщение с ссылкой на ваш фронтенд
+  ctx.reply("Нажмите кнопку, чтобы открыть приложение", {
+    reply_markup: {
+      inline_keyboard: [[{ text: "Открыть в Telegram Mini App", url }]],
+    },
+  });
 });
 
 bot.on("text", (ctx) => {
@@ -86,7 +94,31 @@ bot.on("text", (ctx) => {
 app.post(`/bot${token}`, (req, res) => {
   const { message } = req.body;
   if (message && message.text === "/start") {
-    bot.telegram.sendMessage(message.chat.id, "Привет! Добро пожаловать!");
+    bot.telegram.sendMessage(message.chat.id, "Привет! Добро пожаловать!", {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: "Открыть в Telegram Mini App",
+              url: "https://pocketmoneytg.ru", // URL вашей Mini App
+            },
+          ],
+        ],
+      },
+    });
+  }
+  if (message && message.text === "/veb") {
+    const chatId = message.chat.id;
+    const appUrl = "https://pocketmoneytg.ru";
+    const keyboardMarkup = {
+      inline_keyboard: [[{ text: "Открыть приложение", url: appUrl }]],
+    };
+
+    bot.telegram.sendMessage(
+      chatId,
+      "Нажмите кнопку, чтобы открыть приложение",
+      { reply_markup: keyboardMarkup }
+    );
   }
   res.sendStatus(200);
 });
