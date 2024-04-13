@@ -1,4 +1,5 @@
 const express = require("express");
+const TelegramBot = require("node-telegram-bot-api");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
@@ -6,7 +7,7 @@ const config = require("config");
 const fs = require("fs");
 const https = require("https");
 const PORT = process.env.PORT || config.get("PORT");
-const { Server } = require("socket.io");
+// const { Server } = require("socket.io");
 
 const authRouter = require("./sections/auth/authRouter");
 const chatRouter = require("./sections/chat/chatRouter");
@@ -18,6 +19,16 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
 
+const token = "***REMOVED***";
+
+const webhookUrl = "https://pocketmoneytg.ru";
+
+const privateKey = fs.readFileSync("/etc/ssl/private/privatekey.pem", "utf8");
+const certificate = fs.readFileSync(
+  "/etc/ssl/certs/pocketmoneytgru.pem",
+  "utf8"
+);
+const credentials = { key: privateKey, cert: certificate };
 const start = async () => {
   try {
     await mongoose.connect(config.get("dbUrl"));
@@ -28,23 +39,23 @@ const start = async () => {
       res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
 
-    const privateKey = fs.readFileSync("/etc/ssl/private/privatekey.pem", "utf8");
-    const certificate = fs.readFileSync("/etc/ssl/certs/pocketmoneytgru.pem", "utf8");
-    const credentials = { key: privateKey, cert: certificate };
+    // const privateKey = fs.readFileSync("/etc/ssl/private/privatekey.pem", "utf8");
+    // const certificate = fs.readFileSync("/etc/ssl/certs/pocketmoneytgru.pem", "utf8");
+    // const credentials = { key: privateKey, cert: certificate };
 
     const httpsServer = https.createServer(credentials, app);
 
-     const io = new Server(httpsServer);
+    //  const io = new Server(httpsServer);
 
-    io.on("connection", (socket) => {
-      socket.on("addMessage", (data) => {
-        io.emit("addMessage", data);
-      });
-      socket.on("chatCreated", (data) => {
-        io.emit("chatCreated", data);
-      });
-    });
-    
+    // io.on("connection", (socket) => {
+    //   socket.on("addMessage", (data) => {
+    //     io.emit("addMessage", data);
+    //   });
+    //   socket.on("chatCreated", (data) => {
+    //     io.emit("chatCreated", data);
+    //   });
+    // });
+
     httpsServer.listen(PORT, () => {
       console.log(`HTTPS Server started on port ${PORT}`);
     });
@@ -53,17 +64,61 @@ const start = async () => {
   }
 };
 
-// const { Server } = require("socket.io");
-// const httpsServer = https.createServer(credentials, app);
-// const io = new Server(httpsServer);
+const { Server } = require("socket.io");
+const httpsServer = https.createServer(credentials, app);
+const io = new Server(httpsServer);
 
-// io.on("connection", (socket) => {
-//   socket.on("addMessage", (data) => {
-//     io.emit("addMessage", data);
-//   });
-//   socket.on("chatCreated", (data) => {
-//     io.emit("chatCreated", data);
-//   });
-// });
+io.on("connection", (socket) => {
+  socket.on("addMessage", (data) => {
+    io.emit("addMessage", data);
+  });
+  socket.on("chatCreated", (data) => {
+    io.emit("chatCreated", data);
+  });
+});
+
+// Создаем экземпляр бота
+const bot = new TelegramBot(token);
+
+bot.setWebHook(`${webhookUrl}/bot${token}`);
+
+bot.on("message", (msg) => {
+  const chatId = msg.chat.id;
+  console.log(111111, chatId, msg);
+});
+
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+  const url = webhookUrl;
+  const inlineKeyboardMarkup = {
+    inline_keyboard: [[{ text: "Открыть в TMA", url }]],
+  };
+
+  bot.sendMessage(chatId, "Нажмите кнопку, чтобы открыть приложение", {
+    reply_markup: inlineKeyboardMarkup,
+  });
+});
+
+bot.on("inline_query", (query) => {
+  const url = webhookUrl;
+  const inlineKeyboardMarkup = {
+    inline_keyboard: [[{ text: "Открыть в TMA", url }]],
+  };
+
+  const results = [
+    {
+      type: "article",
+      id: "1",
+      title: "Открыть в TMA",
+      input_message_content: {
+        message_text: "Откройте веб-приложение в Telegram Mini-App",
+        parse_mode: "Markdown",
+      },
+      reply_markup: inlineKeyboardMarkup,
+    },
+  ];
+
+  bot.answerInlineQuery(query.id, results);
+});
 
 start();
