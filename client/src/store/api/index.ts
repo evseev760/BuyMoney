@@ -5,12 +5,13 @@ interface IApi {
     login: string;
     users: string;
   };
-  chat: {
-    createChat: string;
-    getChats: string;
-    getChat: string;
-    addMessage: string;
-    getMessages: string;
+  offer: {
+    createOffer: string;
+    getOffers: string;
+    getOffer: string;
+    addProposal: string;
+    getProposals: string;
+    getPrice: string;
   };
 }
 export const api: IApi = {
@@ -20,11 +21,12 @@ export const api: IApi = {
     login: "auth/login",
     users: "auth/users",
   },
-  chat: {
-    createChat: "chat/createChat",
-    getChats: "chat/getChats",
-    getChat: "chat/getChat",
-    addMessage: "chat/addMessage",
-    getMessages: "chat/getMessages",
+  offer: {
+    createOffer: "offer/createOffer",
+    getOffers: "offer/getOffers",
+    getOffer: "offer/getOffer",
+    addProposal: "offer/addProposal",
+    getProposals: "offer/getProposals",
+    getPrice: "offer/getPrice",
   },
 };

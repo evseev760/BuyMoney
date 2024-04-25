@@ -1,18 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Router } from "./router";
 import "./App.css";
-import { fetchAuth } from "./store/reducers/ActionCreators";
+import { fetchAuth, fetchLogin } from "./store/reducers/ActionCreators";
 import { useAppDispatch } from "./hooks/redux";
-import { useNavigate } from "react-router-dom";
+import { useTg } from "./hooks/useTg";
+import { ThemeProvider } from "styled-components";
+import { lightTheme } from "./theme";
+import { darkTheme } from "theme/darkTheme";
+import { Theme } from "models/Theme";
+
 function App() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { tg } = useTg();
+  const isDark = tg.colorScheme === "dark";
+  //@ts-ignore
+  console.log(8888, tg, window.Telegram);
+  // if (navigator.geolocation) {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       const latitude = position.coords.latitude;
+  //       const longitude = position.coords.longitude;
+  //       console.log("Широта:", latitude);
+  //       console.log("Долгота:", longitude);
+
+  //       // Далее вы можете использовать полученные координаты
+  //     },
+  //     (error) => {
+  //       console.error("Ошибка при получении местоположения:", error);
+  //     }
+  //   );
+  // } else {
+  //   console.error("Geolocation не поддерживается этим браузером.");
+  // }
+  const theme: Theme = isDark ? darkTheme : lightTheme;
+  const bgColor = theme.palette.background.primary;
   useEffect(() => {
-    dispatch(fetchAuth(navigate));
+    dispatch(fetchAuth(tg));
+    tg.setBackgroundColor(`#${bgColor.substring(1)}`);
+    tg.setHeaderColor(`#${bgColor.substring(1)}`);
+    document
+      .querySelector("body")
+      ?.setAttribute("style", "background-color: " + bgColor);
   }, []);
+
   return (
-    <div className="App">
-      <Router />
+    <div style={{ backgroundColor: bgColor }} className="App">
+      <ThemeProvider theme={theme}>
+        <Router />
+      </ThemeProvider>
     </div>
   );
 }

@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainContainer } from "../components/Containers/MainContainer";
 import Registration from "../pages/Auth/Registration";
 import Login from "../pages/Auth/Login";
-import Chats from "../pages/Chat/Chats/Chats";
+import Offers from "pages/Offer/Offers/Offers";
 import { useAppSelector } from "../hooks/redux";
-import { Chat } from "../pages/Chat/Chat/Chat";
+import { Offer } from "../pages/Offer/Offer/Offer";
+import { Mainpage } from "../pages/MainPage";
+import { CreateOffer } from "pages/CreateOffer";
 
 export enum RouteNames {
   MAIN = "/",
-  CHAT = "/chat",
-  NEWS = "/news",
-  REGISTRATION = "/registration",
-  LOGIN = "/login",
+  OFFERS = "/offers",
+  OFFER = "/offer",
+  ADD_OFFER = "/addOffer",
+  SETTINGS = "/settings",
 }
 
 export const Router = () => {
@@ -26,17 +28,33 @@ export const Router = () => {
             path={RouteNames.MAIN}
             element={
               <MainContainer>
-                <Chats />
+                <Mainpage />
               </MainContainer>
             }
           />
-          <Route path={`${RouteNames.CHAT}/:id`} element={<Chat />} />
+          <Route
+            path={RouteNames.OFFERS}
+            element={
+              <MainContainer>
+                <Offers />
+              </MainContainer>
+            }
+          />
+          <Route
+            path={RouteNames.ADD_OFFER}
+            element={
+              <MainContainer>
+                <CreateOffer />
+              </MainContainer>
+            }
+          />
+          <Route path={`${RouteNames.OFFER}/:id`} element={<></>} />
         </Routes>
       ) : (
         <Routes>
-          <Route path={RouteNames.MAIN} element={<></>} />
+          {/* <Route path={RouteNames.MAIN} element={<></>} />
           <Route path={RouteNames.LOGIN} element={<Login />} />
-          <Route path={RouteNames.REGISTRATION} element={<Registration />} />
+          <Route path={RouteNames.REGISTRATION} element={<Registration />} /> */}
         </Routes>
       )}
     </>

@@ -6,11 +6,14 @@ import ForumIcon from "@material-ui/icons/Forum";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { ProgressLine } from "../../../components/Loading/ProgressLine";
 import { CustomizedSnackbars } from "../../../components/SnackBar";
-import { createChat } from "../../../store/reducers/ActionCreators";
+import { createOffer } from "../../../store/reducers/ActionCreators";
 
-export interface IChatCreateData {
-  chatName: string;
-  description: string;
+export interface IOfferCreateData {
+  currency: string;
+  quantity: number;
+  price: number;
+  forPayment: string;
+  location: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,16 +53,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const CreateChatModal = ({ ...props }) => {
-  const { onChatCreated } = props;
+export const CreateOfferModal = ({ ...props }) => {
+  const { onOfferCreated } = props;
   const dispatch = useAppDispatch();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = useState({ chatName: "", description: "" });
+  const [data, setData] = useState({
+    currency: "",
+    quantity: 0,
+    price: 0,
+    forPayment: "",
+    location: "",
+  });
 
   const [errorText, setError] = useState("");
-  const { createChatIsLoading, error } = useAppSelector(
-    (state) => state.chatReducer
+  const { createOfferIsLoading, error } = useAppSelector(
+    (state) => state.offerReducer
   );
 
   useEffect(() => {
@@ -71,27 +80,45 @@ export const CreateChatModal = ({ ...props }) => {
   const handleClose = () => {
     setOpen(false);
   };
-  const onChatNameChange = (value: any) => {
-    setData({ ...data, chatName: value.target.value });
+  const onCurrencyChange = (value: any) => {
+    setData({ ...data, currency: value.target.value });
   };
-  const onDescriptionChange = (value: any) => {
-    setData({ ...data, description: value.target.value });
+  const onQuantityChange = (value: any) => {
+    setData({ ...data, quantity: value.target.value });
+  };
+  const onPriceChange = (value: any) => {
+    setData({ ...data, price: value.target.value });
+  };
+  const onForPaymentChange = (value: any) => {
+    setData({ ...data, forPayment: value.target.value });
+  };
+  const onLocationChange = (value: any) => {
+    setData({ ...data, location: value.target.value });
   };
 
   const onCreated = () => {
-    onChatCreated();
+    onOfferCreated();
     handleClose();
   };
   const onSubmit = () => {
-    validation() && dispatch(createChat(data, onCreated));
+    // validation() && dispatch(createOffer(data, onCreated));
   };
 
   const validation = () => {
-    if (!data.chatName) {
-      setError('"Chat name" field cannot be empty');
+    if (!data.currency) {
+      setError("currency field cannot be empty");
       return false;
-    } else if (data.description !== "" && data.description.length < 5) {
-      setError("Description is too short");
+    } else if (!data.quantity) {
+      setError("quantity field cannot be empty");
+      return false;
+    } else if (!data.price) {
+      setError("price field cannot be empty");
+      return false;
+    } else if (!data.forPayment) {
+      setError("forPayment field cannot be empty");
+      return false;
+    } else if (!data.location) {
+      setError("location field cannot be empty");
       return false;
     }
 
@@ -106,7 +133,7 @@ export const CreateChatModal = ({ ...props }) => {
         color="primary"
       >
         <ForumIcon />
-        <div className={classes.buttonText}>Add chat</div>
+        <div className={classes.buttonText}>Add offer</div>
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -123,14 +150,14 @@ export const CreateChatModal = ({ ...props }) => {
         <Fade in={open}>
           <div className={classes.paper}>
             <div className={classes.paperContainer}>
-              <h2 id="transition-modal-title">Creating a chat</h2>
+              <h2 id="transition-modal-title">Creating a offer</h2>
               <TextField
                 variant="filled"
                 margin="normal"
                 required
                 fullWidth
-                label="Chat name"
-                onChange={onChatNameChange}
+                label="currency"
+                onChange={onCurrencyChange}
                 onKeyDown={(event) => event.code === "Enter" && onSubmit()}
               />
               <TextField
@@ -138,8 +165,35 @@ export const CreateChatModal = ({ ...props }) => {
                 margin="normal"
                 required
                 fullWidth
-                label="Description"
-                onChange={onDescriptionChange}
+                label="quantity"
+                onChange={onQuantityChange}
+                onKeyDown={(event) => event.code === "Enter" && onSubmit()}
+              />
+              <TextField
+                variant="filled"
+                margin="normal"
+                required
+                fullWidth
+                label="price"
+                onChange={onPriceChange}
+                onKeyDown={(event) => event.code === "Enter" && onSubmit()}
+              />
+              <TextField
+                variant="filled"
+                margin="normal"
+                required
+                fullWidth
+                label="forPayment"
+                onChange={onForPaymentChange}
+                onKeyDown={(event) => event.code === "Enter" && onSubmit()}
+              />
+              <TextField
+                variant="filled"
+                margin="normal"
+                required
+                fullWidth
+                label="location"
+                onChange={onLocationChange}
                 onKeyDown={(event) => event.code === "Enter" && onSubmit()}
               />
               <Button
@@ -158,7 +212,7 @@ export const CreateChatModal = ({ ...props }) => {
                 />
               )}
             </div>
-            {createChatIsLoading && <ProgressLine />}
+            {createOfferIsLoading && <ProgressLine />}
           </div>
         </Fade>
       </Modal>

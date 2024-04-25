@@ -9,10 +9,10 @@ import {
 import StarsIcon from "@material-ui/icons/Stars";
 import { IUser } from "../../../models/IUser";
 
-interface IChatView {
-  chat: any;
+interface IOfferView {
+  offer: any;
   user: IUser;
-  joinChat: (id: string) => void;
+  joinOffer: (id: string) => void;
   classes: any;
 }
 
@@ -34,21 +34,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const ChatView = (props: IChatView) => {
-  const { chat, joinChat, user } = props;
+export const OfferView = (props: IOfferView) => {
+  const { offer, joinOffer, user } = props;
   const classes = useStyles();
-  const thatMine = chat.mainUser === user._id;
+  const thatMine = offer.mainUser === user._id;
   return (
     <>
       <CardContent className={classes.cardContent}>
         <Typography gutterBottom variant="h5" component="h2">
-          {chat.chatName}
+          {offer.offerName}
         </Typography>
-        <Typography>{chat.description}</Typography>
+        <Typography>{offer.description}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button
-          onClick={() => joinChat(chat?._id)}
+          onClick={() => joinOffer(offer?._id)}
           size="small"
           color="primary"
         >
@@ -56,7 +56,7 @@ export const ChatView = (props: IChatView) => {
         </Button>
 
         {thatMine && <StarsIcon color="primary" />}
-        <span>{chat.mainUsername}</span>
+        <span>{offer.mainUsername}</span>
       </CardActions>
     </>
   );

@@ -3,6 +3,10 @@ client/node_modules/
 client/package-lock.json
 express/node_modules/
 express/package-lock.json
+client/build/
+client/package-lock 2.json
+client/package-lock 3.json
+.gitignore
 
 # Logs
 logs

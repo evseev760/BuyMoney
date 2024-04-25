@@ -42,7 +42,7 @@ const useStyles = makeStyles(() =>
   })
 );
 export const Message = ({ ...props }) => {
-  const { textMessage, currentUser, user, username, createdAt } = props;
+  const { quantity, currentUser, user, username, createdAt } = props;
   const classes = useStyles();
   const thatMine = currentUser._id === user;
   return (
@@ -73,7 +73,7 @@ export const Message = ({ ...props }) => {
                 [classes.textMessage]: true,
               })}
             >
-              {textMessage}
+              {quantity}
             </div>
           </div>
         }
