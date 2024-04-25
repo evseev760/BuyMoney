@@ -3,20 +3,27 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const config = require("config");
+const { createServer } = require("http");
 const fs = require("fs");
-
 const https = require("https");
-const { Telegraf } = require("telegraf");
+const { Server } = require("socket.io");
+
 const PORT = process.env.PORT || config.get("PORT");
+
 const authRouter = require("./sections/auth/authRouter");
-const chatRouter = require("./sections/chat/chatRouter");
+const offerRouter = require("./sections/offer/offerRouter");
+const telegramBot = require("./telegramBot");
+const socketHandler = require("./socketHandler");
 
 const app = express();
+
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/chat", chatRouter);
+app.use("/offer", offerRouter);
 
 const webhookUrl = "https://pocketmoneytg.ru";
 
@@ -36,113 +43,17 @@ const start = async () => {
     app.get("*", (req, res) => {
       res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
-
+    // app.listen(PORT, () => console.log(`server started on port ${PORT}`));
     const httpsServer = https.createServer(credentials, app);
 
     httpsServer.listen(PORT, () => {
       console.log(`HTTPS Server started on port ${PORT}`);
     });
+    // socketHandler(io);
   } catch (e) {
     console.log(e);
   }
 };
 
-const { Server } = require("socket.io");
-const httpsServer = https.createServer(credentials, app);
-const io = new Server(httpsServer);
-
-io.on("connection", (socket) => {
-  socket.on("addMessage", (data) => {
-    io.emit("addMessage", data);
-  });
-  socket.on("chatCreated", (data) => {
-    io.emit("chatCreated", data);
-  });
-});
-
-const token = "***REMOVED***";
-const bot = new Telegraf(token);
-
-bot.telegram.setWebhook(`${webhookUrl}/bot${token}`);
-
-bot.on("message", (ctx) => {
-  const { message } = ctx;
-  const chatId = message.chat.id;
-  const url = "https://pocketmoneytg.ru"; // Ссылка на ваш фронтенд
-
-  // Отправляем сообщение с ссылкой на ваш фронтенд
-  ctx.reply("Нажмите кнопку, чтобы открыть приложение", {
-    reply_markup: {
-      inline_keyboard: [[{ text: "Открыть в Telegram Mini App", url }]],
-    },
-  });
-});
-
-bot.on("text", (ctx) => {
-  const { message } = ctx;
-  const chatId = message.chat.id;
-  const url = webhookUrl;
-  const inlineKeyboardMarkup = {
-    inline_keyboard: [[{ text: "Открыть в TMA", url }]],
-  };
-
-  ctx.reply("Нажмите кнопку, чтобы открыть приложение", {
-    reply_markup: inlineKeyboardMarkup,
-  });
-});
-
-app.post(`/bot${token}`, (req, res) => {
-  const { message } = req.body;
-  if (message && message.text === "/start") {
-    bot.telegram.sendMessage(message.chat.id, "Привет! Добро пожаловать!", {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "Открыть в Telegram Mini App",
-              url: "https://pocketmoneytg.ru", // URL вашей Mini App
-            },
-          ],
-        ],
-      },
-    });
-  }
-  if (message && message.text === "/veb") {
-    const chatId = message.chat.id;
-    const appUrl = "https://pocketmoneytg.ru";
-    const keyboardMarkup = {
-      inline_keyboard: [[{ text: "Открыть приложение", url: appUrl }]],
-    };
-
-    bot.telegram.sendMessage(
-      chatId,
-      "Нажмите кнопку, чтобы открыть приложение",
-      { reply_markup: keyboardMarkup }
-    );
-  }
-  res.sendStatus(200);
-});
-
-bot.on("inline_query", (query) => {
-  const url = webhookUrl;
-  const inlineKeyboardMarkup = {
-    inline_keyboard: [[{ text: "Открыть в TMA", url }]],
-  };
-
-  const results = [
-    {
-      type: "article",
-      id: "1",
-      title: "Открыть в TMA",
-      input_message_content: {
-        message_text: "Откройте веб-приложение в Telegram Mini-App",
-        parse_mode: "Markdown",
-      },
-      reply_markup: inlineKeyboardMarkup,
-    },
-  ];
-
-  bot.answerInlineQuery(query.id, results);
-});
-
 start();
+httpServer.listen(config.get("WS_PORT"));

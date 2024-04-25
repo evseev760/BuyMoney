@@ -3,13 +3,13 @@ import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { Card, makeStyles, Container, Grid } from "@material-ui/core";
 import { Circular } from "../../../components/Loading/Circular";
-import { CreateChatModal } from "./CreateChatModal";
-import { ChatView } from "./ChatView";
+import { CreateOfferModal } from "./CreateOfferModal";
+import { OfferView } from "./OfferView";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { RouteNames } from "../../../router";
-import { IChat } from "../../../models/IChat";
+import { IOffer } from "../../../models/IOffer";
 import { WS_URL } from "../../../config";
-import { fetchChats } from "../../../store/reducers/ActionCreators";
+import { fetchOffers } from "../../../store/reducers/ActionCreators";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -27,21 +27,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Chats() {
+export default function Offers() {
   const classes = useStyles();
   const navigate = useNavigate();
   const socket = useRef<any>();
   const dispatch = useAppDispatch();
-  const { chats, chatsIsLoading } = useAppSelector(
-    (state) => state.chatReducer
+  const { offers, offersIsLoading } = useAppSelector(
+    (state) => state.offerReducer
   );
   const { currentUser } = useAppSelector((state) => state.authReducer);
   useEffect(() => {
-    dispatch(fetchChats());
+    dispatch(fetchOffers());
     socket.current = io(WS_URL, { transports: ["websocket"] });
     socket.current.on("connect", () => {});
-    socket.current.on("chatCreated", () => {
-      dispatch(fetchChats());
+    socket.current.on("offerCreated", () => {
+      dispatch(fetchOffers());
     });
     socket.current.on("disconnect", () => {});
 
@@ -49,12 +49,12 @@ export default function Chats() {
       socket.current.disconnect();
     };
   }, []);
-  const joinChat = (id: string) => {
-    navigate(`${RouteNames.CHAT}/${id}`, { replace: true });
+  const joinOffer = (id: string) => {
+    navigate(`${RouteNames.OFFER}/${id}`, { replace: true });
   };
 
-  const onChatCreated = () => {
-    socket.current.emit("chatCreated", {
+  const onOfferCreated = () => {
+    socket.current.emit("offerCreated", {
       userId: currentUser._id,
     });
   };
@@ -63,20 +63,20 @@ export default function Chats() {
     <React.Fragment>
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
-          {!chatsIsLoading ? (
-            [undefined, ...chats].map((chat?: IChat) => (
-              <Grid item key={chat?._id || 1} xs={12} sm={6} md={4}>
+          {!offersIsLoading ? (
+            [undefined, ...offers].map((offer?: IOffer) => (
+              <Grid item key={offer?._id || 1} xs={12} sm={12}>
                 <Card className={classes.card}>
-                  {chat ? (
-                    <ChatView
+                  {offer ? (
+                    <OfferView
                       classes={classes}
-                      chat={chat}
+                      offer={offer}
                       user={currentUser}
-                      joinChat={joinChat}
+                      joinOffer={joinOffer}
                     />
                   ) : (
                     <>
-                      <CreateChatModal onChatCreated={onChatCreated} />
+                      <CreateOfferModal onOfferCreated={onOfferCreated} />
                     </>
                   )}
                 </Card>

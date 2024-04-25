@@ -1,5 +1,6 @@
-body {
-    font-family: Roboto, serif;
+/* body {
+    background: var(--tg-theme-bg-color) !important;
+    color: var(--tg-theme-text-color) !important;
 }
 a {
      text-decoration: none;
@@ -16,5 +17,16 @@ a {
 .spaceBetween {
     justify-content: space-between;
 }
+ */
 
-
+.App {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: sans-serif;
+}
+.App * {
+    font-family: sans-serif !important;
+}

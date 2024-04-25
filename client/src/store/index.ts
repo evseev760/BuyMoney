@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./reducers/UserSlice";
 import authReducer from "./reducers/AuthSlice";
-import chatReducer from "./reducers/ChatSlice";
+import offerReducer from "./reducers/OfferSlice";
 
 const rootReducer = combineReducers({
   userReducer,
   authReducer,
-  chatReducer,
+  offerReducer,
 });
 
 export const setupStore = () => {

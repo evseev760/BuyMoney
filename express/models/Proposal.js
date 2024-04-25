@@ -1,10 +1,10 @@
 const { Schema, model } = require("mongoose");
 
-const Message = new Schema({
-  textMessage: { type: String },
+const Proposal = new Schema({
+  quantity: { type: Number },
   user: { type: String, required: true, ref: "User" },
   username: { type: String, required: true },
-  chat: { type: String, required: true, ref: "Chats" },
+  offerId: { type: String, required: true, ref: "Offers" },
   createdAt: { type: Number, required: true },
 });
-module.exports = model("Message", Message);
+module.exports = model("Proposal", Proposal);

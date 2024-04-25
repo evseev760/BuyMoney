@@ -15,8 +15,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import { Copyright } from "../../../components/Copyright/Copyright";
 
-import { RouteNames } from "../../../router";
-import { fetchRegistration } from "../../../store/reducers/ActionCreators";
+// import { RouteNames } from "../../../router";
+// import { fetchRegistration } from "../../../store/reducers/ActionCreators";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,10 +47,10 @@ export default function Registration() {
 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const goToLogin = () => {
-    navigate(RouteNames.LOGIN, { replace: true });
+    // navigate(RouteNames.LOGIN, { replace: true });
   };
   const onSubmit = () => {
-    dispatch(fetchRegistration(formData, navigate));
+    // dispatch(fetchRegistration(formData, navigate));
   };
   const onUserNameChange = (value: any) => {
     setFormData({ ...formData, username: value.target.value });
