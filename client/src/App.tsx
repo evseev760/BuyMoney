@@ -8,6 +8,7 @@ import { ThemeProvider } from "styled-components";
 import { lightTheme } from "./theme";
 import { darkTheme } from "theme/darkTheme";
 import { Theme } from "models/Theme";
+import { Token } from "@mui/icons-material";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -35,7 +36,9 @@ function App() {
   const theme: Theme = isDark ? darkTheme : lightTheme;
   const bgColor = theme.palette.background.primary;
   useEffect(() => {
-    dispatch(fetchAuth(tg));
+    const token = localStorage.getItem("token");
+    !token && dispatch(fetchLogin(tg));
+    token && dispatch(fetchAuth(tg));
     tg.setBackgroundColor(`#${bgColor.substring(1)}`);
     tg.setHeaderColor(`#${bgColor.substring(1)}`);
     document

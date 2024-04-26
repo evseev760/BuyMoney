@@ -1,7 +1,4 @@
 import { Drawer, SwipeableDrawer } from "@material-ui/core";
-import { Typography, Skeleton } from "antd";
-import { useTg } from "hooks/useTg";
-import { Theme } from "models/Theme";
 import { useEffect, useState } from "react";
 import styled, { DefaultTheme, css, useTheme } from "styled-components";
 

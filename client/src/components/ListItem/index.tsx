@@ -18,7 +18,7 @@ export const ListItemComponent = ({
 }: ListItemProps) => {
   return (
     <ListItemContainer>
-      <StyledListItem button onClick={handleClick}>
+      <StyledListItem button disableRipple onClick={handleClick}>
         {icon && <IconContainer>{icon}</IconContainer>}
         <ListItemText primary={label} />
         <StyledValue>{value && value}</StyledValue>
@@ -33,6 +33,9 @@ const StyledListItem = styled(ListItem)`
     color: ${theme.palette.text.primary};
     cursor: pointer;
     -webkit-user-select: none;
+    & svg {
+      fill: ${theme.palette.button.primary};
+    }
     &:hover {
       background-color: ${theme.palette.background.secondary};
       color: ${theme.palette.text.primary};

@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 export const OfferView = (props: IOfferView) => {
   const { offer, joinOffer, user } = props;
   const classes = useStyles();
-  const thatMine = offer.mainUser === user._id;
+  const thatMine = offer.mainUser === user.id;
   return (
     <>
       <CardContent className={classes.cardContent}>
@@ -48,7 +48,7 @@ export const OfferView = (props: IOfferView) => {
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button
-          onClick={() => joinOffer(offer?._id)}
+          onClick={() => joinOffer(offer?.id)}
           size="small"
           color="primary"
         >

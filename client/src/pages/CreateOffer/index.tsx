@@ -17,6 +17,7 @@ import {
   fiatCurrenciesArray,
   criptoCurrenciesArray,
   SelectItem,
+  getLabel,
 } from "models/Currency";
 import { MarketPrice } from "./components/marketPrice";
 import { FixPriceInput } from "./components/FixPriceInput";
@@ -52,7 +53,6 @@ export const CreateOffer = () => {
   const backButtonHandler = () => navigate(RouteNames.MAIN);
 
   useEffect(() => {
-    //!!!!!!!
     onToggleBackButton(backButtonHandler, true);
     return () => {
       onToggleBackButton(backButtonHandler, false);
@@ -81,10 +81,10 @@ export const CreateOffer = () => {
 
   useEffect(() => {
     if (
-      ((newOffer.isFixPrice === "fix" &&
+      ((newOffer.typeOfPrice === "fix" &&
         isValidPrice(marketPrice, newOffer.price) &&
         newOffer.price) ||
-        (newOffer.isFixPrice === "flex" &&
+        (newOffer.typeOfPrice === "flex" &&
           isValidInterestPrice(
             newOffer.interestPrice && newOffer.interestPrice
           ) &&
@@ -165,14 +165,14 @@ export const CreateOffer = () => {
       dispatch(
         setNewOffer({
           ...newOffer,
-          isFixPrice: value,
+          typeOfPrice: value,
           interestPrice: undefined,
         })
       );
     } else if (value === "flex") {
       setIsReversePrice(false);
       dispatch(
-        setNewOffer({ ...newOffer, isFixPrice: value, price: undefined })
+        setNewOffer({ ...newOffer, typeOfPrice: value, price: undefined })
       );
     }
 
@@ -205,11 +205,8 @@ export const CreateOffer = () => {
     dispatch(setNewOffer({ ...newOffer, delivery: value }));
   };
 
-  const getSelectLabel = (arr: SelectItem[], value?: string) => {
-    return arr.find((item) => item.code === value)?.label || "";
-  };
   const getListViewValue = (arr: SelectItem[], value?: string) => {
-    return getSelectLabel(arr, value) || <HorizontalRuleIcon />;
+    return getLabel(arr, value) || <HorizontalRuleIcon />;
   };
   const getFixPriceValue = (value?: number) => {
     if (isReversePrice) {
@@ -242,7 +239,7 @@ export const CreateOffer = () => {
     {
       label: "Тип цены",
       handleClick: () => changeDrawer("priceType"),
-      value: getListViewValue(priceTypes, newOffer.isFixPrice),
+      value: getListViewValue(priceTypes, newOffer.typeOfPrice),
     },
   ];
   const drawers: Drawers = {
@@ -263,7 +260,7 @@ export const CreateOffer = () => {
     priceType: (
       <CurrencySelect
         handleSelect={onPriceTypeChange}
-        currentValue={newOffer.isFixPrice}
+        currentValue={newOffer.typeOfPrice}
         array={priceTypes}
       />
     ),
@@ -274,21 +271,18 @@ export const CreateOffer = () => {
       <div>Создайте объявление</div>
       <ListDividers listArr={offerParams} />
 
-      {newOffer.isFixPrice === "fix" && (
+      {newOffer.typeOfPrice === "fix" && (
         <FixPriceInput
           onChange={onPriceChange}
           value={getFixPriceValue(newOffer.price)}
-          firstCurrency={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
-          secondCurrency={getSelectLabel(
-            criptoCurrenciesArray,
-            newOffer.forPayment
-          )}
+          firstCurrency={getLabel(fiatCurrenciesArray, newOffer.currency)}
+          secondCurrency={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
           isReversePrice={!!isReversePrice}
           isValid={isValidPrice(marketPrice, newOffer.price)}
           setIsReversePrice={onChangeIsReversePrice}
         />
       )}
-      {newOffer.isFixPrice === "flex" && (
+      {newOffer.typeOfPrice === "flex" && (
         <FlexPriceInput
           onChange={onInterestPriceChange}
           value={newOffer.interestPrice}
@@ -301,13 +295,13 @@ export const CreateOffer = () => {
         <MarketPrice
           isLoading={price.isLoading}
           price={marketPrice}
-          first={getSelectLabel(criptoCurrenciesArray, newOffer.forPayment)}
-          second={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
+          first={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
+          second={getLabel(fiatCurrenciesArray, newOffer.currency)}
           isReversePrice={!!isReversePrice}
         />
       )}
 
-      {newOffer.isFixPrice === "flex" &&
+      {newOffer.typeOfPrice === "flex" &&
         price.data &&
         newOffer.currency &&
         newOffer.forPayment && (
@@ -318,8 +312,8 @@ export const CreateOffer = () => {
                 ? (marketPrice / newOffer.interestPrice) * 100
                 : 0
             }
-            first={getSelectLabel(criptoCurrenciesArray, newOffer.forPayment)}
-            second={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
+            first={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
+            second={getLabel(fiatCurrenciesArray, newOffer.currency)}
             isReversePrice={!isReversePrice}
           />
         )}
@@ -327,20 +321,20 @@ export const CreateOffer = () => {
         isValid={true}
         onChange={onQuantityChange}
         value={newOffer.quantity}
-        currency={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
+        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
         label="Количество на продажу"
       />
       <Quantity
         isValid={isValidMinQuantity()}
         onChange={onMinQuantityChange}
         value={newOffer.minQuantity}
-        currency={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
+        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
         label="Сумма минимальной сделки"
       />
       <Delivery
         deliveryValues={newOffer.delivery}
         onChange={onDeliveryChange}
-        currency={getSelectLabel(fiatCurrenciesArray, newOffer.currency)}
+        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
         isValid={true}
       />
       <DrawerComponent

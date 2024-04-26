@@ -13,7 +13,6 @@ module.exports = function (req, res, next) {
       return res.status(403).json({ message: "Пользователь не авторизован" });
     }
     const decodedData = jwt.verify(token, config.get("secretKey"));
-    console.log(6666, decodedData);
     req.user = decodedData;
     next();
   } catch (e) {

@@ -31,3 +31,7 @@ export const fiatCurrenciesArray: SelectItem[] = Object.entries(
 export const criptoCurrenciesArray: SelectItem[] = Object.entries(
   CryptoCurrency
 ).map(([label, code]) => ({ code, label: label.toUpperCase() }));
+
+export const getLabel = (arr: SelectItem[], value?: string) => {
+  return arr.find((item) => item.code === value)?.label || "";
+};

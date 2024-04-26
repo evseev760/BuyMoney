@@ -1,15 +1,7 @@
-import * as React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import { useTg, ThemeParamsProps } from "hooks/useTg";
+import { Divider, List } from "@material-ui/core";
 import styled, { css } from "styled-components";
 import { ListItemComponent } from "components/ListItem";
 
-const style = {
-  //   borderRadius: 2,
-};
 interface listItem {
   label: string;
   icon?: any;
@@ -23,7 +15,7 @@ interface ListProps {
 export default function ListDividers(props: ListProps) {
   const { listArr } = props;
   return (
-    <StyledList sx={style} aria-label="mailbox folders">
+    <StyledList aria-label="mailbox folders">
       {listArr.map((item, index) => (
         <>
           <ListItemComponent {...item} />

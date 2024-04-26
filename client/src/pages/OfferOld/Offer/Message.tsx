@@ -44,7 +44,7 @@ const useStyles = makeStyles(() =>
 export const Message = ({ ...props }) => {
   const { quantity, currentUser, user, username, createdAt } = props;
   const classes = useStyles();
-  const thatMine = currentUser._id === user;
+  const thatMine = currentUser.id === user;
   return (
     <div className={cn({ [classes.root]: true, [classes.right]: thatMine })}>
       <SnackbarContent

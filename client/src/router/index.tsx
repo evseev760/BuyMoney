@@ -3,9 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import { MainContainer } from "../components/Containers/MainContainer";
 import Registration from "../pages/Auth/Registration";
 import Login from "../pages/Auth/Login";
-import Offers from "pages/Offer/Offers/Offers";
+import { Offers } from "pages/Offers";
 import { useAppSelector } from "../hooks/redux";
-import { Offer } from "../pages/Offer/Offer/Offer";
+import { Offer } from "../pages/OfferOld/Offer/Offer";
 import { Mainpage } from "../pages/MainPage";
 import { CreateOffer } from "pages/CreateOffer";
 

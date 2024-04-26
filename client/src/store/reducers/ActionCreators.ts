@@ -6,8 +6,8 @@ import { authSlice } from "./AuthSlice";
 import { offerSlice } from "./OfferSlice";
 
 import { API_URL } from "../../config";
-import { EmptyOfferData, IOffer } from "../../models/IOffer";
-import { IOfferCreateData } from "../../pages/Offer/Offers/CreateOfferModal";
+import { EmptyOfferData, OfferData } from "../../models/IOffer";
+import { IOfferCreateData } from "../../pages/OfferOld/Offers/CreateOfferModal";
 import { IMessage } from "../../models/IMessage";
 
 const auth = () => ({
@@ -64,7 +64,6 @@ export const fetchLogin = (tg: any) => async (dispatch: AppDispatch) => {
     const params = new URLSearchParams(tg.initData);
 
     const hash = params.get("hash") || "";
-    console.log(777, tg, params, hash);
 
     dispatch(authSlice.actions.loginFetching());
     const response = await axios.post<any>(`${API_URL}${api.auth.login}`, {
@@ -89,7 +88,7 @@ export const logOut = (navigate: any) => (dispatch: AppDispatch) => {
 export const fetchOffers = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(offerSlice.actions.offersFetching());
-    const response = await axios.get<IOffer[]>(
+    const response = await axios.get<OfferData[]>(
       `${API_URL}${api.offer.getOffers}`,
       auth()
     );
@@ -104,7 +103,7 @@ export const createOffer =
   async (dispatch: AppDispatch) => {
     try {
       dispatch(offerSlice.actions.createOfferFetching());
-      const response = await axios.post<any>(
+      const response = await axios.post(
         `${API_URL}${api.offer.createOffer}`,
         data,
         auth()
@@ -131,7 +130,7 @@ export const clearNewOffer = () => async (dispatch: AppDispatch) => {
 export const fetchOffer = (id: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(offerSlice.actions.offerFetching());
-    const response = await axios.get<IOffer>(
+    const response = await axios.get<OfferData>(
       `${API_URL}${api.offer.getOffer}/${id}`,
       auth()
     );
