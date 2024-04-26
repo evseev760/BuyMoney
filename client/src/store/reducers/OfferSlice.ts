@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EmptyOfferData, IOffer } from "../../models/IOffer";
+import { EmptyOfferData, OfferData } from "../../models/IOffer";
 
 import { IMessage } from "../../models/IMessage";
 
 interface IOfferState {
-  offers: IOffer[];
+  offers: OfferData[];
   offersIsLoading: boolean;
   offerIsLoading: boolean;
   createOfferIsLoading: boolean;
@@ -22,13 +22,13 @@ interface IOfferState {
 const emptyOfferData: EmptyOfferData = {
   currency: "usd",
   forPayment: "tether",
-  isFixPrice: "fix",
+  typeOfPrice: "fix",
   price: undefined,
   interestPrice: undefined,
   quantity: undefined,
   minQuantity: undefined,
   delivery: {
-    isDelivered: undefined,
+    isDelivered: false,
     price: undefined,
     distance: undefined,
   },
@@ -58,7 +58,7 @@ export const offerSlice = createSlice({
     offersFetching: (state) => {
       state.offersIsLoading = true;
     },
-    offersSuccess: (state, action: PayloadAction<IOffer[]>) => {
+    offersSuccess: (state, action: PayloadAction<OfferData[]>) => {
       state.offersIsLoading = false;
       state.offers = action.payload;
       state.error = "";
@@ -101,10 +101,10 @@ export const offerSlice = createSlice({
     offerFetching: (state) => {
       state.offerIsLoading = true;
     },
-    offerSuccess: (state, action: PayloadAction<IOffer>) => {
+    offerSuccess: (state, action: PayloadAction<OfferData>) => {
       state.offerIsLoading = false;
       state.currentOfferData = action.payload;
-      state.currentOffer = action.payload._id || "";
+      state.currentOffer = action.payload.id || "";
       state.error = "";
     },
     offerError: (state, action: PayloadAction<string>) => {

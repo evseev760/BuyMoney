@@ -110,8 +110,8 @@ export const Offer = () => {
   //   socket.current.on("connect", () => {});
   //   socket.current.on("addMessage", (data: any) => {
   //     if (
-  //       data.userId !== currentUser._id &&
-  //       data.offerId === currentOfferData._id
+  //       data.userId !== currentUser.id &&
+  //       data.offerId === currentOfferData.id
   //     )
   //       dispatch(fetchProposals(data.offerId));
   //   });
@@ -135,11 +135,11 @@ export const Offer = () => {
   //   const createdAt = moment().unix();
   //   dispatch(
   //     addProposal(
-  //       { offerId: currentOfferData._id, quantity: +message, createdAt },
+  //       { offerId: currentOfferData.id, quantity: +message, createdAt },
   //       () => {
   //         socket.current.emit("addMessage", {
-  //           offerId: currentOfferData._id,
-  //           userId: currentUser._id,
+  //           offerId: currentOfferData.id,
+  //           userId: currentUser.id,
   //           createdAt,
   //         });
   //       }
@@ -162,7 +162,7 @@ export const Offer = () => {
   //         {!offerIsLoading ? (
   //           proposals.map((message) => (
   //             <Message
-  //               key={message._id}
+  //               key={message.id}
   //               {...message}
   //               currentUser={currentUser}
   //             />

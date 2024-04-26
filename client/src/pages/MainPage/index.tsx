@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useTg } from "../../hooks/useTg";
+import { useEffect, useState } from "react";
+import { useTg } from "hooks/useTg";
 import { ActionButton } from "components/Button";
 import styled from "styled-components";
 import ListDividers from "components/List";
@@ -9,25 +9,22 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
-import { fetchPrice } from "store/reducers/ActionCreators";
 import { useAppDispatch } from "hooks/redux";
-import { FiatCurrency, CryptoCurrency } from "models/Currency";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 
 export const Mainpage = () => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { onToggleMainButton, onToggleBackButton, onToggleSettingsButton } =
-    useTg();
+  // const { onToggleMainButton, onToggleBackButton, onToggleSettingsButton } =
+  //   useTg();
 
-  useEffect(() => {
-    // onToggleMainButton(() => setValue("Mane done"));
-    // onToggleSettingsButton(() => setValue("Settings"));
-    // onToggleBackButton();
-    // dispatch(fetchPrice(CryptoCurrency.USDT, FiatCurrency.THB));
-  }, []);
-  const [value, setValue] = useState("");
+  // useEffect(() => {
+  //   // onToggleMainButton(() => setValue("Mane done"));
+  //   // onToggleSettingsButton(() => setValue("Settings"));
+  //   // onToggleBackButton();
+  //   // dispatch(fetchPrice(CryptoCurrency.USDT, FiatCurrency.THB));
+  // }, []);
 
   const listArr = [
     {
@@ -56,7 +53,7 @@ export const Mainpage = () => {
       <ButtonsContainer className="mainPage_buttonsContainer">
         <ActionButton
           text="Купить"
-          handleClick={() => {}}
+          handleClick={() => navigate(RouteNames.OFFERS)}
           icon={<AccountBalanceWalletOutlinedIcon />}
         />
         <ActionButton

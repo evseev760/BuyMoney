@@ -7,7 +7,7 @@ import { CreateOfferModal } from "./CreateOfferModal";
 import { OfferView } from "./OfferView";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { RouteNames } from "../../../router";
-import { IOffer } from "../../../models/IOffer";
+import { OfferData } from "../../../models/IOffer";
 import { WS_URL } from "../../../config";
 import { fetchOffers } from "../../../store/reducers/ActionCreators";
 
@@ -55,7 +55,7 @@ export default function Offers() {
 
   const onOfferCreated = () => {
     socket.current.emit("offerCreated", {
-      userId: currentUser._id,
+      userId: currentUser.id,
     });
   };
 
@@ -64,8 +64,8 @@ export default function Offers() {
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {!offersIsLoading ? (
-            [undefined, ...offers].map((offer?: IOffer) => (
-              <Grid item key={offer?._id || 1} xs={12} sm={12}>
+            [undefined, ...offers].map((offer?: OfferData) => (
+              <Grid item key={offer?.id || 1} xs={12} sm={12}>
                 <Card className={classes.card}>
                   {offer ? (
                     <OfferView

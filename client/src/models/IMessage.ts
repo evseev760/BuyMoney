@@ -5,5 +5,5 @@ export interface IMessage {
   user: IUser;
   chat: string;
   createdAt: number;
-  _id: string;
+  id: string;
 }

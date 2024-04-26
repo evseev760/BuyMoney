@@ -31,8 +31,16 @@ class offerController {
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Ошибка при создании", errors });
       }
-      console.log(2121212, req.body);
-      const { currency, quantity, price, forPayment, location } = req.body;
+      const {
+        currency,
+        quantity,
+        price,
+        forPayment,
+        delivery,
+        minQuantity,
+        typeOfPrice,
+        interestPrice,
+      } = req.body;
       const candidate = await Offer.findOne({
         currency,
         mainUser: req.user.id,
@@ -49,14 +57,17 @@ class offerController {
         mainUsername: user.username,
         currency,
         quantity,
+        minQuantity,
         price,
+        typeOfPrice,
+        interestPrice,
         forPayment,
-        location,
-
+        location: user.location,
+        delivery,
         proposals: [],
       });
       await offer.save();
-      return res.json({ message: "Офер успешно создан", offerId: offer._id });
+      return res.json({ message: "Офер успешно создан", offerId: offer.id });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: "Offer create error", err: e });
@@ -82,9 +93,7 @@ class offerController {
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Ошибка запроса", errors });
       }
-      console.log(66666, req.query.crypto, req.query.fiat);
       const response = await getCryptoPrice(req.query.crypto, req.query.fiat);
-      console.log(777777, response);
       res.json(response);
     } catch (e) {
       console.log(e);
@@ -98,25 +107,25 @@ class offerController {
           .status(400)
           .json({ message: "Ошибка запроса предложений", errors });
       }
-      const offer = await Offer.findOne({ _id: req.params.offerId });
+      const offer = await Offer.findOne({ id: req.params.offerId });
       if (!offer) {
         return res.status(400).json({ message: "Offer не найден", errors });
       }
 
       const proposals = offer.proposals.length
         ? await Proposal.find({
-            $or: offer.proposals.map((id) => ({ _id: id })),
+            $or: offer.proposals.map((id) => ({ id: id })),
           })
         : [];
       if (!offer.users.includes(req.user.id)) {
         await Offer.updateOne(
-          { _id: req.params.offerId },
+          { id: req.params.offerId },
           { $push: { users: req.user.id } }
         );
       }
       const users = offer.users.length
         ? await User.find({
-            $or: [...offer.users, req.user.id].map((id) => ({ _id: id })),
+            $or: [...offer.users, req.user.id].map((id) => ({ id: id })),
           })
         : [];
       const mainUser = await User.findOne({ _id: offer.mainUser });
@@ -126,11 +135,12 @@ class offerController {
         proposals,
         currency: offer.currency,
         quantity: offer.quantity,
+        minQuantity: offer.minQuantity,
         price: offer.price,
         forPayment: offer.forPayment,
         location: offer.location,
         users,
-        _id: offer._id,
+        id: offer.id,
       });
     } catch (e) {
       console.log(e);
@@ -165,7 +175,7 @@ class offerController {
 
       const user = await User.findOne({ _id: req.user.id });
       const proposal = new Proposal({
-        user: user._id,
+        user: user.id,
         username: user.username,
         quantity,
         offerId,
@@ -174,8 +184,8 @@ class offerController {
       await proposal.save();
 
       await Offer.updateOne(
-        { _id: offerId },
-        { $push: { proposals: proposal._id } }
+        { id: offerId },
+        { $push: { proposals: proposal.id } }
       );
       return res.json({ message: "Заявка отправлена" });
     } catch (e) {

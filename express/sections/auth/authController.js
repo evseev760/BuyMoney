@@ -11,7 +11,6 @@ const generateAccessToken = (id, name) => {
     id,
     name,
   };
-  console.log(55555, payload);
   return jwt.sign(payload, config.get("secretKey"), { expiresIn: "24h" });
 };
 
@@ -69,8 +68,7 @@ class authController {
         user = await newUser.save();
       }
       // Создаем токен доступа
-      const token = generateAccessToken(user._id, initData.username);
-
+      const token = generateAccessToken(user.id, initData.username);
       return res.json({
         token,
         user: {
@@ -81,7 +79,7 @@ class authController {
           languageCode: user.languageCode,
           allowsWriteToPm: user.allowsWriteToPm,
           authDate: user.authDate,
-          _id: user._id,
+          id: user.id,
         },
       });
     } catch (e) {
@@ -93,7 +91,7 @@ class authController {
   async auth(req, res) {
     try {
       const user = await User.findOne({ _id: req.user.id });
-      const token = generateAccessToken(user._id, user.username);
+      const token = generateAccessToken(user.id, user.username);
       return res.json({
         token,
         user: {
@@ -104,7 +102,8 @@ class authController {
           languageCode: user.languageCode,
           allowsWriteToPm: user.allowsWriteToPm,
           authDate: user.authDate,
-          _id: user._id,
+          location: user.location,
+          id: user.id,
         },
       });
     } catch (e) {

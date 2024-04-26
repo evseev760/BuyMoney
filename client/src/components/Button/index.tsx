@@ -11,7 +11,7 @@ export const ActionButton = (props: ButtonProps) => {
   const { text, handleClick, icon } = props;
   const { themeParams } = useTg();
   return (
-    <StyledButton onClick={handleClick}>
+    <StyledButton disableRipple onClick={handleClick}>
       {icon && <IconContainer>{icon}</IconContainer>}
       {text}
     </StyledButton>
@@ -26,7 +26,9 @@ const StyledButton = styled(Button)`
     flex-grow: 1;
     height: 48px;
     border-radius: 12px;
-
+    & svg {
+      fill: ${theme.palette.button.primary};
+    }
     &:hover {
       background-color: ${theme.palette.button.secondary};
       color: ${theme.palette.text.primary};

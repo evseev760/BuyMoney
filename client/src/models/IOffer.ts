@@ -8,21 +8,24 @@ export interface DeliveryValues {
   distance?: number;
 }
 
-export interface IOffer {
-  mainUser?: IUser;
+export interface OfferData {
+  mainUser: IUser;
   currency: string;
   forPayment: string;
-  isFixPrice: string;
+  typeOfPrice: string;
+  interestPrice: number;
   price: number;
   quantity: number;
   minQuantity: number;
   delivery: DeliveryValues;
-  _id?: string;
+  mainUsername: string;
+  id?: string;
+  _id: string;
 }
 export interface EmptyOfferData {
   currency?: string;
   forPayment?: string;
-  isFixPrice?: string;
+  typeOfPrice?: string;
   price?: number;
   interestPrice?: number;
   quantity?: number;
