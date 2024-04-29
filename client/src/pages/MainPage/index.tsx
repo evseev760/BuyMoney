@@ -12,10 +12,12 @@ import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
 import { useAppDispatch } from "hooks/redux";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
+import { TonConnectButton } from "@tonconnect/ui-react";
 
 export const Mainpage = () => {
   // const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   // const { onToggleMainButton, onToggleBackButton, onToggleSettingsButton } =
   //   useTg();
 
@@ -50,6 +52,7 @@ export const Mainpage = () => {
       <Description>
         Покупайте и продавайте наличные где бы вы ни были
       </Description>
+      <TonConnectButton />
       <ButtonsContainer className="mainPage_buttonsContainer">
         <ActionButton
           text="Купить"
