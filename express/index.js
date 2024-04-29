@@ -12,8 +12,9 @@ const PORT = process.env.PORT || config.get("PORT");
 
 const authRouter = require("./sections/auth/authRouter");
 const offerRouter = require("./sections/offer/offerRouter");
-const telegramBot = require("./telegramBot");
-const socketHandler = require("./socketHandler");
+const verificationRouter = require("./sections/tonConnectVerification/verificationRouter");
+// const telegramBot = require("./telegramBot");
+// const socketHandler = require("./socketHandler");
 
 const app = express();
 
@@ -24,8 +25,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/offer", offerRouter);
+app.use("/verify", verificationRouter);
 
-const webhookUrl = "https://pocketmoneytg.ru";
+const webhookUrl = config.get("APP_URL");
 
 const privateKey = fs.readFileSync("/etc/ssl/private/privatekey.pem", "utf8");
 const certificate = fs.readFileSync(

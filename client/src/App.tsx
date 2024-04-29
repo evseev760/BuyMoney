@@ -5,34 +5,15 @@ import { fetchAuth, fetchLogin } from "./store/reducers/ActionCreators";
 import { useAppDispatch } from "./hooks/redux";
 import { useTg } from "./hooks/useTg";
 import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./theme";
-import { darkTheme } from "theme/darkTheme";
+import { lightTheme, darkTheme } from "./theme";
+// import { darkTheme } from "theme/darkTheme";
 import { Theme } from "models/Theme";
-import { Token } from "@mui/icons-material";
+import BackendTokenProvider from "TonConnectVerification";
 
 function App() {
   const dispatch = useAppDispatch();
   const { tg } = useTg();
   const isDark = tg.colorScheme === "dark";
-  //@ts-ignore
-  console.log(8888, tg, window.Telegram);
-  // if (navigator.geolocation) {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (position) => {
-  //       const latitude = position.coords.latitude;
-  //       const longitude = position.coords.longitude;
-  //       console.log("Широта:", latitude);
-  //       console.log("Долгота:", longitude);
-
-  //       // Далее вы можете использовать полученные координаты
-  //     },
-  //     (error) => {
-  //       console.error("Ошибка при получении местоположения:", error);
-  //     }
-  //   );
-  // } else {
-  //   console.error("Geolocation не поддерживается этим браузером.");
-  // }
   const theme: Theme = isDark ? darkTheme : lightTheme;
   const bgColor = theme.palette.background.primary;
   useEffect(() => {
@@ -47,11 +28,13 @@ function App() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: bgColor }} className="App">
-      <ThemeProvider theme={theme}>
-        <Router />
-      </ThemeProvider>
-    </div>
+    <BackendTokenProvider>
+      <div style={{ backgroundColor: bgColor }} className="App">
+        <ThemeProvider theme={theme}>
+          <Router />
+        </ThemeProvider>
+      </div>
+    </BackendTokenProvider>
   );
 }
 

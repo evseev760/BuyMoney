@@ -20,13 +20,17 @@ a {
  */
 
 .App {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: sans-serif;
+}
+.App::-webkit-scrollbar {
+  width: 0; /* Ширина полосы прокрутки */
+  height: 0; /* Высота полосы прокрутки (для горизонтальной прокрутки) */
 }
 .App * {
-    font-family: sans-serif !important;
+  font-family: sans-serif !important;
 }

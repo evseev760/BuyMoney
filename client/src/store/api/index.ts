@@ -13,6 +13,10 @@ interface IApi {
     getProposals: string;
     getPrice: string;
   };
+  verify: {
+    generatePayload: string;
+    checkProof: string;
+  };
 }
 export const api: IApi = {
   auth: {
@@ -28,5 +32,9 @@ export const api: IApi = {
     addProposal: "offer/addProposal",
     getProposals: "offer/getProposals",
     getPrice: "offer/getPrice",
+  },
+  verify: {
+    generatePayload: "verify/generatePayload",
+    checkProof: "verify/checkProof",
   },
 };

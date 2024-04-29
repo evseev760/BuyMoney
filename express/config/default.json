@@ -3,5 +3,7 @@
   "secretKey": "***REMOVED***",
   "PORT": "443",
   "WS_PORT": "3002",
-  "BOT_TOKEN": "***REMOVED***"
+  "BOT_TOKEN": "***REMOVED***",
+  "APP_URL": "https://pocketmoneytg.ru",
+  "APP_DOMEN": "pocketmoneytg.ru"
 }
