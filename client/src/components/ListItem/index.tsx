@@ -1,4 +1,5 @@
 import { ListItem, ListItemText } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import { DrawerComponent } from "components/Drawer";
 import { Theme } from "models/Theme";
 import styled, { DefaultTheme, css } from "styled-components";
@@ -7,7 +8,9 @@ interface ListItemProps {
   handleClick: () => void;
   label: string;
   icon?: any;
-  value?: string;
+  value?: string | JSX.Element;
+  disable?: boolean;
+  isLoading?: boolean;
 }
 
 export const ListItemComponent = ({
@@ -15,15 +18,28 @@ export const ListItemComponent = ({
   label,
   icon,
   value,
+  disable,
+  isLoading,
 }: ListItemProps) => {
   return (
-    <ListItemContainer>
-      <StyledListItem button disableRipple onClick={handleClick}>
-        {icon && <IconContainer>{icon}</IconContainer>}
-        <ListItemText primary={label} />
-        <StyledValue>{value && value}</StyledValue>
-      </StyledListItem>
-    </ListItemContainer>
+    <>
+      {isLoading ? (
+        <Skeleton height={48} />
+      ) : (
+        <ListItemContainer>
+          <StyledListItem
+            disabled={disable}
+            button
+            disableRipple
+            onClick={handleClick}
+          >
+            {icon && <IconContainer>{icon}</IconContainer>}
+            <ListItemText primary={label} />
+            <StyledValue>{value && value}</StyledValue>
+          </StyledListItem>
+        </ListItemContainer>
+      )}
+    </>
   );
 };
 

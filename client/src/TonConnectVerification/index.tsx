@@ -11,18 +11,23 @@ import React, {
   useState,
 } from "react";
 import {
+  Wallet,
   useIsConnectionRestored,
   useTonConnectUI,
   useTonWallet,
-  useTonConnectModal,
 } from "@tonconnect/ui-react";
-import { checkProof, generatePayload } from "store/reducers/ActionCreators";
+import {
+  checkProof,
+  generatePayload,
+  authWallet,
+} from "store/reducers/verification/ActionCreators";
 import { useAppDispatch } from "hooks/redux";
 import { TonProof } from "models/Verify";
 
 interface BackendTokenContextType {
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  wallet: Wallet | null;
 }
 
 const BackendTokenContext = createContext<BackendTokenContextType | undefined>(
@@ -30,12 +35,10 @@ const BackendTokenContext = createContext<BackendTokenContextType | undefined>(
 );
 const payloadTTLMS = 1000 * 200; //* 60;
 
-export const useBackendToken = () => {
+export const useWalletData = () => {
   const context = useContext(BackendTokenContext);
   if (!context) {
-    throw new Error(
-      "useBackendToken must be used within a BackendTokenProvider"
-    );
+    throw new Error("useWalletData must be used within a BackendTokenProvider");
   }
   return context;
 };
@@ -44,21 +47,10 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const isConnectionRestored = useIsConnectionRestored();
   const wallet = useTonWallet();
-  const [tonConnectUI, setOptions] = useTonConnectUI();
+  const [tonConnectUI] = useTonConnectUI();
   const interval = useRef<ReturnType<typeof setInterval> | undefined>();
   const dispatch = useAppDispatch();
-  const { open } = useTonConnectModal();
-  const localStorageKey = "tonConnect-auth-token";
-  useEffect(() => {
-    open();
-    tonConnectUI.onStatusChange((wallet) => {
-      console.log(999999, wallet);
-
-      // if (wallet.connectItems?.tonProof && 'proof' in wallet.connectItems.tonProof) {
-      //     checkProofInYourBackend(wallet.connectItems.tonProof.proof, wallet.account);
-      // }
-    });
-  }, []);
+  const localStorageKey = "walletToken";
 
   useEffect(() => {
     if (!isConnectionRestored || !setToken) {
@@ -67,21 +59,17 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
 
     clearInterval(interval.current);
 
-    const refreshPayload = async () => {
-      tonConnectUI.setConnectRequestParameters({ state: "loading" });
-
-      const value = await dispatch(generatePayload()); // Используем новую функцию генерации payload
-      if (!value) {
-        tonConnectUI.setConnectRequestParameters(null);
-      } else {
-        tonConnectUI.setConnectRequestParameters({ state: "ready", value });
-        console.log(555, value, wallet);
-      }
-    };
-    // refreshPayload();
-
     if (!wallet) {
-      console.log("!!!!!!!!!!");
+      const refreshPayload = async () => {
+        tonConnectUI.setConnectRequestParameters({ state: "loading" });
+
+        const value = await dispatch(generatePayload()); // Используем новую функцию генерации payload
+        if (!value) {
+          tonConnectUI.setConnectRequestParameters(null);
+        } else {
+          tonConnectUI.setConnectRequestParameters({ state: "ready", value });
+        }
+      };
       localStorage.removeItem(localStorageKey);
       setToken(null);
 
@@ -91,16 +79,18 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const token = localStorage.getItem(localStorageKey);
-    console.log(1111, wallet && { ...wallet }, token);
     if (token) {
-      setToken(token);
+      dispatch(authWallet(wallet.account)).then((result) => {
+        if (result) {
+          setToken(result);
+          localStorage.setItem(localStorageKey, result);
+        } else {
+          alert("Please try another wallet");
+          tonConnectUI.disconnect();
+        }
+      });
       return;
     }
-    console.log(
-      6666,
-      wallet.connectItems?.tonProof &&
-        !("error" in wallet.connectItems.tonProof)
-    );
 
     if (
       wallet.connectItems?.tonProof &&
@@ -114,8 +104,8 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
       };
       dispatch(checkProof(proof, wallet.account)).then((result) => {
         if (result) {
-          setToken(result + "");
-          localStorage.setItem(localStorageKey, result + "");
+          setToken(result);
+          localStorage.setItem(localStorageKey, result);
         } else {
           alert("Please try another wallet");
           tonConnectUI.disconnect();
@@ -128,7 +118,7 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
   }, [wallet, isConnectionRestored, setToken]);
 
   return (
-    <BackendTokenContext.Provider value={{ token, setToken }}>
+    <BackendTokenContext.Provider value={{ token, setToken, wallet }}>
       {children}
     </BackendTokenContext.Provider>
   );

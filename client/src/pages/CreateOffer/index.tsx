@@ -3,22 +3,18 @@ import { useTg } from "hooks/useTg";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
-import { CurrencySelect } from "./components/selectCurrency";
+import { CurrencySelect } from "components/selectCurrency";
 import { DrawerComponent } from "components/Drawer";
+import currensies from "utils/criptocurrency.json";
 import {
   clearNewOffer,
   createOffer,
-  fetchPrice,
   setNewOffer,
-} from "store/reducers/ActionCreators";
+} from "store/reducers/offer/ActionCreators";
+
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import {
-  fiatCurrenciesArray,
-  criptoCurrenciesArray,
-  SelectItem,
-  getLabel,
-} from "models/Currency";
+import { SelectItem, getLabel } from "utils/Currency";
 import { MarketPrice } from "./components/marketPrice";
 import { FixPriceInput } from "./components/FixPriceInput";
 import { FlexPriceInput } from "./components/FlexPriceInput";
@@ -26,43 +22,85 @@ import { YourFlexPrice } from "./components/YourFlexPrice";
 import { Quantity } from "./components/Quantity";
 import { Delivery } from "./components/Delivery";
 import { DeliveryValues } from "models/IOffer";
+import { Currency } from "models/Currency";
+import { useCurrencies } from "hooks/useCurrencies";
+import { CommentInput } from "./components/Comment";
+import { useLocalStorage } from "hooks/useLocalStorage";
 
 interface Drawers {
   fiatCurrency: JSX.Element;
   cryptoCurrency: JSX.Element;
   priceType: JSX.Element;
+  paymentMethods: JSX.Element;
 }
-type Draver = "fiatCurrency" | "cryptoCurrency" | "priceType" | undefined;
+type Draver =
+  | "fiatCurrency"
+  | "cryptoCurrency"
+  | "paymentMethods"
+  | "priceType"
+  | undefined;
 
 export const CreateOffer = () => {
   const navigate = useNavigate();
   const {
     tg,
     onToggleBackButton,
+    setBackButtonCallBack,
+    offBackButtonCallBack,
     onToggleMainButton,
     setMainButtonCallBack,
     offMainButtonCallBack,
   } = useTg();
+  const { setLocalValue, LocalStorageKey } = useLocalStorage();
   const dispatch = useAppDispatch();
-  const { newOffer, price, createOfferIsLoading } = useAppSelector(
+  const { newOffer, createOfferIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
+  const {
+    price,
+    currencies,
+    cripto,
+    forPaymentArr,
+    currenciesIsloading,
+    getPrice,
+    isValidInterestPrice,
+    isValidPrice,
+  } = useCurrencies();
+
   const [isReversePrice, setIsReversePrice] = useState<boolean>();
 
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
-  const backButtonHandler = () => navigate(RouteNames.MAIN);
+  const backButtonHandler = useCallback(() => {
+    if (currentDrawer) {
+      changeDrawer(undefined);
+    } else {
+      navigate(RouteNames.MAIN);
+    }
+  }, [currentDrawer]);
 
   useEffect(() => {
-    onToggleBackButton(backButtonHandler, true);
+    onToggleBackButton(true);
+    setBackButtonCallBack(backButtonHandler);
     return () => {
-      onToggleBackButton(backButtonHandler, false);
+      // onToggleBackButton(false);
+      offBackButtonCallBack(backButtonHandler);
     };
-  }, []);
+  }, [currentDrawer]);
+
+  // useEffect(() => {
+  //   dispatch(setCurrencies(currensies));
+  // }, []);
+
   useEffect(() => {
-    if (newOffer.currency && newOffer.forPayment) {
-      dispatch(fetchPrice(newOffer.forPayment, newOffer.currency));
+    if (
+      newOffer.currency &&
+      newOffer.forPayment &&
+      cripto.data.length &&
+      currencies.data.length
+    ) {
+      getPrice(newOffer.currency, newOffer.forPayment);
     }
-  }, [newOffer.currency, newOffer.forPayment]);
+  }, [newOffer.currency, newOffer.forPayment, currencies, cripto]);
   const submitCreateOffer = useCallback(() => {
     const callback = () => {
       tg.MainButton.hideProgress();
@@ -80,15 +118,15 @@ export const CreateOffer = () => {
   }, [newOffer]);
 
   useEffect(() => {
+    if (!newOffer) return;
+    const isValidPriceCondition =
+      (newOffer.typeOfPrice === "fix" &&
+        isValidPrice(marketPrice, newOffer.price)) ||
+      (newOffer.typeOfPrice === "flex" &&
+        isValidInterestPrice(newOffer.interestPrice));
+
     if (
-      ((newOffer.typeOfPrice === "fix" &&
-        isValidPrice(marketPrice, newOffer.price) &&
-        newOffer.price) ||
-        (newOffer.typeOfPrice === "flex" &&
-          isValidInterestPrice(
-            newOffer.interestPrice && newOffer.interestPrice
-          ) &&
-          newOffer.interestPrice)) &&
+      isValidPriceCondition &&
       isValidMinQuantity() &&
       newOffer.minQuantity &&
       newOffer.quantity
@@ -105,35 +143,9 @@ export const CreateOffer = () => {
   const changeDrawer = (value: Draver) => {
     setCurrentDrawer(value);
   };
-  const marketPrice = useMemo<number>(() => {
-    if (
-      price &&
-      newOffer.forPayment &&
-      newOffer.currency &&
-      price.data &&
-      price.data[newOffer.forPayment]
-    ) {
-      return price.data[newOffer.forPayment][newOffer.currency];
-    }
-    return undefined;
-  }, [price]);
-  const isValidPrice = (mainValue: number, value?: number) => {
-    const upperLimit = mainValue * 1.5;
-    const bottomLimit = mainValue * 0.7;
-    if (!value) return true;
-    if (value && value >= 1 / upperLimit && value <= 1 / bottomLimit) {
-      return true;
-    }
-    return false;
-  };
-  const isValidInterestPrice = (value?: number) => {
-    if (value && value >= 70 && value <= 150) {
-      return true;
-    }
-    return false;
-  };
+  const marketPrice = price?.data?.price;
+
   const isValidMinQuantity = () => {
-    // if()
     return newOffer.minQuantity && newOffer.quantity
       ? newOffer.minQuantity <= newOffer.quantity
       : true;
@@ -147,6 +159,7 @@ export const CreateOffer = () => {
         price: undefined,
       })
     );
+    setLocalValue(LocalStorageKey.newOfferCurrency, value);
     changeDrawer(undefined);
   };
   const onCryptoChange = (value: string) => {
@@ -156,9 +169,30 @@ export const CreateOffer = () => {
         forPayment: value,
         interestPrice: undefined,
         price: undefined,
+        paymentMethods: undefined,
       })
     );
+    setLocalValue(LocalStorageKey.newOfferForPayment, value);
     changeDrawer(undefined);
+  };
+  const onPaymentMethodChange = (value: string) => {
+    const getMethods = () => {
+      if (newOffer?.paymentMethods) {
+        return newOffer.paymentMethods.includes(value)
+          ? newOffer.paymentMethods.filter((item) => item !== value)
+          : [...newOffer.paymentMethods, value];
+      } else {
+        return [value];
+      }
+    };
+    dispatch(
+      setNewOffer({
+        ...newOffer,
+        paymentMethods: getMethods(),
+      })
+    );
+
+    // changeDrawer(undefined);
   };
   const onPriceTypeChange = (value: string) => {
     if (value === "fix") {
@@ -185,8 +219,6 @@ export const CreateOffer = () => {
     } else {
       dispatch(setNewOffer({ ...newOffer, price: value })); // Иначе сохраняем стандартную цену
     }
-    // if (Number.isNaN(+value)) return;
-    // dispatch(setNewOffer({ ...newOffer, price: value }));
   };
   const onInterestPriceChange = (value: number) => {
     dispatch(setNewOffer({ ...newOffer, interestPrice: value }));
@@ -200,6 +232,9 @@ export const CreateOffer = () => {
   };
   const onMinQuantityChange = (value?: number) => {
     dispatch(setNewOffer({ ...newOffer, minQuantity: value }));
+  };
+  const onCommentChange = (value?: string) => {
+    dispatch(setNewOffer({ ...newOffer, comment: value }));
   };
   const onDeliveryChange = (value: DeliveryValues) => {
     dispatch(setNewOffer({ ...newOffer, delivery: value }));
@@ -229,17 +264,37 @@ export const CreateOffer = () => {
     {
       label: "Продать валюту",
       handleClick: () => changeDrawer("fiatCurrency"),
-      value: getListViewValue(fiatCurrenciesArray, newOffer.currency),
+      value: getListViewValue(currencies.data, newOffer.currency),
+      isLoading: currenciesIsloading,
     },
     {
       label: "Принимаю к оплате",
       handleClick: () => changeDrawer("cryptoCurrency"),
-      value: getListViewValue(criptoCurrenciesArray, newOffer.forPayment),
+      value: getListViewValue(forPaymentArr, newOffer.forPayment),
+      isLoading: currenciesIsloading,
+    },
+    {
+      label: "Способ оплаты",
+      handleClick: () => changeDrawer("paymentMethods"),
+      value: newOffer.paymentMethods?.length
+        ? `${getListViewValue(
+            forPaymentArr.find(
+              (item: Currency) => item.code === newOffer.forPayment
+            )?.paymentMethodsList || [],
+            newOffer.paymentMethods[0]
+          )} ${
+            Number(newOffer.paymentMethods?.length) > 1
+              ? " +" + Number(newOffer.paymentMethods?.length - 1)
+              : ""
+          }`
+        : "-",
+      isLoading: currenciesIsloading,
     },
     {
       label: "Тип цены",
       handleClick: () => changeDrawer("priceType"),
       value: getListViewValue(priceTypes, newOffer.typeOfPrice),
+      isLoading: currenciesIsloading,
     },
   ];
   const drawers: Drawers = {
@@ -247,14 +302,27 @@ export const CreateOffer = () => {
       <CurrencySelect
         handleSelect={onFiatChange}
         currentValue={newOffer.currency}
-        array={fiatCurrenciesArray}
+        array={currencies.data}
       />
     ),
     cryptoCurrency: (
       <CurrencySelect
         handleSelect={onCryptoChange}
         currentValue={newOffer.forPayment}
-        array={criptoCurrenciesArray}
+        array={forPaymentArr}
+      />
+    ),
+    paymentMethods: (
+      <CurrencySelect
+        handleSelect={onPaymentMethodChange}
+        currentValue={
+          newOffer.paymentMethods?.length ? newOffer.paymentMethods : ""
+        }
+        array={
+          forPaymentArr.find(
+            (item: Currency) => item.code === newOffer.forPayment
+          )?.paymentMethodsList || []
+        }
       />
     ),
     priceType: (
@@ -265,7 +333,7 @@ export const CreateOffer = () => {
       />
     ),
   };
-  console.log(555, newOffer);
+  // console.log(555, price, marketPrice);
   return (
     <>
       <div>Создайте объявление</div>
@@ -275,11 +343,12 @@ export const CreateOffer = () => {
         <FixPriceInput
           onChange={onPriceChange}
           value={getFixPriceValue(newOffer.price)}
-          firstCurrency={getLabel(fiatCurrenciesArray, newOffer.currency)}
-          secondCurrency={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
+          firstCurrency={getLabel(currencies.data, newOffer.currency)}
+          secondCurrency={getLabel(forPaymentArr, newOffer.forPayment)}
           isReversePrice={!!isReversePrice}
           isValid={isValidPrice(marketPrice, newOffer.price)}
           setIsReversePrice={onChangeIsReversePrice}
+          isLoading={currenciesIsloading}
         />
       )}
       {newOffer.typeOfPrice === "flex" && (
@@ -289,20 +358,21 @@ export const CreateOffer = () => {
           isValid={isValidInterestPrice(
             newOffer.interestPrice && newOffer.interestPrice
           )}
+          isLoading={currenciesIsloading}
         />
       )}
-      {price.data && newOffer.currency && newOffer.forPayment && (
+      {!!marketPrice && newOffer.currency && newOffer.forPayment && (
         <MarketPrice
-          isLoading={price.isLoading}
+          isLoading={price.isLoading || currenciesIsloading}
           price={marketPrice}
-          first={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
-          second={getLabel(fiatCurrenciesArray, newOffer.currency)}
+          first={getLabel(forPaymentArr, newOffer.forPayment)}
+          second={getLabel(currencies.data, newOffer.currency)}
           isReversePrice={!!isReversePrice}
         />
       )}
 
       {newOffer.typeOfPrice === "flex" &&
-        price.data &&
+        !!marketPrice &&
         newOffer.currency &&
         newOffer.forPayment && (
           <YourFlexPrice
@@ -312,8 +382,8 @@ export const CreateOffer = () => {
                 ? (marketPrice / newOffer.interestPrice) * 100
                 : 0
             }
-            first={getLabel(criptoCurrenciesArray, newOffer.forPayment)}
-            second={getLabel(fiatCurrenciesArray, newOffer.currency)}
+            first={getLabel(forPaymentArr, newOffer.forPayment)}
+            second={getLabel(currencies.data, newOffer.currency)}
             isReversePrice={!isReversePrice}
           />
         )}
@@ -321,22 +391,33 @@ export const CreateOffer = () => {
         isValid={true}
         onChange={onQuantityChange}
         value={newOffer.quantity}
-        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
+        currency={getLabel(currencies.data, newOffer.currency)}
         label="Количество на продажу"
+        isLoading={currenciesIsloading}
       />
       <Quantity
         isValid={isValidMinQuantity()}
         onChange={onMinQuantityChange}
         value={newOffer.minQuantity}
-        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
+        currency={getLabel(currencies.data, newOffer.currency)}
         label="Сумма минимальной сделки"
+        isLoading={currenciesIsloading}
       />
-      <Delivery
-        deliveryValues={newOffer.delivery}
-        onChange={onDeliveryChange}
-        currency={getLabel(fiatCurrenciesArray, newOffer.currency)}
+      <CommentInput
         isValid={true}
+        onChange={onCommentChange}
+        value={newOffer.comment}
       />
+      {!currenciesIsloading && (
+        <>
+          <Delivery
+            deliveryValues={newOffer.delivery}
+            onChange={onDeliveryChange}
+            currency={getLabel(currencies.data, newOffer.currency)}
+            isValid={true}
+          />
+        </>
+      )}
       <DrawerComponent
         isOpen={!!currentDrawer}
         onClose={() => changeDrawer(undefined)}

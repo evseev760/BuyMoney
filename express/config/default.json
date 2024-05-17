@@ -1,9 +1,12 @@
 {
   "dbUrl": "mongodb+srv://admin:***REMOVED***@cluster0.rx50cdv.mongodb.net/test?retryWrites=true&w=majority",
   "secretKey": "***REMOVED***",
+  "walletSecret": "***REMOVED***",
   "PORT": "443",
   "WS_PORT": "3002",
   "BOT_TOKEN": "***REMOVED***",
-  "APP_URL": "https://pocketmoneytg.ru",
-  "APP_DOMEN": "pocketmoneytg.ru"
+
+  "APP_URL": "https://pocketmoneytg.ru/",
+  "APP_DOMEN": "pocketmoneytg.ru",
+  "X-CMC_PRO_API_KEY": "40e182b8-e141-42c8-b704-5b6cd7dcea17"
 }

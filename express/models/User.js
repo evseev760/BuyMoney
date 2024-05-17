@@ -9,7 +9,20 @@ const User = new Schema({
   languageCode: { type: String },
   allowsWriteToPm: { type: Boolean },
   authDate: { type: Date },
-  location: { type: String },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+    Country: { type: String },
+    City: { type: String },
+  },
   chatId: { type: String },
+  avatar: { type: String },
 });
 module.exports = model("User", User);

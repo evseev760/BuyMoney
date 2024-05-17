@@ -16,6 +16,18 @@ interface IApi {
   verify: {
     generatePayload: string;
     checkProof: string;
+    authWallet: string;
+  };
+  currency: {
+    getPrice: string;
+    getCurrencies: string;
+    getCripto: string;
+    setCurrencies: string;
+    getPriceFiat: string;
+  };
+  application: {
+    createApplication: string;
+    getMyApplications: string;
   };
 }
 export const api: IApi = {
@@ -36,5 +48,17 @@ export const api: IApi = {
   verify: {
     generatePayload: "verify/generatePayload",
     checkProof: "verify/checkProof",
+    authWallet: "verify/authWallet",
+  },
+  currency: {
+    getPrice: "currency/getPrice",
+    getPriceFiat: "currency/getPriceFiat",
+    getCurrencies: "currency/getCurrencies",
+    setCurrencies: "currency/setCurrencies",
+    getCripto: "currency/getCripto",
+  },
+  application: {
+    createApplication: "application/createApplication",
+    getMyApplications: "application/getMyApplications",
   },
 };

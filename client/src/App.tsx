@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Router } from "./router";
 import "./App.css";
-import { fetchAuth, fetchLogin } from "./store/reducers/ActionCreators";
+import { fetchAuth, fetchLogin } from "./store/reducers/auth/ActionCreators";
 import { useAppDispatch } from "./hooks/redux";
 import { useTg } from "./hooks/useTg";
 import { ThemeProvider } from "styled-components";

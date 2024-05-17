@@ -1,0 +1,592 @@
+[
+  {
+    "label": "AED",
+    "paymentMethodsList": [
+      { "label": "Emirates NBD", "code": "emiratesnbd" },
+      { "label": "National Bank of Abu Dhabi FAB", "code": "nbadfab" },
+      { "label": "Al Mashreg Bank", "code": "almashregbank" },
+      { "label": "Abu Dhabi Commercial Bank ADCB", "code": "adcb" },
+      { "label": "Pyypl", "code": "pyypl" },
+      { "label": "EIB: Emirates Islamic Bank", "code": "eib" },
+      { "label": "ADIB: Abu Dhabi Islamic Bank", "code": "adib" },
+      { "label": "mBank", "code": "mbank" },
+      { "label": "Al Hilal Bank", "code": "alhilalbank" }
+    ]
+  },
+  {
+    "label": "AMD",
+    "paymentMethodsList": [
+      { "label": "Unibank", "code": "unibank" },
+      { "label": "IDBank", "code": "idbank" },
+      { "label": "Inecobank", "code": "inecobank" },
+      { "label": "Ameriabank", "code": "ameriabank" },
+      { "label": "Ardshinbank", "code": "ardshinbank" },
+      { "label": "ACBA Bank", "code": "acb" },
+      { "label": "Arca", "code": "arca" },
+      { "label": "Idram", "code": "idram" },
+      { "label": "Evocabank", "code": "evocabank" },
+      { "label": "AraratBank", "code": "araratbank" },
+      { "label": "ConverseBank", "code": "conversebank" },
+      { "label": "ArmBussinessBank", "code": "armbussinessbank" },
+      { "label": "ArmEconomBank", "code": "armeconombank" }
+    ]
+  },
+  {
+    "label": "ARS",
+    "paymentMethodsList": [
+      { "label": "Mercadopago", "code": "mercadopago" },
+      { "label": "Banco del Sol", "code": "bancodelsol" },
+      { "label": "Uala", "code": "uala" },
+      { "label": "Banco Brubank", "code": "brubank" },
+      { "label": "Belo app", "code": "beloapp" },
+      { "label": "Lemon Cash", "code": "lemoncash" },
+      { "label": "Bank Transfer", "code": "banktransfer" },
+      { "label": "Reba", "code": "reba" },
+      { "label": "Banco Santander Argentina", "code": "santanderargentina" },
+      { "label": "BBVA", "code": "bbva" },
+      { "label": "Fiwind", "code": "fiwind" },
+      { "label": "Narania X", "code": "naraniax" },
+      { "label": "Prex", "code": "prex" },
+      { "label": "Satoshi Tango", "code": "satoshitango" },
+      { "label": "Wilobank", "code": "wilobank" }
+    ]
+  },
+  {
+    "label": "AZN",
+    "paymentMethodsList": [
+      { "label": "m10", "code": "m10" },
+      { "label": "Kapital Bank", "code": "kapitalbank" },
+      { "label": "Leobank", "code": "leobank" },
+      { "label": "ABB Bank", "code": "abbbank" },
+      { "label": "Unibank", "code": "unibank" },
+      { "label": "Azer Turk Bank", "code": "azerturkbank" },
+      { "label": "Rabitabank", "code": "rabitabank" },
+      { "label": "Bank Respublika", "code": "bankrespublika" },
+      { "label": "Access Bank", "code": "accessbank" }
+    ]
+  },
+  {
+    "label": "BDT",
+    "paymentMethodsList": [
+      { "label": "Bkash", "code": "bkash" },
+      { "label": "Nagad", "code": "nagad" },
+      { "label": "Rocket", "code": "rocket" }
+    ]
+  },
+  {
+    "label": "BRL",
+    "paymentMethodsList": [
+      { "label": "Pix", "code": "pix" },
+      { "label": "Nubank", "code": "nubank" },
+      { "label": "PicPay", "code": "picpay" },
+      { "label": "Itau Brazil", "code": "itaubrazil" },
+      { "label": "Mercadopago", "code": "mercadopago" },
+      { "label": "inter", "code": "inter" },
+      { "label": "Santander", "code": "santander" },
+      { "label": "PagSeguro", "code": "pagseguro" },
+      { "label": "Bradesco", "code": "bradesco" },
+      { "label": "Banco Brubank", "code": "bancobrubank" },
+      { "label": "Banco del Sol", "code": "bancodelsol" },
+      { "label": "Digio", "code": "digio" },
+      { "label": "C6 Bank", "code": "c6bank" }
+    ]
+  },
+  {
+    "label": "BYN",
+    "paymentMethodsList": [
+      { "label": "ЕРИП Расчет", "code": "eripraschet" },
+      { "label": "Альфа-Банк", "code": "alfabank" },
+      { "label": "Беларусбанк", "code": "belarusbank" },
+      { "label": "Приорбанк", "code": "priorbank" },
+      { "label": "БНБ-банк", "code": "bnbbank" },
+      { "label": "Белгазпромбанк", "code": "belgazprombank" },
+      { "label": "БПС Сбербанк", "code": "bpssberbank" },
+      { "label": "Белагропромбанк", "code": "belagroprombank" },
+      { "label": "Visa Alias", "code": "visaalias" },
+      { "label": "Money", "code": "money" },
+      { "label": "БелВЭБ", "code": "belveb" },
+      { "label": "Тинькофф", "code": "tinkoff" },
+      { "label": "Абсолютбанк", "code": "absolutbank" },
+      { "label": "Оплати", "code": "oplati" },
+      { "label": "Webmonev", "code": "webmonev" }
+    ]
+  },
+  {
+    "label": "COP",
+    "paymentMethodsList": [
+      { "label": "Nequi", "code": "nequi" },
+      { "label": "Bancolombia", "code": "bancolombia" },
+      { "label": "Davivienda", "code": "davivienda" },
+      { "label": "Daviplata", "code": "daviplata" },
+      { "label": "BBVA", "code": "bbva" },
+      { "label": "Banco Caia Social Colombia", "code": "bancocaia" },
+      { "label": "Banco de Bogota", "code": "bancodebogota" },
+      { "label": "Banco Falabella", "code": "bancofalabella" },
+      { "label": "Banco Itau Colombia", "code": "bancoitau" },
+      { "label": "Banco Popular", "code": "bancopopular" },
+      { "label": "Banco Agrario", "code": "bancoagrario" },
+      { "label": "Efecty", "code": "efecty" },
+      { "label": "Movii", "code": "movii" },
+      { "label": "Scotiabank Colpatria", "code": "scotiabankcolpatria" },
+      { "label": "Uala", "code": "uala" },
+      { "label": "DALE", "code": "dale" },
+      { "label": "POWWI", "code": "powwi" },
+      { "label": "Lulo bank", "code": "lulobank" },
+      { "label": "Stone x", "code": "stonex" },
+      { "label": "Sured", "code": "sured" },
+      { "label": "Global66", "code": "global66" },
+      { "label": "Finandina", "code": "finandina" },
+      { "label": "Alianza fiduciaria", "code": "alianzafiduciaria" },
+      { "label": "Coink", "code": "coink" },
+      { "label": "Ding", "code": "ding" }
+    ]
+  },
+  {
+    "label": "ETB",
+    "paymentMethodsList": [
+      { "label": "CBE", "code": "cbe" },
+      { "label": "Tele Birr", "code": "telebirr" },
+      { "label": "Abyssinia", "code": "abyssinia" },
+      { "label": "Awash", "code": "awash" },
+      { "label": "Dashen", "code": "dashen" },
+      { "label": "MPesa Ethiopia", "code": "mpesaethiopia" }
+    ]
+  },
+  {
+    "label": "EUR",
+    "paymentMethodsList": [
+      { "label": "Revolut", "code": "revolut" },
+      { "label": "Wise", "code": "wise" },
+      { "label": "SEPA Instant", "code": "sepainstant" },
+      { "label": "SEPA (EU) bank transfer", "code": "sepabanktransfer" },
+      { "label": "Skrill", "code": "skrill" },
+      { "label": "Payeer", "code": "payeer" },
+      { "label": "Zen", "code": "zen" },
+      { "label": "AdvCash", "code": "advcash" },
+      { "label": "Pavsera", "code": "pavsera" },
+      { "label": "Bank of Georgia", "code": "bankofgeorgia" },
+      { "label": "N26", "code": "n26" },
+      { "label": "Тинькофф", "code": "tinkoff" },
+      { "label": "Perfect Money", "code": "perfectmoney" },
+      { "label": "Webmonev", "code": "webmonev" },
+      { "label": "Raiffeisen Bank", "code": "raiffeisenbank" },
+      { "label": "Банк Фридом Финанс Казахстан", "code": "freedomfinancekz" },
+      { "label": "TBC Bank", "code": "tbcbank" },
+      { "label": "Credo Bank", "code": "credobank" },
+      { "label": "ПУМБ", "code": "pumb" },
+      { "label": "Neteller", "code": "neteller" },
+      { "label": "Liberty Bank", "code": "libertybank" },
+      { "label": "Райффайзен", "code": "raiffeisen" },
+      { "label": "VTB", "code": "vtb" },
+      { "label": "Mono Bank", "code": "monobank" }
+    ]
+  },
+  {
+    "label": "GBP",
+    "paymentMethodsList": [
+      { "label": "Revolut", "code": "revolut" },
+      { "label": "Wise", "code": "wise" },
+      { "label": "Faster Payments Service FPS", "code": "fps" },
+      { "label": "Bank Transfer", "code": "banktransfer" },
+      { "label": "SEPA (EU) bank transfer", "code": "sepabanktransfer" },
+      { "label": "Skrill", "code": "skrill" },
+      { "label": "Payeer", "code": "payeer" },
+      { "label": "Zen", "code": "zen" },
+      { "label": "AdvCash", "code": "advcash" },
+      { "label": "Pavsera", "code": "pavsera" },
+      { "label": "Barclays", "code": "barclays" },
+      { "label": "Halifax", "code": "halifax" },
+      { "label": "Bank of Scotland", "code": "bankofscotland" },
+      { "label": "HSBC", "code": "hsbc" },
+      { "label": "NatWest", "code": "natwest" },
+      { "label": "Lloyds Bank", "code": "lloydsbank" },
+      { "label": "Santander UK", "code": "santanderuk" },
+      { "label": "Monzo", "code": "monzo" },
+      { "label": "TSB", "code": "tsb" },
+      { "label": "Yorkshire Bank", "code": "yorkshirebank" },
+      {
+        "label": "Nationwide Building Society",
+        "code": "nationwidebuildingsociety"
+      },
+      { "label": "Metro Bank", "code": "metrobank" }
+    ]
+  },
+  {
+    "label": "IDR",
+    "paymentMethodsList": [
+      { "label": "BCA", "code": "bca" },
+      { "label": "BNI", "code": "bni" },
+      { "label": "BRI", "code": "bri" },
+      { "label": "Mandiri", "code": "mandiri" },
+      { "label": "Permata", "code": "permata" },
+      { "label": "Maybank", "code": "maybank" },
+      { "label": "OVO", "code": "ovo" },
+      { "label": "Dana", "code": "dana" },
+      { "label": "LinkAja", "code": "linkaja" },
+      { "label": "GoPay", "code": "gopay" },
+      { "label": "ShopeePay", "code": "shopeepay" },
+      { "label": "Alfamart", "code": "alfamart" },
+      { "label": "Indomaret", "code": "indomaret" },
+      { "label": "XL Tunai", "code": "xltunai" },
+      { "label": "Gudang Voucher", "code": "gudangvoucher" },
+      { "label": "Tokopedia", "code": "tokopedia" },
+      { "label": "Bukalapak", "code": "bukalapak" },
+      { "label": "Pulsa", "code": "pulsa" },
+      { "label": "Telkomsel", "code": "telkomsel" },
+      { "label": "Indosat Ooredoo", "code": "indosatooredoo" },
+      { "label": "XL Axiata", "code": "xlaxiata" },
+      { "label": "Smartfren", "code": "smartfren" }
+    ]
+  },
+  {
+    "label": "ILS",
+    "paymentMethodsList": [
+      { "label": "PayPal", "code": "paypal" },
+      { "label": "Bank Transfer", "code": "banktransfer" },
+      { "label": "Wise", "code": "wise" },
+      { "label": "Bit", "code": "bit" },
+      { "label": "Advanced Cash", "code": "advancedcash" },
+      { "label": "Skrill", "code": "skrill" },
+      { "label": "Payoneer", "code": "payoneer" },
+      { "label": "Paysend", "code": "paysend" },
+      { "label": "Perfect Money", "code": "perfectmoney" },
+      { "label": "Epay", "code": "epay" },
+      { "label": "Webmoney", "code": "webmoney" },
+      { "label": "Yandex.Money", "code": "yandexmoney" },
+      { "label": "Qiwi", "code": "qiwi" },
+      { "label": "Neteller", "code": "neteller" },
+      { "label": "Advcash", "code": "advcash" },
+      { "label": "Privat24", "code": "privat24" },
+      { "label": "Monobank", "code": "monobank" },
+      { "label": "N26", "code": "n26" },
+      { "label": "Revolut", "code": "revolut" },
+      { "label": "Papara", "code": "papara" },
+      { "label": "YooMoney", "code": "yoomoney" },
+      { "label": "Leumi Card", "code": "leumicard" },
+      { "label": "Bit2C", "code": "bit2c" },
+      { "label": "Discount Bank", "code": "discountbank" },
+      { "label": "Bank Hapoalim", "code": "bankhapoalim" }
+    ]
+  },
+  {
+    "label": "INR",
+    "paymentMethodsList": [
+      { "label": "Paytm", "code": "paytm" },
+      { "label": "PhonePe", "code": "phonepe" },
+      { "label": "Google Pay", "code": "googlepay" },
+      { "label": "UPI", "code": "upi" },
+      { "label": "Mobikwik", "code": "mobikwik" },
+      { "label": "Freecharge", "code": "freecharge" },
+      { "label": "Razorpay", "code": "razorpay" },
+      { "label": "ICICI Bank", "code": "icicibank" },
+      { "label": "HDFC Bank", "code": "hdfcbank" },
+      { "label": "State Bank of India SBI", "code": "sbi" },
+      { "label": "Kotak Mahindra Bank", "code": "kotakmahindrabank" },
+      { "label": "Axis Bank", "code": "axisbank" },
+      { "label": "Yes Bank", "code": "yesbank" },
+      { "label": "Indian Bank", "code": "indianbank" },
+      { "label": "Bank of Baroda", "code": "bankofbaroda" },
+      { "label": "Canara Bank", "code": "canarabank" },
+      { "label": "Union Bank of India", "code": "unionbankofindia" },
+      { "label": "Punjab National Bank", "code": "punjabnationalbank" },
+      { "label": "IndusInd Bank", "code": "indusindbank" },
+      { "label": "Federal Bank", "code": "federalbank" },
+      { "label": "Central Bank of India", "code": "centralbankofindia" },
+      { "label": "IDFC First Bank", "code": "idfcfirstbank" },
+      { "label": "RBL Bank", "code": "rblbank" },
+      { "label": "DBS Bank India", "code": "dbsbankindia" },
+      { "label": "South Indian Bank", "code": "southindianbank" },
+      { "label": "Standard Chartered Bank", "code": "standardcharteredbank" }
+    ]
+  },
+  {
+    "label": "KGS",
+    "paymentMethodsList": [
+      { "label": "Elcart", "code": "elcart" },
+      { "label": "Payme", "code": "payme" },
+      { "label": "Visa/Mastercard (comission)", "code": "visamastercard" },
+      { "label": "Visa/Mastercard (Оплата)", "code": "visamastercardpayment" },
+      { "label": "КыргызКарт", "code": "kyrgyzkart" },
+      { "label": "Курманджи", "code": "kurmandzhi" },
+      { "label": "КАПСИТАЛ", "code": "kapsital" }
+    ]
+  },
+  {
+    "label": "KZT",
+    "paymentMethodsList": [
+      { "label": "QIWI", "code": "qiwi" },
+      { "label": "Kaspi", "code": "kaspi" },
+      { "label": "Halyk Bank", "code": "halykbank" },
+      { "label": "Visa/Mastercard", "code": "visamastercard" },
+      { "label": "АЛТЫН БАНК", "code": "altynbank" },
+      { "label": "Eurasian Bank", "code": "eurasianbank" },
+      { "label": "Liberty Bank", "code": "libertybank" },
+      { "label": "HomeCredit", "code": "homecredit" },
+      { "label": "Fortebank", "code": "fortebank" },
+      { "label": "Center Credit Bank", "code": "centercreditbank" },
+      { "label": "Sberbank", "code": "sberbank" },
+      { "label": "Qazkom", "code": "qazkom" },
+      { "label": "АЛЬФА-БАНК", "code": "alfabank" },
+      { "label": "ATF Bank", "code": "atfbank" },
+      { "label": "Kaspi", "code": "kaspi" },
+      { "label": "Rapid", "code": "rapid" },
+      { "label": "Pulscen", "code": "pulscen" },
+      { "label": "Caspian Bank", "code": "caspianbank" },
+      { "label": "Tsesna Bank", "code": "tsesnabank" },
+      { "label": "NurBank", "code": "nurbank" }
+    ]
+  },
+  {
+    "label": "LBP",
+    "paymentMethodsList": [
+      { "label": "MoneyGram", "code": "moneygram" },
+      { "label": "Western Union", "code": "westernunion" },
+      { "label": "RIA", "code": "ria" },
+      { "label": "Cash United", "code": "cashunited" }
+    ]
+  },
+  {
+    "label": "MDL",
+    "paymentMethodsList": [
+      { "label": "Moldova Agroindbank", "code": "moldovaagroindbank" },
+      { "label": "MAIB", "code": "maib" },
+      { "label": "Mobiasbanca", "code": "mobiasbanca" },
+      { "label": "Victoriabank", "code": "victoriabank" },
+      { "label": "Moldindconbank", "code": "moldindconbank" },
+      { "label": "Epay", "code": "epay" }
+    ]
+  },
+  {
+    "label": "MXN",
+    "paymentMethodsList": [
+      { "label": "SPEI", "code": "spei" },
+      { "label": "Oxxo", "code": "oxxo" },
+      { "label": "7 Eleven", "code": "seveneleven" },
+      { "label": "BanCoppel", "code": "bancoppel" },
+      { "label": "Santander", "code": "santander" },
+      { "label": "Banorte", "code": "banorte" },
+      { "label": "Scotiabank", "code": "scotiabank" },
+      { "label": "CitiBanamex", "code": "citibanamex" },
+      { "label": "BBVA Bancomer", "code": "bbvabancomer" },
+      { "label": "HSBC", "code": "hsbc" },
+      { "label": "Inbursa", "code": "inbursa" },
+      { "label": "PagoFacil", "code": "pagofacil" },
+      { "label": "Rapipago", "code": "rapipago" },
+      { "label": "RedLink", "code": "redlink" },
+      { "label": "Banelco", "code": "banelco" },
+      { "label": "Brubank", "code": "brubank" },
+      { "label": "WiZink", "code": "wizink" },
+      { "label": "Uala", "code": "uala" },
+      { "label": "Aldeas Infantiles", "code": "aldeasinfantiles" },
+      { "label": "Clip", "code": "clip" },
+      { "label": "Doppler", "code": "doppler" }
+    ]
+  },
+  {
+    "label": "NGN",
+    "paymentMethodsList": [
+      { "label": "Interswitch", "code": "interswitch" },
+      { "label": "GTB (Guaranty Trust Bank)", "code": "gtb" },
+      { "label": "UBA (United Bank for Africa)", "code": "uba" },
+      { "label": "Zenith Bank", "code": "zenithbank" },
+      { "label": "Access Bank", "code": "accessbank" },
+      { "label": "First Bank", "code": "firstbank" },
+      { "label": "Fidelity Bank", "code": "fidelitybank" },
+      { "label": "Polaris Bank", "code": "polarisbank" },
+      { "label": "Ecobank", "code": "ecobank" },
+      { "label": "Stanbic IBTC Bank", "code": "stanbicibtc" },
+      { "label": "Union Bank", "code": "unionbank" },
+      { "label": "Sterling Bank", "code": "sterlingbank" },
+      { "label": "Standard Chartered Bank", "code": "standardchartered" },
+      { "label": "Jaiz Bank", "code": "jaizbank" },
+      { "label": "Wema Bank", "code": "wemabank" },
+      { "label": "Heritage Bank", "code": "heritagebank" },
+      { "label": "Keystone Bank", "code": "keystonebank" },
+      { "label": "Unity Bank", "code": "unitybank" },
+      { "label": "Citibank Nigeria", "code": "citibanknigeria" }
+    ]
+  },
+  {
+    "label": "PHP",
+    "paymentMethodsList": [
+      { "label": "GCash", "code": "gcash" },
+      { "label": "PayMaya", "code": "paymaya" },
+      { "label": "Coins.ph", "code": "coinsph" },
+      { "label": "BDO", "code": "bdo" },
+      { "label": "BPI", "code": "bpi" },
+      { "label": "Metrobank", "code": "metrobank" },
+      { "label": "UnionBank", "code": "unionbank" },
+      { "label": "Landbank", "code": "landbank" },
+      { "label": "Security Bank", "code": "securitybank" },
+      { "label": "RCBC", "code": "rcbc" },
+      { "label": "PSE: Phil. Stock Exchange", "code": "pse" },
+      { "label": "Coins pro", "code": "coinspro" },
+      { "label": "ABRA", "code": "abra" },
+      { "label": "Coins.asia", "code": "coinsasia" },
+      { "label": "Cashalo", "code": "cashalo" },
+      { "label": "Cash Mart", "code": "cashmart" },
+      { "label": "Cebuana Lhuillier", "code": "cebulhuillier" },
+      { "label": "M Lhuillier", "code": "mlhuillier" },
+      { "label": "Palawan Pawnshop", "code": "palawanpawnshop" },
+      { "label": "RD Pawnshop", "code": "rdpawnshop" },
+      { "label": "Villarica Pawnshop", "code": "villaricapawnshop" }
+    ]
+  },
+  {
+    "label": "PKR",
+    "paymentMethodsList": [
+      { "label": "JazzCash", "code": "jazzcash" },
+      { "label": "Easypaisa", "code": "easypaisa" },
+      { "label": "UBL", "code": "ubl" },
+      { "label": "MCB Bank", "code": "mcbbank" },
+      { "label": "Bank Alfalah", "code": "bankalfalah" },
+      { "label": "HBL", "code": "hbl" },
+      { "label": "Askari Bank", "code": "askaribank" },
+      { "label": "Faysal Bank", "code": "faysalbank" },
+      { "label": "Allied Bank", "code": "alliedbank" },
+      { "label": "Bank Al Habib", "code": "bankalhabib" },
+      { "label": "Soneri Bank", "code": "soneribank" },
+      { "label": "Meezan Bank", "code": "meezanbank" },
+      { "label": "BankIslami", "code": "bankislami" },
+      { "label": "Silk Bank", "code": "silkbank" },
+      {
+        "label": "Standard Chartered Bank Pakistan",
+        "code": "standardcharteredbankpakistan"
+      },
+      { "label": "AlBaraka Bank", "code": "albarakabank" },
+      {
+        "label": "Dubai Islamic Bank Pakistan",
+        "code": "dubaiislamicbankpakistan"
+      },
+      { "label": "United Bank Limited", "code": "unitedbanklimited" },
+      { "label": "National Bank of Pakistan", "code": "nationalbankofpakistan" }
+    ]
+  },
+  {
+    "label": "RUB",
+    "paymentMethodsList": [
+      { "label": "Sberbank Online", "code": "sberbankonline" },
+      { "label": "Alfa-Click", "code": "alfaclick" },
+      { "label": "Tinkoff", "code": "tinkoff" },
+      { "label": "Russian Standard Bank", "code": "russianstandardbank" },
+      { "label": "Promsvyazbank", "code": "promsvyazbank" },
+      { "label": "Otkritie Bank", "code": "otkritiebank" },
+      { "label": "Rusnarbank", "code": "rusnarbank" },
+      { "label": "VTB", "code": "vtb" },
+      { "label": "Gazprombank", "code": "gazprombank" },
+      { "label": "UniStream", "code": "unistream" },
+      { "label": "Raiffeisenbank", "code": "raiffeisenbank" },
+      {
+        "label": "Russian Agricultural Bank",
+        "code": "russianagriculturalbank"
+      },
+      { "label": "Pochta Bank", "code": "pochtobank" },
+      { "label": "QIWI Wallet", "code": "qiwiwallet" },
+      { "label": "YooMoney", "code": "yoomoney" },
+      { "label": "WebMoney", "code": "webmoney" },
+      { "label": "Payeer", "code": "payeer" },
+      { "label": "Advcash", "code": "advcash" },
+      { "label": "Perfect Money", "code": "perfectmoney" },
+      { "label": "Яндекс.Деньги", "code": "yandexmoney" }
+    ]
+  },
+  {
+    "label": "USD",
+    "paymentMethodsList": [
+      { "label": "PayPal", "code": "paypal" },
+      { "label": "Bank Transfer", "code": "banktransfer" },
+      { "label": "Wise", "code": "wise" },
+      { "label": "Skrill", "code": "skrill" },
+      { "label": "Payoneer", "code": "payoneer" },
+      { "label": "Advanced Cash", "code": "advancedcash" },
+      { "label": "Neteller", "code": "neteller" },
+      { "label": "Perfect Money", "code": "perfectmoney" },
+      { "label": "Bitcoin", "code": "bitcoin" },
+      { "label": "Ethereum", "code": "ethereum" },
+      { "label": "Litecoin", "code": "litecoin" },
+      { "label": "Bitcoin Cash", "code": "bitcoincash" },
+      { "label": "USDT", "code": "usdt" },
+      { "label": "Zcash", "code": "zcash" },
+      { "label": "Dogecoin", "code": "dogecoin" },
+      { "label": "Ripple", "code": "ripple" },
+      { "label": "Monero", "code": "monero" },
+      { "label": "Dash", "code": "dash" },
+      { "label": "USD Coin", "code": "usdcoin" },
+      { "label": "Tether", "code": "tether" },
+      { "label": "TrueUSD", "code": "trueusd" }
+    ]
+  },
+  {
+    "label": "UYU",
+    "paymentMethodsList": [
+      { "label": "Redpagos", "code": "redpagos" },
+      { "label": "Abitab", "code": "abitab" },
+      { "label": "BROU", "code": "brou" },
+      { "label": "Banred", "code": "banred" },
+      { "label": "HSBC", "code": "hsbc" },
+      { "label": "Santander", "code": "santander" },
+      { "label": "BBVA", "code": "bbva" },
+      { "label": "Banco Itau", "code": "bancoitau" },
+      { "label": "Itau", "code": "itau" },
+      { "label": "Scotiabank", "code": "scotiabank" },
+      { "label": "Uala", "code": "uala" },
+      { "label": "PayPal", "code": "paypal" }
+    ]
+  },
+  {
+    "label": "VND",
+    "paymentMethodsList": [
+      { "label": "MoMo", "code": "momo" },
+      { "label": "Vietcombank", "code": "vietcombank" },
+      { "label": "VietinBank", "code": "vietinbank" },
+      { "label": "Sacombank", "code": "sacombank" },
+      { "label": "TPBank", "code": "tpbank" },
+      { "label": "BIDV", "code": "bidv" },
+      { "label": "Techcombank", "code": "techcombank" },
+      { "label": "Agribank", "code": "agribank" },
+      { "label": "VPBank", "code": "vpbank" },
+      { "label": "DongA Bank", "code": "dongabank" },
+      { "label": "MSB", "code": "msb" },
+      { "label": "ABBANK", "code": "abbank" },
+      { "label": "Orient Commercial Bank OCB", "code": "ocb" },
+      { "label": "BaoViet Bank", "code": "baovietbank" },
+      { "label": "VietABank", "code": "vietabank" },
+      { "label": "SeaBank", "code": "seabank" },
+      { "label": "LienVietPostBank", "code": "lienvietpostbank" },
+      { "label": "PVcomBank", "code": "pvcombank" },
+      { "label": "ABBANK", "code": "abbank" },
+      { "label": "Eximbank", "code": "eximbank" }
+    ]
+  },
+  {
+    "label": "ZAR",
+    "paymentMethodsList": [
+      { "label": "Absa", "code": "absa" },
+      { "label": "FNB", "code": "fnb" },
+      { "label": "Nedbank", "code": "nedbank" },
+      { "label": "Standard Bank", "code": "standardbank" },
+      { "label": "Capitec", "code": "capitec" },
+      { "label": "Investec", "code": "investec" },
+      { "label": "African Bank", "code": "africanbank" },
+      { "label": "Tyme Bank", "code": "tymebank" },
+      { "label": "Bidvest Bank", "code": "bidvestbank" },
+      { "label": "Discovery Bank", "code": "discoverybank" },
+      { "label": "Post Bank", "code": "postbank" },
+      { "label": "Bank of Athens", "code": "bankofathens" },
+      { "label": "Bank Zero", "code": "bankzero" },
+      { "label": "Mercantile Bank", "code": "mercantilebank" },
+      { "label": "Grindrod Bank", "code": "grindrodbank" },
+      { "label": "Albaraka Bank", "code": "albarakabank" },
+      { "label": "TymeBank", "code": "tymebank" },
+      { "label": "Ubank", "code": "ubank" },
+      { "label": "ABSA Bank", "code": "absabank" },
+      { "label": "First National Bank", "code": "firstnationalbank" },
+      { "label": "Nedbank Limited", "code": "nedbanklimited" },
+      {
+        "label": "Standard Bank of South Africa",
+        "code": "standardbankofsouthafrica"
+      },
+      { "label": "Capitec Bank", "code": "capitecbank" }
+    ]
+  }
+]

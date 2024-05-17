@@ -1,6 +1,6 @@
 import { IUser } from "./IUser";
 import { IMessage } from "./IMessage";
-import { CryptoCurrency, FiatCurrency } from "./Currency";
+import { CryptoCurrency, FiatCurrency } from "../utils/Currency";
 
 export interface DeliveryValues {
   isDelivered?: boolean;
@@ -9,7 +9,7 @@ export interface DeliveryValues {
 }
 
 export interface OfferData {
-  mainUser: IUser;
+  mainUser: string;
   currency: string;
   forPayment: string;
   typeOfPrice: string;
@@ -18,7 +18,10 @@ export interface OfferData {
   quantity: number;
   minQuantity: number;
   delivery: DeliveryValues;
+  paymentMethods?: string[];
+  comment?: string;
   mainUsername: string;
+  mainUserAvatar: string;
   id?: string;
   _id: string;
 }
@@ -31,4 +34,6 @@ export interface EmptyOfferData {
   quantity?: number;
   minQuantity?: number;
   delivery: DeliveryValues;
+  paymentMethods?: string[];
+  comment?: string;
 }

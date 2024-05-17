@@ -1,33 +1,49 @@
+import { Filter } from "components/Filter";
+import { NoResults } from "components/NoResults";
 import { OfferView } from "components/OfferView";
 import { OfferViewSkeleton } from "components/OfferView/Skeleton";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { useCurrencies } from "hooks/useCurrencies";
 import { useTg } from "hooks/useTg";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
-import { fetchOffers } from "store/reducers/ActionCreators";
 import styled from "styled-components";
 
 export const Offers = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const backButtonHandler = () => navigate(RouteNames.MAIN);
-  const { onToggleBackButton } = useTg();
+  const {
+    onToggleBackButton,
+    setBackButtonCallBack,
+    offBackButtonCallBack,
+    tg,
+  } = useTg();
   const { offers, offersIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
+  const { price } = useAppSelector((state) => state.currencyReducer);
+
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const backButtonHandler = useCallback(() => {
+    if (isOpenDrawer) {
+      setIsOpenDrawer(false);
+      tg.BackButton.show();
+    } else {
+      navigate(RouteNames.MAIN);
+    }
+  }, [isOpenDrawer]);
 
   useEffect(() => {
-    dispatch(fetchOffers());
-    onToggleBackButton(backButtonHandler, true);
+    onToggleBackButton(true);
+    setBackButtonCallBack(backButtonHandler);
     return () => {
-      onToggleBackButton(backButtonHandler, false);
+      offBackButtonCallBack(backButtonHandler);
     };
-  }, []);
-  console.log(11111, offers);
+  }, [isOpenDrawer]);
   return (
     <>
-      {offersIsLoading ? (
+      <Filter drawerCallback={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
+      {offersIsLoading || price.isLoading ? (
         <Container>
           <OfferViewSkeleton />
           <OfferViewSkeleton />
@@ -35,9 +51,11 @@ export const Offers = () => {
         </Container>
       ) : (
         <Container>
-          {offers.map((offer) => (
-            <OfferView key={offer._id} offer={offer} />
-          ))}
+          {offers.length ? (
+            offers.map((offer) => <OfferView key={offer._id} offer={offer} />)
+          ) : (
+            <NoResults />
+          )}
         </Container>
       )}
     </>

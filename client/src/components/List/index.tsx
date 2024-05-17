@@ -27,6 +27,7 @@ export default function ListDividers(props: ListProps) {
 }
 
 const StyledList = styled(List)`
+  padding: 0;
   overflow: hidden;
   border-color: "divider";
   width: 100%;

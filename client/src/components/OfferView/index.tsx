@@ -1,36 +1,76 @@
+import { Button } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
+import { Avatar } from "components/Avatar";
+import { MainButton } from "components/MainButton";
+import Price from "components/Price";
+import { useAppSelector } from "hooks/redux";
+import { useCurrencies } from "hooks/useCurrencies";
+import { useFilter } from "hooks/useFilter";
 import { OfferData } from "models/IOffer";
+import { useNavigate } from "react-router-dom";
+import { RouteNames } from "router";
 import styled, { DefaultTheme, css } from "styled-components";
-import {
-  fiatCurrenciesArray,
-  criptoCurrenciesArray,
-  getLabel,
-} from "models/Currency";
 
 interface OfferViewProps {
   offer: OfferData;
 }
 export const OfferView = (props: OfferViewProps) => {
+  const navigate = useNavigate();
+  const { currency, forPayment } = useAppSelector(
+    (state) => state.filterReducer
+  );
+  const { forPaymentArr } = useCurrencies();
+  const { price } = useAppSelector((state) => state.currencyReducer);
+
   const { offer } = props;
+  const isReversePrice = offer.interestPrice
+    ? price.data.price < 0.1
+    : offer.price < 0.1;
+  const getViewPrice = () => {
+    if (offer.interestPrice) {
+      const interestPrice = (offer.interestPrice / 100) * price.data.price;
+      return isReversePrice ? 1 / interestPrice : interestPrice;
+    } else {
+      return isReversePrice ? 1 / offer.price : offer.price;
+    }
+  };
+  const getMainUnit = () => {
+    return (
+      forPaymentArr.find(
+        (item) => item.code === (isReversePrice ? currency : forPayment)
+      )?.label || <Skeleton width={50} />
+    );
+  };
+  const getSecondUnit = () => {
+    return (
+      forPaymentArr.find(
+        (item) => item.code === (isReversePrice ? forPayment : currency)
+      )?.label || <Skeleton width={50} />
+    );
+  };
+  const onGoToOffer = () => {
+    navigate(`${RouteNames.OFFER}/${offer._id}`);
+  };
+  console.log(444, price.data.price, offer);
   return (
     <Container>
       <StyledHeader>
         <PriceContainer>
-          <Price>
-            {offer.price
-              ? offer.price
-              : offer.interestPrice +
-                " " +
-                getLabel(criptoCurrenciesArray, offer.forPayment)}{" "}
-          </Price>
-          <Label>
-            Цена за 1 {getLabel(fiatCurrenciesArray, offer.currency)}
-          </Label>
+          <PriceRow>
+            <Price value={getViewPrice()} />
+            <span>{getMainUnit()}</span>
+          </PriceRow>
+          <Label>Цена за 1 {getSecondUnit()}</Label>
         </PriceContainer>
-        <ButtonContainer></ButtonContainer>
+        <ButtonContainer>
+          <MainButton handleClick={onGoToOffer} text="Купить" />
+        </ButtonContainer>
       </StyledHeader>
       <StyledBody>
         <InfoRow>
-          <Label>Аватар</Label>
+          <Label>
+            <Avatar avatar={offer.mainUserAvatar} size={24} />
+          </Label>
           <Value>{offer.mainUsername}</Value>
         </InfoRow>
         <InfoRow>
@@ -39,11 +79,11 @@ export const OfferView = (props: OfferViewProps) => {
         </InfoRow>
         <InfoRow>
           <Label>Лимиты</Label>
-          <Value>{offer.minQuantity}</Value>
+          <Value>{offer?.minQuantity}</Value>
         </InfoRow>
         <InfoRow>
           <Label>Доставка</Label>
-          <Value>{offer.delivery.distance}</Value>
+          <Value>{offer?.delivery?.distance}</Value>
         </InfoRow>
       </StyledBody>
     </Container>
@@ -66,6 +106,7 @@ const StyledHeader = styled.div`
     border-radius: 12px 12px 0 0;
     padding: 16px;
     display: flex;
+    justify-content: space-between;
   `}
 `;
 const StyledBody = styled.div`
@@ -79,10 +120,15 @@ const StyledBody = styled.div`
     gap: 4px;
   `}
 `;
-const Price = styled.div`
+const PriceRow = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     color: ${theme.palette.text.primary};
     font-size: 24px;
+    display: flex;
+    gap: 8px;
+    & * {
+      font-family: ui-rounded, sans-serif !important;
+    }
   `}
 `;
 const PriceContainer = styled.div`
