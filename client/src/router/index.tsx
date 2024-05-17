@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainContainer } from "../components/Containers/MainContainer";
-import Registration from "../pages/Auth/Registration";
-import Login from "../pages/Auth/Login";
+
 import { Offers } from "pages/Offers";
 import { useAppSelector } from "../hooks/redux";
-import { Offer } from "../pages/OfferOld/Offer/Offer";
 import { Mainpage } from "../pages/MainPage";
 import { CreateOffer } from "pages/CreateOffer";
+import { Offer } from "pages/Offer";
 
 export enum RouteNames {
   MAIN = "/",
@@ -48,7 +46,14 @@ export const Router = () => {
               </MainContainer>
             }
           />
-          <Route path={`${RouteNames.OFFER}/:id`} element={<></>} />
+          <Route
+            path={`${RouteNames.OFFER}/:id`}
+            element={
+              <MainContainer>
+                <Offer />
+              </MainContainer>
+            }
+          />
         </Routes>
       ) : (
         <Routes>

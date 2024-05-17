@@ -1,45 +1,208 @@
+import { DrawerComponent } from "components/Drawer";
 import { FilterItem, FilterItemProps } from "components/FilterItem";
+import { CurrencySelect } from "components/selectCurrency";
+import { useCurrencies } from "hooks/useCurrencies";
+import { useFilter } from "hooks/useFilter";
+import { Currency } from "models/Currency";
+import { Quantity } from "pages/CreateOffer/components/Quantity";
+import { useEffect, useState } from "react";
+import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import styled from "styled-components";
+import { Tabs } from "@material-ui/core";
+import Price from "components/Price";
 
-export const Filter = () => {
+type Draver =
+  | "currency"
+  | "forPayment"
+  | "paymentMethods"
+  | "sum"
+  | "distance"
+  | undefined;
+interface Drawers {
+  currency: JSX.Element;
+  forPayment: JSX.Element;
+  paymentMethods: JSX.Element;
+  sum: JSX.Element;
+  distance: JSX.Element;
+}
+interface FilterProps {
+  drawerCallback: (value: boolean) => void;
+  isOpenDrawer: boolean;
+}
+export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
+  const {
+    forPaymentArr,
+    currencies,
+    currenciesIsloading,
+    getPrice,
+    cripto,
+    getLabel,
+  } = useCurrencies();
+  const {
+    currency,
+    forPayment,
+    paymentMethods,
+    sum,
+    distance,
+    setCurrency,
+    setForPayment,
+    setPaymentMethods,
+    setSum,
+    setDistance,
+  } = useFilter();
+
+  const [currentDrawer, setCurrentDrawer] = useState<Draver>();
+  useEffect(() => {
+    drawerCallback(!!currentDrawer);
+  }, [currentDrawer]);
+  useEffect(() => {
+    if (!isOpenDrawer) {
+      setCurrentDrawer(undefined);
+    }
+  }, [isOpenDrawer]);
+  useEffect(() => {
+    if (currency && forPayment && cripto.data.length) {
+      getPrice(currency, forPayment);
+    }
+  }, [currency, forPayment, cripto]);
   const filterList: FilterItemProps[] = [
     {
-      items: [],
-      currentValue: "",
-      onSelect: () => {},
-      label: "",
+      items: currencies.data,
+      currentValue: getLabel(currency),
+      onSelect: () => changeDrawer("currency"),
+      label: "Влюта",
+    },
+    {
+      items: forPaymentArr,
+      currentValue: getLabel(forPayment),
+      onSelect: () => changeDrawer("forPayment"),
+      label: "К оплате",
+    },
+    {
+      items:
+        forPaymentArr.find((item) => item.code === forPayment)
+          ?.paymentMethodsList || [],
+      currentValue: !!paymentMethods?.length && (
+        <FlexContainer>
+          <ChecklistRtlIcon />
+          <span>{paymentMethods?.length}</span>
+        </FlexContainer>
+      ),
+      placeholder: "Все",
+      onSelect: () => changeDrawer("paymentMethods"),
+      label: "Оплата",
     },
     {
       items: [],
-      currentValue: "",
-      onSelect: () => {},
-      label: "",
+      currentValue: sum ? <Price value={sum} /> : sum,
+      onSelect: () => changeDrawer("sum"),
+      label: "Сумма",
+      placeholder: "00.0",
     },
     {
       items: [],
-      currentValue: "",
-      onSelect: () => {},
-      label: "",
-    },
-    {
-      items: [],
-      currentValue: "",
-      onSelect: () => {},
-      label: "",
+      currentValue: <Price value={distance / 1000} />,
+      onSelect: () => changeDrawer("distance"),
+      label: "Дист.(km)",
+      placeholder: "1",
     },
   ];
+  const changeDrawer = (value: Draver) => {
+    setCurrentDrawer(value);
+  };
+  const onPaymentMethodChange = (value: string) => {
+    const getMethods = () => {
+      if (paymentMethods) {
+        return paymentMethods.includes(value)
+          ? paymentMethods.filter((item) => item !== value)
+          : [...paymentMethods, value];
+      } else {
+        return [value];
+      }
+    };
+    setPaymentMethods(getMethods());
+  };
+  const onSetCurrency = (value: string) => {
+    setCurrency(value);
+    changeDrawer(undefined);
+  };
+  const onSetForPayment = (value: string) => {
+    if (value !== forPayment) setPaymentMethods([]);
+    setForPayment(value);
+    changeDrawer(undefined);
+  };
+  const drawers: Drawers = {
+    currency: (
+      <CurrencySelect
+        handleSelect={onSetCurrency}
+        currentValue={currency}
+        array={currencies.data}
+      />
+    ),
+    forPayment: (
+      <CurrencySelect
+        handleSelect={onSetForPayment}
+        currentValue={forPayment}
+        array={forPaymentArr}
+      />
+    ),
+    paymentMethods: (
+      <CurrencySelect
+        handleSelect={onPaymentMethodChange}
+        currentValue={paymentMethods?.length ? paymentMethods : ""}
+        array={
+          forPaymentArr.find((item: Currency) => item.code === forPayment)
+            ?.paymentMethodsList || []
+        }
+      />
+    ),
+    sum: (
+      <Quantity
+        onChange={setSum}
+        value={sum}
+        isValid={true}
+        label="Сумма для обмена"
+        currency={getLabel(currency) || ""}
+        focus
+      />
+    ),
+    distance: (
+      <Quantity
+        onChange={setDistance}
+        defaultValue={distance / 1000}
+        isValid={true}
+        label="Дистанция"
+        currency={"кm"}
+        focus
+      />
+    ),
+  };
+
   return (
-    <Container>
-      {filterList.map((item) => (
-        <FilterItem {...item} />
-      ))}
-    </Container>
+    <>
+      <Tabs variant="scrollable" scrollButtons="auto">
+        <Container>
+          {filterList.map((item) => (
+            <FilterItem {...item} isLoading={currenciesIsloading} />
+          ))}
+        </Container>
+      </Tabs>
+      <DrawerComponent
+        isOpen={!!currentDrawer}
+        onClose={() => changeDrawer(undefined)}
+        component={currentDrawer ? drawers[currentDrawer] : <></>}
+      />
+    </>
   );
 };
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 8px;
   position: relative;
-  margin-top: 16px;
+  margin-bottom: 16px;
+`;
+const FlexContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
 `;

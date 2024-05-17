@@ -35,14 +35,18 @@ export const useTg = () => {
       WebApp.MainButton.setParams({ text: text });
     }
   };
-  const onToggleBackButton = (callBack: () => void, needShow: boolean) => {
+  const onToggleBackButton = (needShow: boolean) => {
     if (!needShow) {
-      WebApp.BackButton.offClick(callBack);
       WebApp.BackButton.hide();
     } else {
       WebApp.BackButton.show();
-      WebApp.BackButton.onClick(callBack);
     }
+  };
+  const setBackButtonCallBack = (callBack: () => void) => {
+    WebApp.BackButton.onClick(callBack);
+  };
+  const offBackButtonCallBack = (callBack: () => void) => {
+    WebApp.BackButton.offClick(callBack);
   };
   const onToggleSettingsButton = (callBack: () => void) => {
     if (WebApp.SettingsButton.isVisible) {
@@ -61,6 +65,8 @@ export const useTg = () => {
     onToggleSettingsButton,
     setMainButtonCallBack,
     offMainButtonCallBack,
+    setBackButtonCallBack,
+    offBackButtonCallBack,
     tg: WebApp,
     user: WebApp.initDataUnsafe?.user,
     themeParams: WebApp.themeParams as ThemeParamsProps,

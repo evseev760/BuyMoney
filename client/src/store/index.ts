@@ -1,14 +1,18 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import userReducer from "./reducers/UserSlice";
-import authReducer from "./reducers/AuthSlice";
-import offerReducer from "./reducers/OfferSlice";
-import verifyReducer from "./reducers/VerificationSlice";
+import authReducer from "./reducers/auth/AuthSlice";
+import offerReducer from "./reducers/offer/OfferSlice";
+import verifyReducer from "./reducers/verification/VerificationSlice";
+import currencyReducer from "./reducers/currency/CurrencySlice";
+import filterReducer from "./reducers/filter/FilterSlice";
+import applicationReducer from "./reducers/application/ApplicationSlice";
 
 const rootReducer = combineReducers({
-  userReducer,
   authReducer,
   offerReducer,
   verifyReducer,
+  currencyReducer,
+  filterReducer,
+  applicationReducer,
 });
 
 export const setupStore = () => {

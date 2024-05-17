@@ -13,19 +13,23 @@ const PORT = process.env.PORT || config.get("PORT");
 const authRouter = require("./sections/auth/authRouter");
 const offerRouter = require("./sections/offer/offerRouter");
 const verificationRouter = require("./sections/tonConnectVerification/verificationRouter");
-// const telegramBot = require("./telegramBot");
+const currencyApiRouter = require("./sections/currencyApi/currencyApiRouter");
+const applicationApiRouter = require("./sections/application/applicationApiRouter");
+const telegramBot = require("./telegramBot");
 // const socketHandler = require("./socketHandler");
 
 const app = express();
 
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+// const io = new Server(httpServer);
 
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/offer", offerRouter);
 app.use("/verify", verificationRouter);
+app.use("/currency", currencyApiRouter);
+app.use("/application", applicationApiRouter);
 
 const webhookUrl = config.get("APP_URL");
 

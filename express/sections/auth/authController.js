@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
+const { default: axios } = require("axios");
+// const { createAvatar } = require("@dicebear/core");
+// const { thumbs } = require("@dicebear/collection");
 
 const BOT_TOKEN = config.get("BOT_TOKEN");
 
@@ -33,6 +36,13 @@ const verifyTelegramWebAppData = async (telegramInitData) => {
   return _hash === hash;
 };
 
+const getAvatar = async (id) => {
+  const result = await axios(
+    `https://api.dicebear.com/8.x/shapes/svg?size=96&seed=${id}`
+  );
+  return result.data;
+};
+
 class authController {
   async handleAuth(req, res) {
     const errors = validationResult(req);
@@ -55,8 +65,10 @@ class authController {
 
       // Если пользователь не найден, создаем нового пользователя
       if (!user) {
+        const avatar = await getAvatar(telegramId);
         const userData = JSON.parse(initData.user);
         const newUser = new User({
+          avatar,
           telegramId,
           firstName: userData.first_name,
           lastName: userData.last_name,
@@ -80,6 +92,7 @@ class authController {
           allowsWriteToPm: user.allowsWriteToPm,
           authDate: user.authDate,
           id: user.id,
+          avatar: user.avatar,
         },
       });
     } catch (e) {
@@ -104,6 +117,7 @@ class authController {
           authDate: user.authDate,
           location: user.location,
           id: user.id,
+          avatar: user.avatar,
         },
       });
     } catch (e) {

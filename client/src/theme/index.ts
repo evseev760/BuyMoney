@@ -36,10 +36,10 @@ export const darkTheme = {
     },
 
     background: {
-      // primary: "#151E27",
-      primary: WebApp.themeParams.header_bg_color,
-      // secondary: "#1D2733",
-      secondary: WebApp.themeParams.bg_color,
+      primary: "#151E27",
+      // primary: WebApp.themeParams.header_bg_color,
+      secondary: "#1D2733",
+      // secondary: WebApp.themeParams.bg_color,
     },
     text: {
       primary: "#FFFFFF",

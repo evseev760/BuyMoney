@@ -9,6 +9,7 @@ import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import { API_URL } from "config";
 
 const store = setupStore();
+// store.dispatch(api.util.initialize());
 WebApp.ready();
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

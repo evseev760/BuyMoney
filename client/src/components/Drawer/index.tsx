@@ -43,5 +43,8 @@ const StyledContainer = styled.div`
     padding: 16px;
     max-height: 60vh !important;
     background-color: ${theme.palette.background.primary} !important;
+    & * {
+      font-family: sans-serif;
+    }
   `}
 `;
