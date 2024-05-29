@@ -63,6 +63,9 @@ const start = async () => {
     app.get("*", (req, res) => {
       res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
+    app.use((req, res, next) => {
+      res.status(404).sendFile(path.join(__dirname, "./public", "404.html"));
+    });
 
     server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 

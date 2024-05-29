@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oops..</title>
+    <style>
+      :root {
+        --background-color: var(
+          --tg-theme-bg-color,
+          #f8f9fa
+        ); /* Default color if variable is not available */
+        --text-color: var(
+          --tg-theme-text-color,
+          #343a40
+        ); /* Default color if variable is not available */
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: inherit;
+      }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>404 - Page Not Found</h1>
+      <p>Ой!</p>
+    </div>
+  </body>
+</html>
