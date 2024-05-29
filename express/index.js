@@ -29,6 +29,7 @@ app.use("/currency", currencyApiRouter);
 app.use("/application", applicationApiRouter);
 
 const isProduction = process.env.NODE_ENV === "production";
+console.log(111111, isProduction);
 
 let server;
 if (isProduction) {
