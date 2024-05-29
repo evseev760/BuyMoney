@@ -57,14 +57,16 @@ const start = async () => {
       })
       .then(() => console.log("MongoDB connected"))
       .catch((err) => console.error("MongoDB connection error:", err));
-    app.use(express.static(__dirname));
+
     app.use(express.static(path.resolve(__dirname, "../client/build")));
 
     app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+      res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
     });
     app.use((req, res, next) => {
-      res.status(404).sendFile(path.join(__dirname, "./public", "404.html"));
+      res
+        .status(404)
+        .sendFile(path.join(__dirname, "./public", "notFound.html"));
     });
 
     server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
