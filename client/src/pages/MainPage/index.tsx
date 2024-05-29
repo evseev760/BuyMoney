@@ -114,6 +114,12 @@ const StyledTonConnectButton = styled(TonConnectButton)`
       height: 32px;
       border-radius: 12px;
       background-color: ${theme.palette.button.primary} !important;
+      & * {
+        color: ${theme.palette.buttonText.primary} !important;
+      }
+      & svg {
+        fill: ${theme.palette.buttonText.primary} !important;
+      }
     }
   `}
 `;
