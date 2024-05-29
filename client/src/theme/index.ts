@@ -23,6 +23,13 @@ export const lightTheme = {
       primary: WebApp.themeParams.button_color,
       secondary: "#E2E2E2",
     },
+    buttonText: {
+      primary: "#FFFFFF",
+      secondary: WebApp.themeParams.button_color,
+    },
+    link: {
+      primary: WebApp.themeParams.link_color,
+    },
   },
 };
 
@@ -48,6 +55,13 @@ export const darkTheme = {
     button: {
       primary: WebApp.themeParams.button_color,
       secondary: "#2D343C",
+    },
+    buttonText: {
+      primary: "#FFFFFF",
+      secondary: WebApp.themeParams.button_color,
+    },
+    link: {
+      primary: WebApp.themeParams.link_color,
     },
   },
 };

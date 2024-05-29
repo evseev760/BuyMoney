@@ -19,6 +19,8 @@ export const Avatar = (props: AvatarProps) => {
 };
 export const StyledAvatar = styled.div<{ size: number }>`
   ${({ theme, size }: { theme: DefaultTheme; size: number }) => css`
+    width: ${size + "px"};
+    height: ${size + "px"};
     & > svg {
       border-radius: ${size / 4 + "px"};
       width: ${size + "px"};

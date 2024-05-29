@@ -25,6 +25,7 @@
     "lottie-react": "^2.4.0",
     "millify": "^5.0.1",
     "moment": "^2.29.4",
+    "numeral": "^2.0.6",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.8.0",
@@ -63,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "@types/numeral": "^2.0.5",
     "prettier": "2.8.3"
   }
 }

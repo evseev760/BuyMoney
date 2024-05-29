@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 import { CurrencySelect } from "components/selectCurrency";
 import { DrawerComponent } from "components/Drawer";
-import currensies from "utils/criptocurrency.json";
+// import currensies from "utils/criptocurrency.json";
 import {
   clearNewOffer,
   createOffer,
@@ -15,17 +15,18 @@ import {
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import { SelectItem, getLabel } from "utils/Currency";
-import { MarketPrice } from "./components/marketPrice";
-import { FixPriceInput } from "./components/FixPriceInput";
-import { FlexPriceInput } from "./components/FlexPriceInput";
-import { YourFlexPrice } from "./components/YourFlexPrice";
-import { Quantity } from "./components/Quantity";
-import { Delivery } from "./components/Delivery";
+import { MarketPrice } from "components/marketPrice";
+import { FixPriceInput } from "components/FixPriceInput";
+import { FlexPriceInput } from "components/FlexPriceInput";
+import { YourFlexPrice } from "components/YourFlexPrice";
+import { Quantity } from "components/Quantity";
+import { Delivery } from "components/Delivery";
 import { DeliveryValues } from "models/IOffer";
 import { Currency } from "models/Currency";
 import { useCurrencies } from "hooks/useCurrencies";
-import { CommentInput } from "./components/Comment";
+import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { Container, Title } from "components/Styles/Styles";
 
 interface Drawers {
   fiatCurrency: JSX.Element;
@@ -40,7 +41,7 @@ type Draver =
   | "priceType"
   | undefined;
 
-export const CreateOffer = () => {
+const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   const navigate = useNavigate();
   const {
     tg,
@@ -87,9 +88,12 @@ export const CreateOffer = () => {
     };
   }, [currentDrawer]);
 
-  // useEffect(() => {
-  //   dispatch(setCurrencies(currensies));
-  // }, []);
+  useEffect(() => {
+    // dispatch(setCurrencies(currensies));
+    return () => {
+      tg.MainButton.hide();
+    };
+  }, []);
 
   useEffect(() => {
     if (
@@ -107,17 +111,25 @@ export const CreateOffer = () => {
       offMainButtonCallBack(submitCreateOffer);
       onToggleMainButton(false, "Создать");
       dispatch(clearNewOffer());
-      backButtonHandler();
+      navigate(RouteNames.MYOFFERS);
     };
     const onError = () => {
       tg.MainButton.hideProgress();
       onToggleMainButton(false, "Создать");
     };
     tg.MainButton.showProgress();
-    !createOfferIsLoading && dispatch(createOffer(newOffer, callback, onError));
+    const price = newOffer?.price ? 1 / newOffer.price : undefined;
+    const interestPrice = newOffer?.interestPrice
+      ? 1 / newOffer.interestPrice
+      : undefined;
+    !createOfferIsLoading &&
+      dispatch(
+        createOffer({ ...newOffer, price, interestPrice }, callback, onError)
+      );
   }, [newOffer]);
 
   useEffect(() => {
+    console.log(555, isValidPrice(marketPrice, newOffer.price));
     if (!newOffer) return;
     const isValidPriceCondition =
       (newOffer.typeOfPrice === "fix" &&
@@ -129,7 +141,8 @@ export const CreateOffer = () => {
       isValidPriceCondition &&
       isValidMinQuantity() &&
       newOffer.minQuantity &&
-      newOffer.quantity
+      newOffer.quantity &&
+      !currentDrawer
     ) {
       onToggleMainButton(true, "Создать");
       tg.onEvent("mainButtonClicked", submitCreateOffer);
@@ -138,8 +151,9 @@ export const CreateOffer = () => {
       };
     } else {
       onToggleMainButton(false, "Создать");
+      tg.MainButton.hide();
     }
-  }, [newOffer]);
+  }, [newOffer, currentDrawer]);
   const changeDrawer = (value: Draver) => {
     setCurrentDrawer(value);
   };
@@ -212,14 +226,19 @@ export const CreateOffer = () => {
 
     changeDrawer(undefined);
   };
+  // const onPriceChange = (value: number) => {
+  //   if (isReversePrice) {
+  //     const reversePrice = value ? 1 / value : undefined;
+  //     dispatch(setNewOffer({ ...newOffer, price: reversePrice }));
+  //   } else {
+  //     dispatch(setNewOffer({ ...newOffer, price: value }));
+  //   }
+  // };
   const onPriceChange = (value: number) => {
-    if (isReversePrice) {
-      const reversePrice = value ? 1 / value : undefined; // Рассчитываем обратную цену
-      dispatch(setNewOffer({ ...newOffer, price: reversePrice })); // Сохраняем обратную цену
-    } else {
-      dispatch(setNewOffer({ ...newOffer, price: value })); // Иначе сохраняем стандартную цену
-    }
+    const price = isReversePrice ? (value ? 1 / value : undefined) : value;
+    dispatch(setNewOffer({ ...newOffer, price }));
   };
+
   const onInterestPriceChange = (value: number) => {
     dispatch(setNewOffer({ ...newOffer, interestPrice: value }));
   };
@@ -266,12 +285,14 @@ export const CreateOffer = () => {
       handleClick: () => changeDrawer("fiatCurrency"),
       value: getListViewValue(currencies.data, newOffer.currency),
       isLoading: currenciesIsloading,
+      isSelect: true,
     },
     {
       label: "Принимаю к оплате",
       handleClick: () => changeDrawer("cryptoCurrency"),
       value: getListViewValue(forPaymentArr, newOffer.forPayment),
       isLoading: currenciesIsloading,
+      isSelect: true,
     },
     {
       label: "Способ оплаты",
@@ -287,14 +308,16 @@ export const CreateOffer = () => {
               ? " +" + Number(newOffer.paymentMethods?.length - 1)
               : ""
           }`
-        : "-",
+        : "",
       isLoading: currenciesIsloading,
+      isSelect: true,
     },
     {
       label: "Тип цены",
       handleClick: () => changeDrawer("priceType"),
       value: getListViewValue(priceTypes, newOffer.typeOfPrice),
       isLoading: currenciesIsloading,
+      isSelect: true,
     },
   ];
   const drawers: Drawers = {
@@ -323,6 +346,7 @@ export const CreateOffer = () => {
             (item: Currency) => item.code === newOffer.forPayment
           )?.paymentMethodsList || []
         }
+        handleClose={() => changeDrawer(undefined)}
       />
     ),
     priceType: (
@@ -333,12 +357,13 @@ export const CreateOffer = () => {
       />
     ),
   };
-  // console.log(555, price, marketPrice);
+  console.log(6666, newOffer, isReversePrice);
   return (
     <>
-      <div>Создайте объявление</div>
-      <ListDividers listArr={offerParams} />
-
+      <Container>
+        <Title>Создайте объявление</Title>
+        <ListDividers listArr={offerParams} />
+      </Container>
       {newOffer.typeOfPrice === "fix" && (
         <FixPriceInput
           onChange={onPriceChange}
@@ -408,7 +433,7 @@ export const CreateOffer = () => {
         onChange={onCommentChange}
         value={newOffer.comment}
       />
-      {!currenciesIsloading && (
+      {/* {!currenciesIsloading && (
         <>
           <Delivery
             deliveryValues={newOffer.delivery}
@@ -417,7 +442,7 @@ export const CreateOffer = () => {
             isValid={true}
           />
         </>
-      )}
+      )} */}
       <DrawerComponent
         isOpen={!!currentDrawer}
         onClose={() => changeDrawer(undefined)}
@@ -426,3 +451,5 @@ export const CreateOffer = () => {
     </>
   );
 };
+
+export default CreateOffer;

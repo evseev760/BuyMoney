@@ -10,6 +10,7 @@ import {
 
 import { CryptoCurrency } from "utils/Currency";
 import { useAppDispatch, useAppSelector } from "./redux";
+import ComponentStyle from "styled-components/dist/models/ComponentStyle";
 
 export const useCurrencies = () => {
   const dispatch = useAppDispatch();
@@ -48,13 +49,21 @@ export const useCurrencies = () => {
       return;
     }
   };
-  const isValidPrice = (mainValue: number, value?: number) => {
-    const upperLimit = mainValue * 1.5;
-    const bottomLimit = mainValue * 0.7;
+  const isValidPrice = (
+    mainValue: number,
+    value?: number,
+    isReversePrice?: boolean
+  ) => {
+    console.log(33333, value, mainValue);
+    const upperLimit = isReversePrice ? (1 / mainValue) * 1.5 : mainValue * 1.5;
+    const bottomLimit = isReversePrice
+      ? (1 / mainValue) * 0.7
+      : mainValue * 0.7;
     if (!value) return true;
     if (value && value >= 1 / upperLimit && value <= 1 / bottomLimit) {
       return true;
     }
+    console.log(444);
     return false;
   };
   const isValidInterestPrice = (value?: number) => {

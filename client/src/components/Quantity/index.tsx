@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 import { PriceInputSkeleton } from "../FlexPriceInput/PriceInputSkeleton";
-import { Container, Title, StiledCurrencyInput, StyledSuffix } from "../Styles";
+import {
+  Container,
+  Title,
+  StiledCurrencyInput,
+  StyledSuffix,
+} from "components/Styles/Styles";
 
 interface QuantityProps {
   isValid: boolean;

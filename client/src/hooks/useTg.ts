@@ -57,6 +57,10 @@ export const useTg = () => {
       WebApp.SettingsButton.onClick(callBack);
     }
   };
+  const openTelegramLink = (id: string) => {
+    const url = `https://t.me/${id}`;
+    WebApp.openTelegramLink(url);
+  };
 
   return {
     onClose,
@@ -67,6 +71,7 @@ export const useTg = () => {
     offMainButtonCallBack,
     setBackButtonCallBack,
     offBackButtonCallBack,
+    openTelegramLink,
     tg: WebApp,
     user: WebApp.initDataUnsafe?.user,
     themeParams: WebApp.themeParams as ThemeParamsProps,

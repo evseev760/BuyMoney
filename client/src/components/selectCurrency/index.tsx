@@ -5,14 +5,17 @@ import { setNewOffer } from "store/reducers/offer/ActionCreators";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useTheme } from "styled-components";
 
+import { ArrayConfirmButton } from "components/ArrayConfirmButton";
+
 interface CurrencySelectProps {
   array: SelectItem[];
   currentValue?: string | string[];
   handleSelect: (value: string) => void;
+  handleClose?: () => void;
 }
 
 export const CurrencySelect = (props: CurrencySelectProps) => {
-  const { array, handleSelect, currentValue } = props;
+  const { array, handleSelect, currentValue, handleClose } = props;
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { newOffer } = useAppSelector((state) => state.offerReducer);
@@ -40,6 +43,7 @@ export const CurrencySelect = (props: CurrencySelectProps) => {
   return (
     <>
       <Select list={getList()} />
+      <ArrayConfirmButton handleConfirm={handleClose} />
     </>
   );
 };

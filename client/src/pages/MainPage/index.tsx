@@ -15,8 +15,10 @@ import { RouteNames } from "router";
 import { TonConnectButton } from "@tonconnect/ui-react";
 import { useCurrencies } from "hooks/useCurrencies";
 import { MyDeals } from "components/MyDeals";
+import { useAppSelector } from "hooks/redux";
 
-export const Mainpage = () => {
+const Mainpage = () => {
+  const { currentUser } = useAppSelector((state) => state.authReducer);
   const navigate = useNavigate();
   const { onToggleBackButton } = useTg();
   const {} = useCurrencies();
@@ -28,7 +30,9 @@ export const Mainpage = () => {
     {
       label: "Мои обьявления",
       icon: <PersonOutlineOutlinedIcon />,
-      handleClick: () => {},
+      handleClick: () => {
+        navigate(RouteNames.MYOFFERS);
+      },
     },
 
     {
@@ -42,10 +46,11 @@ export const Mainpage = () => {
       handleClick: () => {},
     },
   ];
-
   return (
     <MainPageContainer className="mainPage_container">
-      <Animation type={Animations.WELCOME} />
+      <Animation
+        type={currentUser.isSuspicious ? Animations.HELLO : Animations.HELLO}
+      />
 
       <Title>P2P маркет наличных</Title>
       <Description>
@@ -108,6 +113,7 @@ const StyledTonConnectButton = styled(TonConnectButton)`
       flex-grow: 1;
       height: 32px;
       border-radius: 12px;
+      background-color: ${theme.palette.button.primary} !important;
     }
   `}
 `;
@@ -120,3 +126,4 @@ const ButtonContainer = styled.div`
     /* padding: 0 16px; */
   `}
 `;
+export default Mainpage;

@@ -1,6 +1,6 @@
 import { AppDispatch } from "store";
 import axios from "axios";
-import { api } from "store/api";
+import { api, auth } from "store/api";
 
 import { verifySlice } from "./VerificationSlice";
 
@@ -9,20 +9,6 @@ import { EmptyOfferData, OfferData } from "models/IOffer";
 
 import { TonAccount, TonProof } from "models/Verify";
 import { Account, ConnectAdditionalRequest } from "@tonconnect/ui-react";
-
-const auth = () => {
-  let headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-
-  const walletToken = localStorage.getItem("walletToken");
-  if (walletToken) {
-    //@ts-ignore
-    headers = { ...headers, walletToken: walletToken };
-  }
-
-  return { headers };
-};
 
 export const generatePayload = () => async (dispatch: AppDispatch) => {
   try {

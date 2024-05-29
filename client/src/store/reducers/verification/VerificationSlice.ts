@@ -1,4 +1,3 @@
-import { IUser } from "../../../models/IUser";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface VerificationState {

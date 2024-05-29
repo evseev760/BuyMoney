@@ -4,7 +4,7 @@ export const NoResults = () => {
   return (
     <Container>
       <Title>Активных предложений нет, попробуйте изменить фильтры</Title>
-      <Animation size={150} type={Animations.SLEEP} />
+      <Animation size={150} type={Animations.OH} />
     </Container>
   );
 };

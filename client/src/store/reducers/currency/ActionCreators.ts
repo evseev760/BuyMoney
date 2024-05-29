@@ -1,6 +1,6 @@
 import { AppDispatch } from "store";
 import axios from "axios";
-import { api } from "store/api";
+import { api, auth } from "store/api";
 
 import {
   currencySlice,
@@ -9,20 +9,6 @@ import {
 } from "./CurrencySlice";
 
 import { API_URL } from "config";
-
-const auth = () => {
-  let headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-
-  const walletToken = localStorage.getItem("walletToken");
-  if (walletToken) {
-    //@ts-ignore
-    headers = { ...headers, walletToken: walletToken };
-  }
-
-  return { headers };
-};
 
 export const fetchPrice =
   (fiat: string, crypto: string) => async (dispatch: AppDispatch) => {

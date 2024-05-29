@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 import styled from "styled-components";
 
-export const Offers = () => {
+const Offers = () => {
   const navigate = useNavigate();
   const {
     onToggleBackButton,
@@ -40,6 +40,7 @@ export const Offers = () => {
       offBackButtonCallBack(backButtonHandler);
     };
   }, [isOpenDrawer]);
+  console.log(222, offers);
   return (
     <>
       <Filter drawerCallback={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
@@ -66,3 +67,5 @@ const Container = styled.div`
   flex-direction: column;
   gap: 8px;
 `;
+
+export default Offers;

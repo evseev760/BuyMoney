@@ -33,4 +33,5 @@ a {
 }
 .App * {
   font-family: sans-serif !important;
+  user-select: none;
 }

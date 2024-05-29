@@ -1,16 +1,17 @@
 import { ListItem, ListItemText } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { DrawerComponent } from "components/Drawer";
-import { Theme } from "models/Theme";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 import styled, { DefaultTheme, css } from "styled-components";
 
-interface ListItemProps {
+export interface ListItemProps {
   handleClick: () => void;
   label: string;
   icon?: any;
   value?: string | JSX.Element;
   disable?: boolean;
   isLoading?: boolean;
+  isSelect?: boolean;
 }
 
 export const ListItemComponent = ({
@@ -20,6 +21,7 @@ export const ListItemComponent = ({
   value,
   disable,
   isLoading,
+  isSelect,
 }: ListItemProps) => {
   return (
     <>
@@ -35,7 +37,9 @@ export const ListItemComponent = ({
           >
             {icon && <IconContainer>{icon}</IconContainer>}
             <ListItemText primary={label} />
-            <StyledValue>{value && value}</StyledValue>
+            <StyledValue>
+              {value && value} {isSelect && <ArrowDropDownIcon />}
+            </StyledValue>
           </StyledListItem>
         </ListItemContainer>
       )}
@@ -59,9 +63,16 @@ const StyledListItem = styled(ListItem)`
     }
   `}
 `;
+
 const StyledValue = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     color: ${theme.palette.button.primary};
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* & svg {
+      fill: ${theme.palette.button.primary};
+    } */
   `}
 `;
 

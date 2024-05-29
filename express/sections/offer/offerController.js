@@ -1,29 +1,80 @@
+const mongoose = require("mongoose");
 const User = require("../../models/User");
 const Offer = require("../../models/Offer");
+const Cripto = require("../../models/Cripto");
+const { getCryptoPrice } = require("../../utils/apiService");
 // const Proposal = require("../../models/Application");
 const telegramBot = require("../../telegramBot");
-const axios = require("axios");
-const geolib = require("geolib");
 
 const { validationResult } = require("express-validator");
 
-async function getCryptoPrice(cryptoCurrency, currency) {
-  try {
-    // Формируем URL для запроса
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoCurrency}&vs_currencies=${currency}`;
+const calculateOfferPrices = async (offers) => {
+  const cryptoPairs = offers
+    .filter((offer) => offer.interestPrice)
+    .map((offer) => ({
+      forPayment: offer.forPayment,
+      currency: offer.currency,
+    }));
 
-    // Отправляем GET запрос к API CoinGecko
-    const response = await axios.get(url);
+  // Получение уникальных криптовалют
+  const uniquePairs = [
+    ...new Set(
+      cryptoPairs.map((pair) => `${pair.forPayment}-${pair.currency}`)
+    ),
+  ];
+  const forPayments = uniquePairs.map((pair) => pair.split("-")[0]);
+  const cryptoItems = await Cripto.find({ code: { $in: forPayments } });
 
-    // Получаем цену криптовалюты из ответа
-    const price = response.data;
+  const cryptoData = uniquePairs.map((pair) => {
+    const [forPayment, currency] = pair.split("-");
+    const cryptoItem = cryptoItems.find((item) => item.code === forPayment);
+    return {
+      pair,
+      cmcId: cryptoItem ? cryptoItem.cmcId : null,
+      currency,
+      forPayment,
+    };
+  });
 
-    return price;
-  } catch (error) {
-    console.error("Ошибка при получении цены криптовалюты:", error);
-    throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
+  const validCryptoData = cryptoData;
+
+  // Запрос цен для каждой пары
+  const pricePromises = validCryptoData.map(async (data) => {
+    if (data.cmcId) {
+      return getCryptoPrice(data.cmcId, data.currency);
+    } else {
+      const usdtPrice = await getCryptoPrice(825, data.currency);
+      const forPaymentPrice = await getCryptoPrice(825, data.forPayment);
+      return usdtPrice / forPaymentPrice;
+    }
+  });
+  const prices = await Promise.all(pricePromises);
+
+  // Создание мапы для быстрого доступа к ценам
+  const priceMap = {};
+  validCryptoData.forEach((data, index) => {
+    priceMap[data.pair] = prices[index];
+  });
+
+  // Расчет цен для офферов с interestPrice
+  for (const offer of offers) {
+    if (offer.interestPrice) {
+      const pair = `${offer.forPayment}-${offer.currency}`;
+      const cryptoPrice = priceMap[pair];
+
+      if (cryptoPrice) {
+        offer.price = offer.interestPrice * 100 * cryptoPrice;
+      } else {
+        offer.price =
+          offer.interestPrice *
+          100 *
+          priceMap[pair.split("-").reverse().join("-")];
+      }
+    }
   }
-}
+
+  return offers;
+};
 
 class offerController {
   async createOffer(req, res) {
@@ -47,7 +98,7 @@ class offerController {
       // const candidate = await Offer.findOne({
       //   currency,
       //   forPayment,
-      //   mainUser: req.user.id,
+      //   seller: req.user.id,
       // });
       // if (candidate) {
       //   return res
@@ -57,9 +108,7 @@ class offerController {
       const user = await User.findOne({ _id: req.user.id });
 
       const offer = new Offer({
-        mainUser: req.user.id,
-        mainUsername: user.username,
-        mainUserAvatar: user.avatar,
+        seller: mongoose.Types.ObjectId(req.user.id),
         currency,
         quantity,
         minQuantity,
@@ -71,7 +120,7 @@ class offerController {
         forPayment,
         location: user.location,
         delivery,
-        proposals: [],
+        applications: [],
       });
       await offer.save();
       return res.json({ message: "Офер успешно создан", offerId: offer.id });
@@ -80,6 +129,52 @@ class offerController {
       res.status(400).json({ message: "Offer create error", err: e });
     }
   }
+  async editOffer(req, res) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ message: "Ошибка при обновлении", errors });
+      }
+      const {
+        _id,
+        currency,
+        quantity,
+        price,
+        forPayment,
+        delivery,
+        minQuantity,
+        typeOfPrice,
+        interestPrice,
+        paymentMethods,
+        comment,
+      } = req.body;
+
+      const offer = await Offer.findOne({ _id, seller: req.user.id });
+      if (!offer) {
+        return res.status(404).json({ message: "Оффер не найден" });
+      }
+
+      offer.currency = currency;
+      offer.quantity = quantity;
+      offer.price = price;
+      offer.forPayment = forPayment;
+      offer.delivery = delivery;
+      offer.minQuantity = minQuantity;
+      offer.typeOfPrice = typeOfPrice;
+      offer.interestPrice = interestPrice;
+      offer.paymentMethods = paymentMethods;
+      offer.comment = comment;
+
+      await offer.save();
+      return res.json({ message: "Оффер успешно обновлен", offerId: offer.id });
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ message: "Offer update error", err: e });
+    }
+  }
+
   async getOffers(req, res) {
     try {
       const errors = validationResult(req);
@@ -113,6 +208,9 @@ class offerController {
           delete filter[key];
         }
       });
+      filter.seller = { $ne: mongoose.Types.ObjectId(req.user.id) };
+
+      let offers;
       if (
         user &&
         user.location &&
@@ -120,46 +218,76 @@ class offerController {
         req.query.distance
       ) {
         const userCoordinates = user.location.coordinates;
-        filter["location.coordinates"] = {
-          $near: {
-            $geometry: {
-              type: "Point",
-              coordinates: [userCoordinates[0], userCoordinates[1]], // Порядок координат для MongoDB: [longitude, latitude]
-            },
-            $maxDistance: parseInt(req.query.distance), // Максимальное расстояние в метрах
-          },
-        };
-      }
-      let offers = await Offer.find(filter);
+        const maxDistance = parseInt(req.query.distance);
 
-      // if (user && user.location && user.location.coordinates) {
-      //   const userCoordinates = user.location.coordinates;
-      //   offers = offers.map((offer) => {
-      //     const offerCoordinates = offer.location.coordinates;
-      //     const distance = geolib.getDistance(
-      //       { latitude: userCoordinates[1], longitude: userCoordinates[0] },
-      //       { latitude: offerCoordinates[1], longitude: offerCoordinates[0] }
-      //     );
-      //     return { ...offer, distance };
-      //   });
-      // }
-      res.json(offers);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  async getPrice(req, res) {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ message: "Ошибка запроса", errors });
+        offers = await Offer.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: [userCoordinates[0], userCoordinates[1]],
+              },
+              distanceField: "distance",
+              maxDistance: maxDistance,
+              spherical: true,
+              query: filter,
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "seller",
+              foreignField: "_id",
+              as: "sellerData",
+            },
+          },
+          {
+            $unwind: {
+              path: "$sellerData",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              "sellerData.firstName": 0,
+              "sellerData.lastName": 0,
+              "sellerData.allowsWriteToPm": 0,
+              "sellerData.__v": 0,
+              "sellerData.telegramId": 0,
+              "sellerData.location": 0,
+              "sellerData.chatId": 0,
+              "sellerData.authDate": 0,
+            },
+          },
+          {
+            $addFields: {
+              distance: { $round: ["$distance", 0] },
+            },
+          },
+        ]);
+      } else {
+        offers = await Offer.aggregate([
+          { $match: filter },
+          {
+            $lookup: {
+              from: "users",
+              localField: "seller",
+              foreignField: "_id",
+              as: "sellerData",
+            },
+          },
+          {
+            $unwind: "$sellerData",
+          },
+        ]);
       }
-      const response = await getCryptoPrice(req.query.crypto, req.query.fiat);
-      res.json(response);
+      const updatedOffers = await calculateOfferPrices(offers);
+      res.json(updatedOffers);
     } catch (e) {
       console.log(e);
     }
   }
+
   async getOffer(req, res) {
     try {
       const errors = validationResult(req);
@@ -168,17 +296,142 @@ class offerController {
           .status(400)
           .json({ message: "Ошибка запроса предложений", errors });
       }
-      const offer = await Offer.findOne({ _id: req.params.offerId });
-      if (!offer) {
-        return res.status(400).json({ message: "Offer не найден", errors });
+
+      const user = await User.findOne({ _id: req.user.id });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Пользователь не найден", errors });
       }
 
-      res.json(offer);
+      const userCoordinates = user.location?.coordinates;
+      const offerId = mongoose.Types.ObjectId(req.params.offerId);
+
+      if (userCoordinates) {
+        const offers = await Offer.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: userCoordinates,
+              },
+              distanceField: "distance",
+              spherical: true,
+              query: { _id: offerId },
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "seller",
+              foreignField: "_id",
+              as: "sellerData",
+            },
+          },
+          {
+            $unwind: {
+              path: "$sellerData",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              "sellerData.firstName": 0,
+              "sellerData.lastName": 0,
+              "sellerData.allowsWriteToPm": 0,
+              "sellerData.__v": 0,
+              "sellerData.telegramId": 0,
+              "sellerData.location": 0,
+              "sellerData.chatId": 0,
+              "sellerData.authDate": 0,
+            },
+          },
+          {
+            $addFields: {
+              distance: { $round: ["$distance", 0] },
+            },
+          },
+        ]);
+
+        if (!offers.length) {
+          return res.status(404).json({ message: "Offer не найден", errors });
+        }
+        const updatedOffers = await calculateOfferPrices(offers);
+        res.json(updatedOffers[0]);
+      } else {
+        const offer = await Offer.findOne({ _id: offerId }).populate(
+          "seller",
+          "-firstName -lastName -allowsWriteToPm -__v -telegramId -location -chatId -authDate"
+        );
+
+        if (!offer) {
+          return res.status(404).json({ message: "Offer не найден", errors });
+        }
+        const updatedOffers = await calculateOfferPrices([offer]);
+        res.json(updatedOffers[0]);
+      }
     } catch (e) {
       console.log(e);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   }
 
+  async getMyOffers(req, res) {
+    try {
+      const userId = mongoose.Types.ObjectId(req.user.id);
+
+      const myOffers = await Offer.aggregate([
+        { $match: { seller: userId } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "seller",
+            foreignField: "_id",
+            as: "sellerData",
+          },
+        },
+        {
+          $unwind: {
+            path: "$sellerData",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            "sellerData.firstName": 0,
+            "sellerData.lastName": 0,
+            "sellerData.allowsWriteToPm": 0,
+            "sellerData.__v": 0,
+            "sellerData.telegramId": 0,
+            "sellerData.location": 0,
+            "sellerData.chatId": 0,
+            "sellerData.authDate": 0,
+          },
+        },
+      ]);
+
+      const updatedOffers = await calculateOfferPrices(myOffers);
+
+      res.json(updatedOffers);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  // async getPrice(req, res) {
+  //   try {
+  //     const errors = validationResult(req);
+  //     if (!errors.isEmpty()) {
+  //       return res.status(400).json({ message: "Ошибка запроса", errors });
+  //     }
+  //     const response = await getCryptoPrice(req.query.crypto, req.query.fiat);
+  //     res.json(response);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
   // async getProposals(req, res) {
   //   try {
   //     const errors = validationResult(req);

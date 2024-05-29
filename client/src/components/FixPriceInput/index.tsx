@@ -6,7 +6,8 @@ import {
   StyledSuffix,
   SwapButton,
   Title,
-} from "../Styles";
+} from "components/Styles/Styles";
+import { useEffect, useState } from "react";
 
 interface FlexPriceProps {
   onChange: (value: number) => void;
@@ -19,6 +20,7 @@ interface FlexPriceProps {
   isLoading?: boolean;
 }
 export const FixPriceInput = (props: FlexPriceProps) => {
+  const [showInput, setShowInput] = useState(true);
   const {
     onChange,
     value,
@@ -33,12 +35,28 @@ export const FixPriceInput = (props: FlexPriceProps) => {
   const handleChange = (value: any, name: any, values: any) => {
     onChange(values.float);
   };
-
-  return isLoading ? (
+  useEffect(() => {
+    if (!showInput) {
+      const timer = setTimeout(() => {
+        setShowInput(true);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [showInput]);
+  const handleSwap = () => {
+    if (value && value !== 0) {
+      const newValue = 1 / value;
+      onChange(newValue);
+      setShowInput(false);
+    }
+    setIsReversePrice();
+  };
+  return isLoading || !showInput ? (
     <PriceInputSkeleton />
   ) : (
     <Container>
       <Title>Фиксированная цена</Title>
+
       <StiledCurrencyInput
         placeholder={`${isReversePrice ? "Отдам" : "Получу"} за 1 ${
           isReversePrice ? secondCurrency : firstCurrency
@@ -51,7 +69,7 @@ export const FixPriceInput = (props: FlexPriceProps) => {
 
       <StyledSuffix isValid={isValid}>
         {isReversePrice ? firstCurrency : secondCurrency}
-        <SwapButton onClick={setIsReversePrice}>
+        <SwapButton onClick={handleSwap}>
           <SwapHorizIcon />
         </SwapButton>
       </StyledSuffix>

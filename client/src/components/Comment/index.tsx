@@ -1,5 +1,5 @@
 import { PriceInputSkeleton } from "../FlexPriceInput/PriceInputSkeleton";
-import { Container, StiledTextInput, Title } from "../Styles";
+import { Container, StiledTextInput, Title } from "components/Styles/Styles";
 
 interface CommentInputProps {
   onChange: (value: string) => void;
