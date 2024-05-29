@@ -13,8 +13,8 @@ interface IOfferState {
   currentOffer: string;
   currentOfferData?: OfferData;
   message: string;
-
   newOffer: EmptyOfferData;
+  myOffers: OfferData[];
 }
 const emptyOfferData: EmptyOfferData = {
   currency:
@@ -44,7 +44,7 @@ const initialState: IOfferState = {
   error: "",
   message: "",
   currentOfferData: undefined,
-
+  myOffers: [],
   newOffer: emptyOfferData,
 };
 
@@ -61,6 +61,19 @@ export const offerSlice = createSlice({
       state.error = "";
     },
     offersError: (state, action: PayloadAction<string>) => {
+      state.offersIsLoading = false;
+      state.error = action.payload;
+    },
+
+    myOffersFetching: (state) => {
+      state.offersIsLoading = true;
+    },
+    myOffersSuccess: (state, action: PayloadAction<OfferData[]>) => {
+      state.offersIsLoading = false;
+      state.myOffers = action.payload;
+      state.error = "";
+    },
+    myOffersError: (state, action: PayloadAction<string>) => {
       state.offersIsLoading = false;
       state.error = action.payload;
     },
@@ -91,6 +104,25 @@ export const offerSlice = createSlice({
       state.currentOffer = action.payload.id || "";
       state.error = "";
     },
+    myOfferSuccess: (state, action: PayloadAction<OfferData>) => {
+      const offer = action.payload;
+      let typeOfPrice = "fix";
+      let interestPrice;
+      let price = offer.price;
+      if (offer.interestPrice) {
+        typeOfPrice = "flex";
+      }
+      if (offer.interestPrice) {
+        interestPrice = 1 / offer.interestPrice;
+      }
+      if (offer.price) {
+        price = 1 / offer.price;
+      }
+      console.log(232323, interestPrice, offer.interestPrice);
+      state.offerIsLoading = false;
+      state.newOffer = { ...offer, typeOfPrice, interestPrice, price };
+      state.error = "";
+    },
     offerError: (state, action: PayloadAction<string>) => {
       state.offerIsLoading = false;
       state.error = action.payload;
@@ -109,14 +141,6 @@ export const offerSlice = createSlice({
           localStorage.getItem(LocalStorageKey.newOfferForPayment) ||
           CryptoCurrency.USDT,
       };
-    },
-
-    addMessageFetching: (state) => {},
-    addMessageSuccess: (state, action: PayloadAction<any>) => {},
-    addMessageError: (state, action: PayloadAction<string>) => {},
-
-    leaveTheOffer: (state) => {
-      state.currentOfferData = undefined;
     },
   },
 });

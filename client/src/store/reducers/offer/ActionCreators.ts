@@ -1,26 +1,12 @@
 import { AppDispatch } from "store";
 import axios from "axios";
-import { api } from "store/api";
+import { api, auth } from "store/api";
 
 import { offerSlice } from "./OfferSlice";
 
 import { API_URL } from "config";
 import { EmptyOfferData, OfferData } from "models/IOffer";
 import { Filter } from "../filter/FilterSlice";
-
-const auth = () => {
-  let headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-
-  const walletToken = localStorage.getItem("walletToken");
-  if (walletToken) {
-    //@ts-ignore
-    headers = { ...headers, walletToken: walletToken };
-  }
-
-  return { headers };
-};
 
 export const fetchOffers =
   (filter?: Filter) => async (dispatch: AppDispatch) => {
@@ -49,7 +35,58 @@ export const fetchOffers =
     }
   };
 
+export const fetchMyOffers = () => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(offerSlice.actions.myOffersFetching());
+    let url = `${API_URL}${api.offer.getOffers}`;
+
+    const response = await axios.get<OfferData[]>(
+      `${API_URL}${api.offer.getMyOffers}`,
+      auth()
+    );
+    dispatch(offerSlice.actions.myOffersSuccess(response.data));
+  } catch (e: any) {
+    dispatch(offerSlice.actions.myOffersError(e.response.data.message));
+  }
+};
+
 export const createOffer =
+  (data: EmptyOfferData, callback: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(offerSlice.actions.createOfferFetching());
+      const response = await axios.post(
+        `${API_URL}${api.offer.createOffer}`,
+        data,
+        auth()
+      );
+      dispatch(offerSlice.actions.createOfferSuccess(response.data));
+      callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(offerSlice.actions.createOfferError(e.response.data.message));
+    }
+  };
+
+export const editOffer =
+  (data: EmptyOfferData, callback: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(offerSlice.actions.createOfferFetching());
+      const response = await axios.post(
+        `${API_URL}${api.offer.editOffer}`,
+        data,
+        auth()
+      );
+      dispatch(offerSlice.actions.createOfferSuccess(response.data));
+      callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(offerSlice.actions.createOfferError(e.response.data.message));
+    }
+  };
+
+export const updateOffer =
   (data: EmptyOfferData, callback: () => void, errorCallback?: () => void) =>
   async (dispatch: AppDispatch) => {
     try {
@@ -91,6 +128,15 @@ export const fetchOffer = (id: string) => async (dispatch: AppDispatch) => {
   }
 };
 
-export const leaveTheOffer = () => (dispatch: AppDispatch) => {
-  dispatch(offerSlice.actions.leaveTheOffer());
+export const fetchMyOffer = (id: string) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(offerSlice.actions.offerFetching());
+    const response = await axios.get<OfferData>(
+      `${API_URL}${api.offer.getOffer}/${id}`,
+      auth()
+    );
+    dispatch(offerSlice.actions.myOfferSuccess(response.data));
+  } catch (e: any) {
+    dispatch(offerSlice.actions.offerError(e.response.data.message));
+  }
 };

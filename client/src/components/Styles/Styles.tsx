@@ -76,3 +76,17 @@ export const StyledSuffix = styled.div<{ isValid: boolean }>`
     gap: 8px;
   `}
 `;
+export const Primary = styled.span`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.text.primary} !important;
+  `}
+`;
+
+export const PrimaryBtn = styled.span`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.button.primary} !important;
+    & * {
+      color: ${theme.palette.button.primary} !important;
+    }
+  `}
+`;

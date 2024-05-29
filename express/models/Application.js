@@ -11,6 +11,25 @@ const Application = new Schema({
   forPayment: { type: String, required: true },
   paymentMethod: { type: String },
   price: { type: Number, required: true },
-  status: { type: String, required: true },
+  updatedAt: { type: Number, default: Date.now },
+  messageId: {
+    seller: { type: Number },
+    buyer: { type: Number },
+  },
+  rating: {
+    buyer: { type: Number },
+    seller: { type: Number },
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["NEW", "PENDING", "CONFIRMATION", "COMPLETED", "FROZEN"],
+  },
+  isExcludedFromRating: { type: Boolean, default: false },
+});
+
+Application.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 module.exports = model("Application", Application);

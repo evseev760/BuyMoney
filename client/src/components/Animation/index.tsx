@@ -1,13 +1,18 @@
-import React from "react";
 import Lottie from "lottie-react";
-import welcome from "./welcome.json";
-import money from "./money.json";
-import sleep from "./sleep.json";
+// import welcome from "./animationSrc/welcome.json";
+// import money from "./animationSrc/money.json";
+// import sleep from "./animationSrc/sleep.json";
+// import suspicion from "./animationSrc/suspicion.json";
+import hello from "./animationSrc/hello.json";
+import oh from "./animationSrc/oh.json";
 
 export enum Animations {
-  WELCOME = "WELCOME",
-  MONEY = "MONEY",
-  SLEEP = "SLEEP",
+  // WELCOME = "WELCOME",
+  // MONEY = "MONEY",
+  // SLEEP = "SLEEP",
+  // SUSPICION = "SUSPICION",
+  HELLO = "HELLO",
+  OH = "OH",
 }
 interface AnimationProps {
   type: Animations;
@@ -16,9 +21,12 @@ interface AnimationProps {
 
 export const Animation = ({ type, size }: AnimationProps) => {
   const animations = {
-    [Animations.MONEY]: money,
-    [Animations.WELCOME]: welcome,
-    [Animations.SLEEP]: sleep,
+    // [Animations.MONEY]: money,
+    // [Animations.WELCOME]: welcome,
+    // [Animations.SLEEP]: sleep,
+    // [Animations.SUSPICION]: suspicion,
+    [Animations.HELLO]: hello,
+    [Animations.OH]: oh,
   };
   return (
     <>
@@ -33,5 +41,3 @@ export const Animation = ({ type, size }: AnimationProps) => {
     </>
   );
 };
-
-// export default Animation;

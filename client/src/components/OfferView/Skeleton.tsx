@@ -9,6 +9,7 @@ const SkeletonContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    width: calc(100% - 32px);
   `}
 `;
 
@@ -29,20 +30,19 @@ const SkeletonBody = styled.div`
     border-radius: 0 0 12px 12px;
     padding: 16px;
     display: flex;
+    margin-top: 10px;
     flex-direction: column;
     gap: 8px;
   `}
 `;
 
 const SkeletonRow = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    &:not(:last-child) {
-      margin-bottom: 8px;
-    }
-  `}
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
 `;
 
 const SkeletonLabel = styled(Skeleton)`
@@ -71,6 +71,10 @@ export const OfferViewSkeleton = () => {
         <SkeletonLabel variant="text" />
       </SkeletonHeader>
       <SkeletonBody>
+        <SkeletonRow>
+          <SkeletonLabel variant="text" />
+          <SkeletonValue variant="text" />
+        </SkeletonRow>
         <SkeletonRow>
           <SkeletonLabel variant="text" />
           <SkeletonValue variant="text" />

@@ -1,5 +1,9 @@
 import { PriceInputSkeleton } from "./PriceInputSkeleton";
-import { Container, StiledCurrencyInput, Title } from "../Styles";
+import {
+  Container,
+  StiledCurrencyInput,
+  Title,
+} from "components/Styles/Styles";
 
 interface FlexPriceProps {
   onChange: (value: number) => void;

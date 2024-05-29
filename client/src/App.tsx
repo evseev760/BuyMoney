@@ -9,9 +9,11 @@ import { lightTheme, darkTheme } from "./theme";
 // import { darkTheme } from "theme/darkTheme";
 import { Theme } from "models/Theme";
 import BackendTokenProvider from "TonConnectVerification";
+import { useConnectUserRoom } from "hooks/useConnectUserRoom";
 
 function App() {
   const dispatch = useAppDispatch();
+  useConnectUserRoom();
   const { tg } = useTg();
   const isDark = tg.colorScheme === "dark";
   const theme: Theme = isDark ? darkTheme : lightTheme;

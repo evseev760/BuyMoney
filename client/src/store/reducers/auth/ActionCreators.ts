@@ -1,25 +1,11 @@
 import { AppDispatch } from "store";
 import axios from "axios";
-import { api } from "store/api";
+import { api, auth } from "store/api";
 import { authSlice } from "./AuthSlice";
 
 import { API_URL } from "config";
+import { UpdateUserData } from "models/Auth";
 
-const auth = () => {
-  let headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-
-  const walletToken = localStorage.getItem("walletToken");
-  if (walletToken) {
-    //@ts-ignore
-    headers = { ...headers, walletToken: walletToken };
-  }
-
-  return { headers };
-};
-
-//AUTH BEGIN.............................................................
 export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
   try {
     dispatch(authSlice.actions.authFetching());
@@ -28,29 +14,11 @@ export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
     const path = window.location.pathname;
-    // navigate(path);
   } catch (e: any) {
     dispatch(authSlice.actions.authError(""));
     dispatch(fetchLogin(tg));
-    // navigate("/login");
   }
 };
-
-export const fetchRegistration =
-  (data: { username: string; password: string }, navigate: any) =>
-  async (dispatch: AppDispatch) => {
-    try {
-      dispatch(authSlice.actions.registrationFetching());
-      const response = await axios.post(
-        `${API_URL}${api.auth.registration}`,
-        data
-      );
-      dispatch(authSlice.actions.registrationSuccess(response.data));
-      navigate("/login");
-    } catch (e: any) {
-      dispatch(authSlice.actions.registrationError(e.response.data.message));
-    }
-  };
 
 export const fetchLogin = (tg: any) => async (dispatch: AppDispatch) => {
   try {
@@ -70,9 +38,20 @@ export const fetchLogin = (tg: any) => async (dispatch: AppDispatch) => {
   }
 };
 
-export const logOut = (navigate: any) => (dispatch: AppDispatch) => {
-  dispatch(authSlice.actions.logout());
-  localStorage.removeItem("token");
-  navigate("/login");
-};
-// AUTH END........................................................
+export const updateUserData =
+  (data: UpdateUserData, callback?: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(authSlice.actions.updateUserDataFetching());
+      const response = await axios.post(
+        `${API_URL}${api.auth.updateUserData}`,
+        data,
+        auth()
+      );
+      dispatch(authSlice.actions.updateUserDataSuccess(response.data));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(authSlice.actions.updateUserDataError(e.response.data.message));
+    }
+  };

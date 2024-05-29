@@ -1,4 +1,5 @@
 import { Switch, SwitchProps } from "@material-ui/core";
+import { StyledSwitch } from "components/StyledSwitch";
 import { DeliveryValues } from "models/IOffer";
 import CurrencyInput from "react-currency-input-field";
 import styled, { DefaultTheme, css } from "styled-components";
@@ -31,8 +32,8 @@ export const Delivery = (props: DeliveryProps) => {
       <SwitchContainer>
         <Title>Есть доставка</Title>
         <StyledSwitch
-          checked={deliveryValues?.isDelivered}
-          onChange={(e) => handleChangeIsDelivered(e.target.checked)}
+          isOn={!!deliveryValues?.isDelivered}
+          handleChangeSwitch={handleChangeIsDelivered}
         />
       </SwitchContainer>
       <Container>
@@ -121,19 +122,19 @@ const StyledSuffix = styled.div<{ isValid: boolean }>`
   `}
 `;
 
-const StyledSwitch = styled(Switch)`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    .MuiSwitch-colorSecondary.Mui-checked {
-      color: ${theme.palette.button.primary};
-    }
-    .MuiSwitch-switchBase {
-      color: ${theme.palette.button.secondary};
-    }
-    .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
-      background-color: ${theme.palette.text.secondary};
-    }
-    .MuiSwitch-track {
-      background-color: ${theme.palette.background.secondary};
-    }
-  `}
-`;
+// const StyledSwitch = styled(Switch)`
+//   ${({ theme }: { theme: DefaultTheme }) => css`
+//     .MuiSwitch-colorSecondary.Mui-checked {
+//       color: ${theme.palette.button.primary};
+//     }
+//     .MuiSwitch-switchBase {
+//       color: ${theme.palette.button.secondary};
+//     }
+//     .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+//       background-color: ${theme.palette.text.secondary};
+//     }
+//     .MuiSwitch-track {
+//       background-color: ${theme.palette.background.secondary};
+//     }
+//   `}
+// `;

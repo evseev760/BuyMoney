@@ -22,7 +22,7 @@ const StyledButton = styled(Button)`
   ${({ theme }: { theme: DefaultTheme }) => css`
     cursor: pointer !important;
     background-color: ${theme.palette.button.secondary};
-    color: ${theme.palette.text.primary};
+    color: ${theme.palette.button.primary};
     flex-grow: 1;
     height: 48px;
     border-radius: 12px;
@@ -31,7 +31,7 @@ const StyledButton = styled(Button)`
     }
     &:hover {
       background-color: ${theme.palette.button.secondary};
-      color: ${theme.palette.text.primary};
+      color: ${theme.palette.button.primary};
       opacity: 0.9;
     }
     /* &:active {

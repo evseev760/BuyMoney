@@ -2,27 +2,28 @@ const axios = require("axios");
 const Currency = require("../../models/Currency");
 const Cripto = require("../../models/Cripto");
 const config = require("config");
+const { getCryptoPrice } = require("../../utils/apiService");
 
 const { validationResult } = require("express-validator");
 
-const conf = {
-  headers: {
-    "X-CMC_PRO_API_KEY": config.get("X-CMC_PRO_API_KEY"),
-  },
-};
+// const conf = {
+//   headers: {
+//     "X-CMC_PRO_API_KEY": config.get("X-CMC_PRO_API_KEY"),
+//   },
+// };
 
-async function getCryptoPrice(cryptoCurrency, currency) {
-  try {
-    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${cryptoCurrency}&convert=${currency}`;
-    const response = await axios.get(url, conf);
-    const price = response.data;
+// async function getCryptoPrice(cryptoCurrency, currency) {
+//   try {
+//     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${cryptoCurrency}&convert=${currency}`;
+//     const response = await axios.get(url, conf);
+//     const price = response.data;
 
-    return price;
-  } catch (error) {
-    console.error("Ошибка при получении цены криптовалюты:", error);
-    throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
-  }
-}
+//     return price;
+//   } catch (error) {
+//     console.error("Ошибка при получении цены криптовалюты:", error);
+//     throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
+//   }
+// }
 
 async function getCurrenciesApi() {
   try {
@@ -73,7 +74,7 @@ class currencyApiController {
       const response = await getCryptoPrice(crypto.cmcId, req.query.fiat);
 
       const result = {
-        price: response.data[crypto.cmcId].quote[fiat.label].price,
+        price: response,
       };
 
       res.json(result);
@@ -97,13 +98,10 @@ class currencyApiController {
           .status(400)
           .json({ message: "Криптовалюта или валюта не найдены" });
       }
-      const [firstItem, secondItem] = await Promise.all([
+      const [firstPrice, secondPrice] = await Promise.all([
         getCryptoPrice(cryptoItem.cmcId, first),
         getCryptoPrice(cryptoItem.cmcId, second),
       ]);
-
-      const firstPrice = firstItem.data[cryptoItem.cmcId].quote[first].price;
-      const secondPrice = secondItem.data[cryptoItem.cmcId].quote[second].price;
 
       const result = {
         price: firstPrice / secondPrice,

@@ -1,6 +1,6 @@
 import { Divider, List } from "@material-ui/core";
 import styled, { css } from "styled-components";
-import { ListItemComponent } from "components/ListItem";
+import { ListItemComponent, ListItemProps } from "components/ListItem";
 
 interface listItem {
   label: string;
@@ -9,7 +9,7 @@ interface listItem {
   value?: any;
 }
 interface ListProps {
-  listArr: listItem[];
+  listArr: ListItemProps[];
 }
 
 export default function ListDividers(props: ListProps) {

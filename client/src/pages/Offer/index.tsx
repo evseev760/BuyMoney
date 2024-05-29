@@ -26,11 +26,11 @@ const getDisplayedPrice = (
   currency?: string,
   forPayment?: string
 ) => {
-  const roundedPrice = parseFloat(price.toFixed(10));
+  const roundedPrice = parseFloat(price?.toFixed(10));
   if (roundedPrice >= 0.1) {
     return { price: roundedPrice, currency, forPayment };
   } else {
-    const inversePrice = parseFloat((1 / roundedPrice).toFixed(10));
+    const inversePrice = parseFloat((1 / roundedPrice)?.toFixed(10));
     return { price: inversePrice, currency: forPayment, forPayment: currency };
   }
 };
@@ -46,7 +46,6 @@ export const Offer = () => {
     (state) => state.offerReducer
   );
 
-  const { price } = useAppSelector((state) => state.currencyReducer);
   const {
     onToggleBackButton,
     setBackButtonCallBack,
@@ -57,6 +56,7 @@ export const Offer = () => {
   } = useTg();
   const [isReversePrice, setIsReversePrice] = useState<boolean>(false);
   const [currentDrawer, setCurrentDrawer] = useState<Drawer>(undefined);
+  const isRevers = currentOfferData?.price && !(currentOfferData?.price > 100);
 
   const backButtonHandler = useCallback(() => {
     if (!!currentDrawer) {
@@ -90,20 +90,11 @@ export const Offer = () => {
     return () => {
       offBackButtonCallBack(backButtonHandler);
     };
-  }, [
-    currentDrawer,
-    // backButtonHandler,
-    // offBackButtonCallBack,
-    // onToggleBackButton,
-    // setBackButtonCallBack,
-  ]);
+  }, [currentDrawer]);
 
   useEffect(() => {
     if (id) dispatch(fetchOffer(id));
-  }, [
-    id,
-    // dispatch
-  ]);
+  }, [id]);
 
   useEffect(() => {
     if (currentOfferData?.currency) {
@@ -114,22 +105,18 @@ export const Offer = () => {
           forPayment: currentOfferData.forPayment,
           price: getViewPrice(),
           offerId: currentOfferData._id,
-          seller: currentOfferData.mainUser,
+          seller: currentOfferData.seller,
         })
       );
     }
-  }, [
-    currentOfferData,
-    //  dispatch,
-    // application,
-  ]);
+  }, [currentOfferData]);
 
   const submitCreateOffer = useCallback(() => {
     const callback = () => {
       tg.MainButton.hideProgress();
       offMainButtonCallBack(submitCreateOffer);
       onToggleMainButton(false, "Купить");
-      backButtonHandler();
+      navigate(RouteNames.MAIN);
     };
     const onError = () => {
       tg.MainButton.hideProgress();
@@ -137,25 +124,30 @@ export const Offer = () => {
     };
     tg.MainButton.showProgress();
     if (!isLoading) dispatch(createApplication(application, callback, onError));
-  }, [
-    application,
-    isLoading,
-    // dispatch,
-    // offMainButtonCallBack,
-    // onToggleMainButton,
-    // tg,
-    // backButtonHandler,
-  ]);
+  }, [application, isLoading]);
 
   const isValidQuantity = () => {
-    if (
-      currentOfferData?.minQuantity &&
-      application.quantity >= currentOfferData.minQuantity &&
-      application.quantity <= currentOfferData.quantity
-    ) {
-      return true;
+    if (!currentOfferData || !application.quantity) return false;
+
+    const viewPrice = getViewPrice();
+    let minQuantity;
+    let maxQuantity;
+
+    if (isReversePrice) {
+      // При обратной цене используем прямые значения minQuantity и quantity
+      minQuantity = currentOfferData.minQuantity;
+      maxQuantity = currentOfferData.quantity;
+    } else {
+      // При прямой цене корректируем значения minQuantity и quantity с учетом viewPrice
+      minQuantity = currentOfferData.minQuantity * (1 / viewPrice);
+      maxQuantity = currentOfferData.quantity * (1 / viewPrice);
     }
-    return false;
+
+    const calculateQuantity = isReversePrice
+      ? application.quantity
+      : viewPrice * application.quantity;
+
+    return calculateQuantity >= minQuantity && calculateQuantity <= maxQuantity;
   };
   useEffect(() => {
     if (!application) return;
@@ -169,10 +161,7 @@ export const Offer = () => {
     } else {
       onToggleMainButton(false, "Купить");
     }
-  }, [
-    application,
-    // isValidQuantity, onToggleMainButton, submitCreateOffer, tg
-  ]);
+  }, [application]);
 
   const changeDrawer = (value: Drawer) => {
     setCurrentDrawer(value);
@@ -208,13 +197,8 @@ export const Offer = () => {
 
   const getViewPrice = () => {
     if (!currentOfferData) return 0;
-    if (currentOfferData.interestPrice) {
-      const interestPrice =
-        (currentOfferData.interestPrice / 100) * price.data.price;
-      return interestPrice;
-    } else {
-      return currentOfferData.price;
-    }
+
+    return currentOfferData.price;
   };
 
   const getLimits = () => {
@@ -225,18 +209,18 @@ export const Offer = () => {
         <>
           <Price value={currentOfferData.minQuantity} />
           {" - "} <Price value={currentOfferData.quantity} />{" "}
-          {` ${getLabel(currentOfferData.currency)}`}
+          <Primary>{` ${getLabel(currentOfferData.currency)}`}</Primary>
         </>
       );
     } else {
       const viewPrice = getViewPrice();
-      const minQuantity = currentOfferData.minQuantity * viewPrice;
-      const quantity = currentOfferData.quantity * viewPrice;
+      const minQuantity = currentOfferData.minQuantity * (1 / viewPrice);
+      const quantity = currentOfferData.quantity * (1 / viewPrice);
       return (
         <>
           <Price value={minQuantity} />
           {" - "} <Price value={quantity} />{" "}
-          {` ${getLabel(currentOfferData.forPayment)}`}
+          <Primary>{` ${getLabel(currentOfferData.forPayment)}`}</Primary>
         </>
       );
     }
@@ -249,8 +233,9 @@ export const Offer = () => {
       value:
         paymentMethodsList?.find(
           (item) => item.code === application.paymentMethod
-        )?.label || "-",
+        )?.label || "",
       isLoading: currenciesIsloading,
+      isSelect: true,
     },
     {
       label: "Лимиты",
@@ -266,7 +251,7 @@ export const Offer = () => {
 
   const onQuantityChange = (value: number) => {
     const adjustedValue = !isReversePrice
-      ? parseFloat((value / getViewPrice()).toFixed(10))
+      ? parseFloat((value / getViewPrice())?.toFixed(10))
       : value;
 
     dispatch(
@@ -286,16 +271,17 @@ export const Offer = () => {
     currentOfferData?.currency,
     currentOfferData?.forPayment
   );
-  console.log(555, application);
+
+  console.log(555, currentOfferData);
   return offerIsLoading || currenciesIsloading ? (
     <SkeletonOffer />
   ) : currentOfferData ? (
     <StyledContainer>
       <Header>
-        <Avatar avatar={currentOfferData.mainUserAvatar} size={40} />
+        <Avatar avatar={currentOfferData?.sellerData?.avatar || ""} size={40} />
         <Title>
           Вы {isReversePrice ? `покупаете у` : "отдадите"}{" "}
-          <b>{currentOfferData.mainUsername}</b>
+          <b>{currentOfferData?.sellerData?.nickname}</b>
         </Title>
       </Header>
       <TransactionVolumeInput
@@ -307,10 +293,17 @@ export const Offer = () => {
         secondCurrency={currentOfferData.forPayment}
         isValid={application.quantity === 0 || isValidQuantity()}
       />
-      <StyledPriceInfo>
-        Цена за 1 {getLabel(displayedCurrency)} ≈{" "}
-        <Price value={displayedPrice} /> {getLabel(displayedForPayment)}
-      </StyledPriceInfo>
+      {isRevers ? (
+        <StyledPriceInfo>
+          Цена за 1 {getLabel(displayedCurrency)} ≈{" "}
+          <Price value={1 / displayedPrice} /> {getLabel(displayedForPayment)}
+        </StyledPriceInfo>
+      ) : (
+        <StyledPriceInfo>
+          Цена за 1 {getLabel(displayedForPayment)} ≈{" "}
+          <Price value={displayedPrice} /> {getLabel(displayedCurrency)}
+        </StyledPriceInfo>
+      )}
       <ListDividers listArr={listArr} />
       <DrawerComponent
         isOpen={!!currentDrawer}
@@ -345,3 +338,9 @@ const StyledPriceInfo = styled.div`
     font-size: 20px;
   `}
 `;
+const Primary = styled.span`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.text.primary} !important;
+  `}
+`;
+export default Offer;

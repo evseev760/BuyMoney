@@ -4,12 +4,13 @@ import { CurrencySelect } from "components/selectCurrency";
 import { useCurrencies } from "hooks/useCurrencies";
 import { useFilter } from "hooks/useFilter";
 import { Currency } from "models/Currency";
-import { Quantity } from "pages/CreateOffer/components/Quantity";
+import { Quantity } from "components/Quantity";
 import { useEffect, useState } from "react";
 import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import styled from "styled-components";
 import { Tabs } from "@material-ui/core";
 import Price from "components/Price";
+import { ArrayConfirmButton } from "components/ArrayConfirmButton";
 
 type Draver =
   | "currency"
@@ -107,6 +108,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
       placeholder: "1",
     },
   ];
+  const closeDrawer = () => changeDrawer(undefined);
   const changeDrawer = (value: Draver) => {
     setCurrentDrawer(value);
   };
@@ -124,12 +126,12 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
   };
   const onSetCurrency = (value: string) => {
     setCurrency(value);
-    changeDrawer(undefined);
+    closeDrawer();
   };
   const onSetForPayment = (value: string) => {
     if (value !== forPayment) setPaymentMethods([]);
     setForPayment(value);
-    changeDrawer(undefined);
+    closeDrawer();
   };
   const drawers: Drawers = {
     currency: (
@@ -154,27 +156,34 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           forPaymentArr.find((item: Currency) => item.code === forPayment)
             ?.paymentMethodsList || []
         }
+        handleClose={closeDrawer}
       />
     ),
     sum: (
-      <Quantity
-        onChange={setSum}
-        value={sum}
-        isValid={true}
-        label="Сумма для обмена"
-        currency={getLabel(currency) || ""}
-        focus
-      />
+      <>
+        <Quantity
+          onChange={setSum}
+          value={sum}
+          isValid={true}
+          label="Сумма для обмена"
+          currency={getLabel(currency) || ""}
+          focus
+        />
+        <ArrayConfirmButton handleConfirm={closeDrawer} />
+      </>
     ),
     distance: (
-      <Quantity
-        onChange={setDistance}
-        defaultValue={distance / 1000}
-        isValid={true}
-        label="Дистанция"
-        currency={"кm"}
-        focus
-      />
+      <>
+        <Quantity
+          onChange={setDistance}
+          defaultValue={distance / 1000}
+          isValid={true}
+          label="Дистанция"
+          currency={"кm"}
+          focus
+        />
+        <ArrayConfirmButton handleConfirm={closeDrawer} />
+      </>
     ),
   };
 

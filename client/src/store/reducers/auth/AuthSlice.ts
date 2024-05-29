@@ -1,4 +1,4 @@
-import { ICurrentUser } from "../../../models/IAuth";
+import { CurrentUser } from "models/Auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
@@ -6,9 +6,8 @@ interface AuthState {
   error: string;
   isLoading: boolean;
   message?: string;
-
   isAuth: boolean;
-  currentUser: ICurrentUser;
+  currentUser: CurrentUser;
 }
 
 const initialState: AuthState = {
@@ -21,6 +20,18 @@ const initialState: AuthState = {
     id: "",
     username: "",
     roles: [],
+    isSuspicious: false,
+    nickname: "",
+    avatar: "",
+    isAnOffice: false,
+    delivery: {
+      isDelivered: false,
+      distance: undefined,
+    },
+    ratings: {
+      average: 0,
+      count: 0,
+    },
   },
 };
 
@@ -51,7 +62,7 @@ export const authSlice = createSlice({
     authFetching: (state) => {
       state.isLoading = true;
     },
-    authSuccess: (state, action: PayloadAction<ICurrentUser>) => {
+    authSuccess: (state, action: PayloadAction<CurrentUser>) => {
       state.isLoading = false;
       state.currentUser = action.payload;
       state.message = "";
@@ -61,6 +72,19 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.message = action.payload;
       state.isAuth = false;
+    },
+
+    updateUserDataFetching: (state) => {
+      state.isLoading = true;
+    },
+    updateUserDataSuccess: (state, action: PayloadAction<CurrentUser>) => {
+      state.isLoading = false;
+      state.currentUser = action.payload;
+      state.message = "";
+    },
+    updateUserDataError: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.message = action.payload;
     },
   },
 });

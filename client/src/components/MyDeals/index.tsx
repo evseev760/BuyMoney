@@ -8,11 +8,14 @@ import {
 import { Skeleton } from "@material-ui/lab";
 import { ApplicationComponent } from "components/Application";
 import { DrawerComponent } from "components/Drawer";
+import { OfferViewSkeleton } from "components/OfferView/Skeleton";
 import { CurrencySelect } from "components/selectCurrency";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useApplication } from "hooks/useApplication";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styled, { css, DefaultTheme } from "styled-components";
 import { SelectItem, getLabel } from "utils/Currency";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 type Draver = "dealsType" | undefined;
 interface Drawers {
@@ -20,15 +23,34 @@ interface Drawers {
 }
 
 export const MyDeals = () => {
+  const { currentUser } = useAppSelector((state) => state.authReducer);
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
   const [dealsType, setDealsType] = useState<string>("active");
-  const { myApplications, myApplicationsIsloading } = useApplication();
+  const dispatch = useAppDispatch();
+  const {
+    myApplications,
+    myApplicationsIsloading,
+    completeApplication,
+    acceptApplication,
+    deliteApplication,
+    completeApplicationIsLoading,
+    deliteApplicationIsLoading,
+  } = useApplication();
   const handleDealsType = (value: string) => {
     setDealsType(value);
     changeDrawer(undefined);
   };
   const changeDrawer = (value: Draver) => {
     setCurrentDrawer(value);
+  };
+  const completeApplicationHandle = (applicationId: string, rating: number) => {
+    dispatch(completeApplication({ applicationId, rating }));
+  };
+  const acceptApplicationHandle = (applicationId: string) => {
+    dispatch(acceptApplication({ applicationId }));
+  };
+  const deliteApplicationHandle = (applicationId: string) => {
+    dispatch(deliteApplication({ applicationId }));
   };
   const dealsTypes: SelectItem[] = [
     {
@@ -40,27 +62,64 @@ export const MyDeals = () => {
       label: "Завершенные",
     },
   ];
-  const drawers: Drawers = {
-    dealsType: (
-      <CurrencySelect
-        handleSelect={handleDealsType}
-        currentValue={dealsType}
-        array={dealsTypes}
-      />
-    ),
-  };
-  console.log(555, myApplications);
-  return (
+  const drawers: Drawers = useMemo(
+    () => ({
+      dealsType: (
+        <CurrencySelect
+          handleSelect={handleDealsType}
+          currentValue={dealsType}
+          array={dealsTypes}
+        />
+      ),
+    }),
+    [dealsType, dealsTypes]
+  );
+
+  const applicationsArr = useMemo(
+    () =>
+      myApplications.filter((application) => {
+        const isSell = currentUser.id === application.seller;
+        return (
+          (dealsType === "active" &&
+            (application.status === "PENDING" ||
+              application.status === "NEW" ||
+              (application.status === "CONFIRMATION" &&
+                isSell &&
+                !application.rating.seller) ||
+              (application.status === "CONFIRMATION" &&
+                !isSell &&
+                !application.rating.buyer))) ||
+          (dealsType === "completed" &&
+            (application.status === "COMPLETED" ||
+              (application.status === "CONFIRMATION" &&
+                isSell &&
+                application.rating.seller) ||
+              (application.status === "CONFIRMATION" &&
+                !isSell &&
+                application.rating.buyer)))
+        );
+      }),
+    [myApplications, dealsType]
+  );
+  return myApplicationsIsloading ? (
+    <OfferViewSkeleton />
+  ) : (
     <MyDealsContainer>
       <ItemContainer>
-        <StyledHeader
-          button
-          disableRipple
-          onClick={() => changeDrawer("dealsType")}
-        >
-          <ListItemText primary={"Мои сделки"} />
-          <StyledValue>{getLabel(dealsTypes, dealsType)}</StyledValue>
-        </StyledHeader>
+        {myApplicationsIsloading ? (
+          <HeaderSkeleton />
+        ) : (
+          <StyledHeader
+            button
+            disableRipple
+            onClick={() => changeDrawer("dealsType")}
+          >
+            <ListItemText primary={"Мои сделки"} />
+            <StyledValue>
+              {getLabel(dealsTypes, dealsType)} <ArrowDropDownIcon />
+            </StyledValue>
+          </StyledHeader>
+        )}
       </ItemContainer>
       <Divider component="li" />
       <ItemContainer>
@@ -68,21 +127,29 @@ export const MyDeals = () => {
           <StyledSkeleton />
         ) : (
           <StyledBody>
-            {!myApplications.length ? (
-              <Title>У вас пока нет активных сделок</Title>
+            {!applicationsArr.length ? (
+              dealsType === "active" ? (
+                <Title>У вас пока нет активных сделок</Title>
+              ) : (
+                <Title>У вас пока нет завершенных сделок</Title>
+              )
             ) : (
-              myApplications
-                .filter(
-                  (application) =>
-                    (dealsType === "active" &&
-                      (application.status === "PENDING" ||
-                        application.status === "NEW")) ||
-                    (dealsType === "completed" &&
-                      application.status === "COMPLETED")
-                )
-                .map((application) => (
-                  <ApplicationComponent application={application} />
-                ))
+              applicationsArr.map((application, index) => (
+                <>
+                  <ApplicationComponent
+                    key={application.offerId + index}
+                    application={application}
+                    completeApplicationHandle={completeApplicationHandle}
+                    acceptApplicationHandle={acceptApplicationHandle}
+                    deliteApplicationHandle={deliteApplicationHandle}
+                    deliteApplicationIsLoading={deliteApplicationIsLoading}
+                    completeApplicationIsLoading={completeApplicationIsLoading}
+                  />
+                  {applicationsArr.length - 1 !== index && (
+                    <Divider component="li" />
+                  )}
+                </>
+              ))
             )}
           </StyledBody>
         )}
@@ -118,9 +185,7 @@ const StyledHeader = styled(ListItem)`
     color: ${theme.palette.text.primary};
     cursor: pointer;
     -webkit-user-select: none;
-    /* & svg {
-      fill: ${theme.palette.button.primary};
-    } */
+
     &:hover {
       background-color: ${theme.palette.background.secondary};
       color: ${theme.palette.text.primary};
@@ -133,7 +198,7 @@ const StyledBody = styled(Paper)`
   ${({ theme }: { theme: DefaultTheme }) => css`
     background-color: ${theme.palette.background.secondary};
     color: ${theme.palette.text.primary};
-    padding: 8px 16px;
+    padding: 0 16px;
     min-height: 80px;
     display: flex;
     flex-direction: column;
@@ -144,6 +209,12 @@ const StyledBody = styled(Paper)`
 const StyledValue = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     color: ${theme.palette.button.primary};
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    & svg {
+      fill: ${theme.palette.button.primary};
+    }
   `}
 `;
 const Title = styled.p`
@@ -160,6 +231,12 @@ const StyledSkeleton = styled(Skeleton)`
   ${({ theme }: { theme: DefaultTheme }) => css`
     flex-grow: 1;
     height: 48px;
-    min-height: 80px;
+    /* min-height: 80px; */
+  `}
+`;
+const HeaderSkeleton = styled(Skeleton)`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    flex-grow: 1;
+    height: 48px;
   `}
 `;
