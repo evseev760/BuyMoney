@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 import { CurrencySelect } from "components/selectCurrency";
 import { DrawerComponent } from "components/Drawer";
-// import currensies from "utils/criptocurrency.json";
+
 import {
   clearNewOffer,
   createOffer,
@@ -27,6 +27,9 @@ import { useCurrencies } from "hooks/useCurrencies";
 import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { Container, Title } from "components/Styles/Styles";
+// import { setCurrencies } from "store/reducers/currency/ActionCreators";
+// import criptoList from "utils/criptocurrency.json";
+// import fiat from "utils/currency.json";
 
 interface Drawers {
   fiatCurrency: JSX.Element;
@@ -88,12 +91,12 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     };
   }, [currentDrawer]);
 
-  useEffect(() => {
-    // dispatch(setCurrencies(currensies));
-    return () => {
-      tg.MainButton.hide();
-    };
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setCurrencies({ fiat, cripto: criptoList }));
+  //   return () => {
+  //     tg.MainButton.hide();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (
