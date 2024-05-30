@@ -17,7 +17,7 @@ export interface Application {
     buyer?: number;
     seller?: number;
   };
-
+  shouldDelite?: boolean;
   partnerData?: User;
 }
 export interface CreateApplicationRequest {
@@ -36,8 +36,8 @@ export interface ApplicationState {
   error: string;
   myApplications: Application[];
   myApplicationsIsloading: boolean;
-  completeApplicationIsLoading: boolean | string;
-  deliteApplicationIsLoading: boolean | string;
+  completeApplicationIsLoading: string[];
+  deliteApplicationIsLoading: string[];
 }
 const emptyApplication = {
   quantity: 0,
@@ -54,8 +54,8 @@ const initialState: ApplicationState = {
   error: "",
   myApplications: [],
   myApplicationsIsloading: false,
-  completeApplicationIsLoading: false,
-  deliteApplicationIsLoading: false,
+  completeApplicationIsLoading: [],
+  deliteApplicationIsLoading: [],
 };
 
 const statusSort = {
@@ -101,28 +101,48 @@ export const applicationSlice = createSlice({
     },
 
     completeApplicationFetching: (state, action: PayloadAction<string>) => {
-      state.completeApplicationIsLoading = action.payload;
+      state.completeApplicationIsLoading = [
+        ...state.completeApplicationIsLoading,
+        action.payload,
+      ];
     },
-    completeApplicationSuccess: (state) => {
-      state.completeApplicationIsLoading = false;
+    completeApplicationSuccess: (state, action: PayloadAction<string>) => {
+      state.completeApplicationIsLoading =
+        state.completeApplicationIsLoading.filter(
+          (id) => id !== action.payload
+        );
     },
     completeApplicationError: (state, action: PayloadAction<string>) => {
-      state.completeApplicationIsLoading = false;
-      state.error = action.payload;
+      state.completeApplicationIsLoading =
+        state.completeApplicationIsLoading.filter(
+          (id) => id !== action.payload
+        );
     },
 
     deliteApplicationFetching: (state, action: PayloadAction<string>) => {
-      state.deliteApplicationIsLoading = action.payload;
+      state.deliteApplicationIsLoading = [
+        ...state.deliteApplicationIsLoading,
+        action.payload,
+      ];
     },
     deliteApplicationSuccess: (state, action: PayloadAction<string>) => {
-      state.deliteApplicationIsLoading = false;
+      state.deliteApplicationIsLoading =
+        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
       state.myApplications = state.myApplications.filter(
         (item) => item._id !== action.payload
       );
     },
     deliteApplicationError: (state, action: PayloadAction<string>) => {
-      state.deliteApplicationIsLoading = false;
+      state.deliteApplicationIsLoading =
+        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
       state.error = action.payload;
+    },
+    shouldDeliteApplication: (state, action: PayloadAction<string>) => {
+      state.deliteApplicationIsLoading =
+        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
+      state.myApplications = state.myApplications.map((item) =>
+        item._id === action.payload ? { ...item, shouldDelite: true } : item
+      );
     },
 
     addNewApplication: (state, action: PayloadAction<Application>) => {

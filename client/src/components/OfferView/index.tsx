@@ -14,6 +14,7 @@ import styled, { DefaultTheme, css } from "styled-components";
 import { getLabel } from "utils/Currency";
 import { Numeral } from "components/Numeral";
 import EditIcon from "@mui/icons-material/Edit";
+import SwipeableListItem from "components/SwipeableListItemProps";
 
 interface OfferViewProps {
   offer: OfferData;
@@ -67,164 +68,179 @@ export const OfferView = (props: OfferViewProps) => {
         : (offer.distance / 1000).toFixed(1)
     );
   };
-  console.log(222, offer);
   return (
-    <Container>
-      <StyledHeader>
-        <ColumnContainer>
-          <PriceRow>
-            <Price value={getViewPrice()} />
-            <span>{getMainUnit()}</span>
-          </PriceRow>
-          <Label>
-            <div style={{ display: "flex", alignItems: "flex-end" }}>
-              <span>Цена за 1 {getSecondUnit()}</span>
-
-              <IconsContainer>
-                {offer.sellerData.isAnOffice && <BusinessOutlinedIcon />}
-                {offer.delivery.isDelivered && (
-                  <DeliveryDiningOutlinedIcon sx={{ marginBottom: "-3px" }} />
-                )}
-              </IconsContainer>
-            </div>
-          </Label>
-        </ColumnContainer>
-        <ButtonContainer>
-          {isMy ? (
-            <MainButton
-              handleClick={onGoToEditOffer}
-              text=""
-              icon={<EditIcon />}
-            />
-          ) : (
-            <MainButton handleClick={onGoToOffer} text="Купить" />
-          )}
-        </ButtonContainer>
-      </StyledHeader>
-      <StyledBody>
-        {!isMy && (
-          <InfoRow>
-            <LeftBlock>
+    <BorderRadius>
+      <SwipeableListItem onClick={() => {}} isDisabled={!isMy}>
+        <Container>
+          <StyledHeader>
+            <ColumnContainer>
+              <PriceRow>
+                <Price value={getViewPrice()} />
+                <span>{getMainUnit()}</span>
+              </PriceRow>
               <Label>
-                <Avatar avatar={offer?.sellerData?.avatar || ""} size={24} />
-                {offer?.sellerData?.nickname}
-              </Label>
-            </LeftBlock>
-            <RightBlock>
-              <Value>
-                {!!offer?.sellerData?.ratings?.average && (
-                  <Grade>
-                    <Price value={offer.sellerData.ratings.average} />
-                  </Grade>
-                )}
-                <ColumnContainer style={{ gap: 0 }}>
-                  <StyledRating
-                    defaultValue={5}
-                    value={offer.sellerData.ratings.average}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                  <GradeCount>
-                    Всего оценок{" "}
-                    <Secondary>
-                      <Price value={offer.sellerData.ratings.count} />
-                    </Secondary>
-                  </GradeCount>
-                </ColumnContainer>
-              </Value>
-            </RightBlock>
-          </InfoRow>
-        )}
-        {!!offer.comment && (
-          <InfoRow>
-            <LeftBlock>
-              <Label>
-                <Comment>{offer.comment}</Comment>
-              </Label>
-            </LeftBlock>
-          </InfoRow>
-        )}
-        <div style={{ marginBottom: "8px" }}></div>
-        {!!offer.paymentMethods?.length && (
-          <InfoRow>
-            <LeftBlock>
-              <Label>Оплата</Label>
-            </LeftBlock>
-            <RightBlock>
-              <GradeCount>
-                {offer.paymentMethods.map((item) => (
-                  <span>{getLabel(getCurrencyPaymentMethods(), item)}</span>
-                ))}
-              </GradeCount>
-            </RightBlock>
-          </InfoRow>
-        )}
-        <InfoRow>
-          <LeftBlock>
-            <Label>Лимиты</Label>
-          </LeftBlock>
-          <RightBlock>
-            <Value>
-              {/* <Price value={offer.minQuantity} /> */}
-              <Numeral value={offer.minQuantity} />
-              {" - "}
-              {/* <Price value={offer.quantity} /> */}
-              <Numeral value={offer.quantity} />
-              <span>{!isRevers ? getMainUnit() : getSecondUnit()}</span>
-            </Value>
-          </RightBlock>
-        </InfoRow>
+                <div style={{ display: "flex", alignItems: "flex-end" }}>
+                  <span>Цена за 1 {getSecondUnit()}</span>
 
-        {offer.distance && (
-          <InfoRow>
-            <LeftBlock>
-              <Label>От вас</Label>
-            </LeftBlock>
-            <RightBlock>
-              <Value>
-                <span>≈</span>
-                <Price value={getDistance()} />
-                <span>km</span>
-              </Value>
-            </RightBlock>
-          </InfoRow>
-        )}
-        {offer?.delivery?.distance && (
-          <InfoRow>
-            <LeftBlock>
-              <Label>Доставка</Label>
-            </LeftBlock>
-            <RightBlock>
-              <Value>
-                <span>до</span>
-                <Price value={offer?.delivery?.distance} />
-                <span>km</span>
-                {offer?.delivery.price ? (
+                  <IconsContainer>
+                    {offer.sellerData.isAnOffice && <BusinessOutlinedIcon />}
+                    {offer.delivery.isDelivered && (
+                      <DeliveryDiningOutlinedIcon
+                        sx={{ marginBottom: "-3px" }}
+                      />
+                    )}
+                  </IconsContainer>
+                </div>
+              </Label>
+            </ColumnContainer>
+            <ButtonContainer>
+              {isMy ? (
+                <MainButton
+                  handleClick={onGoToEditOffer}
+                  text=""
+                  icon={<EditIcon />}
+                />
+              ) : (
+                <MainButton handleClick={onGoToOffer} text="Купить" />
+              )}
+            </ButtonContainer>
+          </StyledHeader>
+          <StyledBody>
+            {!isMy && (
+              <InfoRow>
+                <LeftBlock>
                   <Label>
-                    <Secondary>
-                      <Price value={offer?.delivery?.price} />
-                    </Secondary>
-                    <span>{isRevers ? getMainUnit() : getSecondUnit()}</span>
+                    <Avatar
+                      avatar={offer?.sellerData?.avatar || ""}
+                      size={24}
+                    />
+                    {offer?.sellerData?.nickname}
                   </Label>
-                ) : (
-                  <Label></Label>
-                )}
-              </Value>
-            </RightBlock>
-          </InfoRow>
-        )}
-      </StyledBody>
-    </Container>
+                </LeftBlock>
+                <RightBlock>
+                  <Value>
+                    {!!offer?.sellerData?.ratings?.average && (
+                      <Grade>
+                        <Price value={offer.sellerData.ratings.average} />
+                      </Grade>
+                    )}
+                    <ColumnContainer style={{ gap: 0 }}>
+                      <StyledRating
+                        defaultValue={5}
+                        value={offer.sellerData.ratings.average}
+                        precision={0.5}
+                        readOnly
+                        size="small"
+                      />
+                      <GradeCount>
+                        Всего оценок{" "}
+                        <Secondary>
+                          <Price value={offer.sellerData.ratings.count} />
+                        </Secondary>
+                      </GradeCount>
+                    </ColumnContainer>
+                  </Value>
+                </RightBlock>
+              </InfoRow>
+            )}
+            {!!offer.comment && (
+              <InfoRow>
+                <LeftBlock>
+                  <Label>
+                    <Comment>{offer.comment}</Comment>
+                  </Label>
+                </LeftBlock>
+              </InfoRow>
+            )}
+            <div style={{ marginBottom: "8px" }}></div>
+            {!!offer.paymentMethods?.length && (
+              <InfoRow>
+                <LeftBlock>
+                  <Label>Оплата</Label>
+                </LeftBlock>
+                <RightBlock>
+                  <GradeCount>
+                    {offer.paymentMethods.map((item) => (
+                      <span>{getLabel(getCurrencyPaymentMethods(), item)}</span>
+                    ))}
+                  </GradeCount>
+                </RightBlock>
+              </InfoRow>
+            )}
+            <InfoRow>
+              <LeftBlock>
+                <Label>Лимиты</Label>
+              </LeftBlock>
+              <RightBlock>
+                <Value>
+                  {/* <Price value={offer.minQuantity} /> */}
+                  <Numeral value={offer.minQuantity} />
+                  {" - "}
+                  {/* <Price value={offer.quantity} /> */}
+                  <Numeral value={offer.quantity} />
+                  <span>{!isRevers ? getMainUnit() : getSecondUnit()}</span>
+                </Value>
+              </RightBlock>
+            </InfoRow>
+
+            {offer.distance && (
+              <InfoRow>
+                <LeftBlock>
+                  <Label>От вас</Label>
+                </LeftBlock>
+                <RightBlock>
+                  <Value>
+                    <span>≈</span>
+                    <Price value={getDistance()} />
+                    <span>km</span>
+                  </Value>
+                </RightBlock>
+              </InfoRow>
+            )}
+            {offer?.delivery?.distance && (
+              <InfoRow>
+                <LeftBlock>
+                  <Label>Доставка</Label>
+                </LeftBlock>
+                <RightBlock>
+                  <Value>
+                    <span>до</span>
+                    <Price value={offer?.delivery?.distance} />
+                    <span>km</span>
+                    {offer?.delivery.price ? (
+                      <Label>
+                        <Secondary>
+                          <Price value={offer?.delivery?.price} />
+                        </Secondary>
+                        <span>
+                          {isRevers ? getMainUnit() : getSecondUnit()}
+                        </span>
+                      </Label>
+                    ) : (
+                      <Label></Label>
+                    )}
+                  </Value>
+                </RightBlock>
+              </InfoRow>
+            )}
+          </StyledBody>
+        </Container>
+      </SwipeableListItem>
+    </BorderRadius>
   );
 };
-
+const BorderRadius = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    border-radius: 12px;
+    overflow: hidden;
+  `}
+`;
 const Container = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     color: ${theme.palette.text.primary};
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    /* gap: 1px; */
     position: relative;
   `}
 `;
@@ -237,6 +253,7 @@ const StyledHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid ${theme.palette.background.primary};
   `}
 `;
 const StyledBody = styled.div`

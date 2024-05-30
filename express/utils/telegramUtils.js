@@ -110,27 +110,33 @@ const deliteApplicationMessage = async (
   buyerUser,
   sellerUser
 ) => {
-  const newKeyboard = {
-    inline_keyboard: [
-      [
-        {
-          text: "Заявка была удалена",
-          callback_data: "!",
-        },
+  try {
+    const newKeyboard = {
+      inline_keyboard: [
+        [
+          {
+            text: "Заявка была удалена",
+            callback_data: "!",
+          },
+        ],
       ],
-    ],
-  };
+    };
 
-  // Редактируем сообщение в чате продавца
-  await telegramBot.editMessageReplyMarkup(newKeyboard, {
-    chat_id: sellerUser.telegramId,
-    message_id: application.messageId.seller,
-  });
+    // Редактируем сообщение в чате продавца
+    if (application.messageId.seller) {
+      await telegramBot.editMessageReplyMarkup(newKeyboard, {
+        chat_id: sellerUser.telegramId,
+        message_id: application.messageId.seller,
+      });
+    }
 
-  await telegramBot.editMessageReplyMarkup(newKeyboard, {
-    chat_id: buyerUser.telegramId,
-    message_id: application.messageId.buyer,
-  });
+    await telegramBot.editMessageReplyMarkup(newKeyboard, {
+      chat_id: buyerUser.telegramId,
+      message_id: application.messageId.buyer,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {

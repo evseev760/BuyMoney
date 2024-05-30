@@ -61,7 +61,7 @@ export const useTg = () => {
     const url = `https://t.me/${id}`;
     WebApp.openTelegramLink(url);
   };
-
+  const isMobile = ["android", "ios"].includes(WebApp.platform);
   return {
     onClose,
     onToggleMainButton,
@@ -72,6 +72,7 @@ export const useTg = () => {
     setBackButtonCallBack,
     offBackButtonCallBack,
     openTelegramLink,
+    isMobile,
     tg: WebApp,
     user: WebApp.initDataUnsafe?.user,
     themeParams: WebApp.themeParams as ThemeParamsProps,

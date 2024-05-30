@@ -145,8 +145,7 @@ export const Offer = () => {
 
     const calculateQuantity = isReversePrice
       ? application.quantity
-      : viewPrice * application.quantity;
-
+      : application.quantity / viewPrice;
     return calculateQuantity >= minQuantity && calculateQuantity <= maxQuantity;
   };
   useEffect(() => {
@@ -250,9 +249,10 @@ export const Offer = () => {
   ];
 
   const onQuantityChange = (value: number) => {
-    const adjustedValue = !isReversePrice
-      ? parseFloat((value / getViewPrice())?.toFixed(10))
-      : value;
+    const viewPrice = getViewPrice();
+    const adjustedValue = isReversePrice
+      ? value
+      : parseFloat((value * viewPrice).toFixed(10));
 
     dispatch(
       editApplication({
@@ -272,7 +272,6 @@ export const Offer = () => {
     currentOfferData?.forPayment
   );
 
-  console.log(555, currentOfferData);
   return offerIsLoading || currenciesIsloading ? (
     <SkeletonOffer />
   ) : currentOfferData ? (

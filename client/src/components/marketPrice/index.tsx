@@ -12,7 +12,6 @@ interface MarketPriceProps {
 
 export const MarketPrice = (props: MarketPriceProps) => {
   const { first, second, price, isLoading, isReversePrice } = props;
-  console.log(7777, price, 1 / price);
   return !isLoading ? (
     <StyledBlock>
       {`Рыночная цена:   `}

@@ -124,7 +124,6 @@ export const AccountSettings = () => {
       </>
     ),
   };
-  console.log(333, currentUser);
   return (
     <>
       <ListDividers listArr={listArr} />

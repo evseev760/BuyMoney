@@ -42,7 +42,6 @@ class applicationApiController {
         seller,
       } = req.body;
       const { id, name } = req.user;
-      // console.log(444, req.user);
       const buyerUser = await User.findOne({ _id: id });
       const newApplication = {
         quantity,
@@ -281,7 +280,7 @@ class applicationApiController {
 
       res.status(200).json({ message: "Заявка успешно удалена" });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   };

@@ -62,7 +62,6 @@ export const MyOffers = () => {
       ),
     },
   ];
-  console.log(555, myOffers);
   return (
     <StyledContainer>
       <Avatar avatar={currentUser.avatar} size={60} />

@@ -129,7 +129,6 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   }, [newOffer]);
 
   useEffect(() => {
-    console.log(555, isValidPrice(marketPrice, newOffer.price));
     if (!newOffer) return;
     const isValidPriceCondition =
       (newOffer.typeOfPrice === "fix" &&
@@ -357,7 +356,6 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       />
     ),
   };
-  console.log(6666, newOffer, isReversePrice);
   return (
     <>
       <Container>

@@ -40,7 +40,6 @@ const Offers = () => {
       offBackButtonCallBack(backButtonHandler);
     };
   }, [isOpenDrawer]);
-  console.log(222, offers);
   return (
     <>
       <Filter drawerCallback={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
