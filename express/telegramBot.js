@@ -1,15 +1,15 @@
 const TelegramBot = require("node-telegram-bot-api");
 const config = require("config");
-const token = config.get("BOT_TOKEN");
+
 const User = require("./models/User");
 const Offer = require("./models/Offer");
 const Application = require("./models/Application");
 const { getAvatar, getGeolocationData } = require("./utils/apiService");
 const { editApplicationMessage } = require("./utils/telegramUtils");
 const { sendApplicationStatusUpdate } = require("./socketHandler");
-
-const webAppUrl = config.get("APP_URL");
-
+const isProduction = process.env.NODE_ENV === "production";
+const webAppUrl = config.get(isProduction ? "APP_URL_PROD" : "APP_URL");
+const token = config.get(isProduction ? "BOT_TOKEN_PROD" : "BOT_TOKEN");
 const bot = new TelegramBot(token, { polling: true });
 // bot.telegram.setWebhook(`${webAppUrl}/bot${token}`);
 

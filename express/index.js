@@ -31,6 +31,7 @@ app.use("/application", applicationApiRouter);
 const isProduction = process.env.NODE_ENV === "production";
 
 let server;
+let dbUrl;
 if (isProduction) {
   const privateKey = fs.readFileSync("/etc/ssl/private/privatekey.pem", "utf8");
   const certificate = fs.readFileSync(
@@ -39,14 +40,16 @@ if (isProduction) {
   );
   const credentials = { key: privateKey, cert: certificate };
   server = https.createServer(credentials, app);
+  dbUrl = config.get("dbUrlProd");
 } else {
+  dbUrl = config.get("dbUrl");
   server = createServer(app);
 }
 
 const start = async () => {
   try {
     await mongoose
-      .connect(config.get("dbUrl"), {
+      .connect(dbUrl, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,

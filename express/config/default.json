@@ -1,12 +1,16 @@
 {
   "dbUrl": "mongodb+srv://admin:***REMOVED***@cluster0.rx50cdv.mongodb.net/test?retryWrites=true&w=majority",
+  "dbUrlProd": "mongodb+srv://pavelevseev94:***REMOVED***@prod.n61c0kn.mongodb.net/Prod?retryWrites=true&w=majority",
   "secretKey": "***REMOVED***",
   "walletSecret": "***REMOVED***",
   "PORT": "443",
   "WS_PORT": "3002",
   "BOT_TOKEN": "***REMOVED***",
+  "BOT_TOKEN_PROD": "***REMOVED***",
 
   "APP_URL": "https://af39-123-19-31-114.ngrok-free.app/",
   "APP_DOMEN": "af39-123-19-31-114.ngrok-free.app",
+  "APP_URL_PROD": "https://pocketmoneytg.ru/",
+  "APP_DOMEN_PROD": "pocketmoneytg.ru",
   "X-CMC_PRO_API_KEY": "40e182b8-e141-42c8-b704-5b6cd7dcea17"
 }
