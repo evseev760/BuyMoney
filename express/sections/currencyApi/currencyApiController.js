@@ -38,7 +38,7 @@ async function getCurrenciesApi() {
   }
 }
 
-async function getCriptoCurrenciesApi() {
+async function getCriptoCurrenciesApi(isCripto) {
   try {
     const conf = {
       headers: {
@@ -46,7 +46,8 @@ async function getCriptoCurrenciesApi() {
       },
     };
     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/map`;
-    const response = await axios.get(url, conf);
+    const fiatUrl = "https://pro-api.coinmarketcap.com/v1/fiat/map";
+    const response = await axios.get(isCripto ? url : fiatUrl, conf);
     const currencies = response.data.data;
     console.log(currencies.filter((item) => item.symbol === "TON"));
     return currencies;
@@ -146,23 +147,14 @@ class currencyApiController {
       }
       const { data } = req.body;
 
-      const response = await getCriptoCurrenciesApi();
+      const criptoArr = await getCriptoCurrenciesApi(true);
+      const fiatArr = await getCriptoCurrenciesApi(false);
 
-      for (const currency of data) {
-        const foundCurrency = response.find(
+      for (const currency of data.cripto) {
+        const foundCurrency = criptoArr.find(
           (item) => item.slug === currency.code
         );
         if (foundCurrency) {
-          // await Currency.create({
-          //   cmcId: foundCurrency.id,
-          //   name: foundCurrency.name,
-          //   sign: foundCurrency.sign,
-          //   symbol: foundCurrency.symbol,
-          //   label: currency.label,
-          //   code: currency.label,
-          //   paymentMethodsList: currency.paymentMethodsList,
-          // });
-
           await Cripto.create({
             cmcId: foundCurrency.id,
             name: foundCurrency.name,
@@ -176,8 +168,24 @@ class currencyApiController {
           console.log(5555, currency.label);
         }
       }
+      for (const fiat of data.fiat) {
+        const foundFiat = fiatArr.find((item) => item.symbol === fiat.label);
+        if (foundFiat) {
+          await Currency.create({
+            cmcId: foundFiat.id,
+            name: foundFiat.name,
+            sign: foundFiat.sign,
+            symbol: foundFiat.symbol,
+            label: fiat.label,
+            code: fiat.label,
+            paymentMethodsList: fiat.paymentMethodsList,
+          });
+        } else {
+          console.log(6666, fiat.label);
+        }
+      }
 
-      res.json(response);
+      res.json({});
     } catch (e) {
       console.log(e);
     }
