@@ -18,6 +18,9 @@ interface DeliteDialogProps {
   icon?: any;
   disabled?: boolean;
   isLoading?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
+  noBtn?: boolean;
 }
 export const DeliteDialog = (props: DeliteDialogProps) => {
   const [open, setOpen] = useState(false);
@@ -28,6 +31,9 @@ export const DeliteDialog = (props: DeliteDialogProps) => {
 
   const handleClose = () => {
     setOpen(false);
+    if (props?.onClose) {
+      props.onClose();
+    }
   };
 
   const handleConfirm = () => {
@@ -36,9 +42,11 @@ export const DeliteDialog = (props: DeliteDialogProps) => {
   };
   return (
     <>
-      <SecondButton {...props} handleClick={handleClickOpen} />
+      {!props.noBtn && (
+        <SecondButton {...props} handleClick={handleClickOpen} />
+      )}
       <StyledDialog
-        open={open}
+        open={open || !!props.isOpen}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

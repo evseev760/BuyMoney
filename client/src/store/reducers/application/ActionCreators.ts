@@ -78,7 +78,9 @@ export const completeApplication =
         data,
         auth()
       );
-      dispatch(applicationSlice.actions.completeApplicationSuccess());
+      dispatch(
+        applicationSlice.actions.completeApplicationSuccess(data.applicationId)
+      );
       // dispatch(fetchOffers());
       callback && callback();
     } catch (e: any) {
@@ -107,14 +109,14 @@ export const acceptApplication =
         data,
         auth()
       );
-      dispatch(applicationSlice.actions.completeApplicationSuccess());
+      dispatch(
+        applicationSlice.actions.completeApplicationSuccess(data.applicationId)
+      );
       callback && callback();
     } catch (e: any) {
       errorCallback && errorCallback();
       dispatch(
-        applicationSlice.actions.completeApplicationError(
-          e.response.data.message
-        )
+        applicationSlice.actions.completeApplicationError(data.applicationId)
       );
     }
   };
@@ -158,4 +160,8 @@ export const updateApplicationStatusEvent =
 export const deliteApplicationEvent =
   (applicationId: string) => async (dispatch: AppDispatch) => {
     dispatch(applicationSlice.actions.deliteApplicationSuccess(applicationId));
+  };
+export const shouldDeliteApplicationEvent =
+  (applicationId: string) => async (dispatch: AppDispatch) => {
+    dispatch(applicationSlice.actions.shouldDeliteApplication(applicationId));
   };

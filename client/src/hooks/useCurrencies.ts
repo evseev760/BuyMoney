@@ -54,7 +54,6 @@ export const useCurrencies = () => {
     value?: number,
     isReversePrice?: boolean
   ) => {
-    console.log(33333, value, mainValue);
     const upperLimit = isReversePrice ? (1 / mainValue) * 1.5 : mainValue * 1.5;
     const bottomLimit = isReversePrice
       ? (1 / mainValue) * 0.7
@@ -63,7 +62,6 @@ export const useCurrencies = () => {
     if (value && value >= 1 / upperLimit && value <= 1 / bottomLimit) {
       return true;
     }
-    console.log(444);
     return false;
   };
   const isValidInterestPrice = (value?: number) => {

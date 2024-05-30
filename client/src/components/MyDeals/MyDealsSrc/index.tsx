@@ -198,12 +198,15 @@ const StyledBody = styled(Paper)`
   ${({ theme }: { theme: DefaultTheme }) => css`
     background-color: ${theme.palette.background.secondary};
     color: ${theme.palette.text.primary};
-    padding: 0 16px;
+    /* padding: 0 16px; */
     min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    & .MuiCollapse-root {
+      width: 100%;
+    }
   `}
 `;
 const StyledValue = styled.div`

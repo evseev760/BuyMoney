@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core";
+import { Collapse, Paper } from "@material-ui/core";
 import Price from "components/Price";
 import { useAppSelector } from "hooks/redux";
 import { useCurrencies } from "hooks/useCurrencies";
@@ -8,6 +8,7 @@ import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import DoDisturbAltOutlinedIcon from "@mui/icons-material/DoDisturbAltOutlined";
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import DoneIcon from "@mui/icons-material/Done";
 import { getLabel } from "utils/Currency";
@@ -16,14 +17,16 @@ import { Avatar } from "components/Avatar";
 import { useTg } from "hooks/useTg";
 import { CompliteDialog } from "components/Dialogs/Complite";
 import { DeliteDialog } from "components/Dialogs/Delite";
+import SwipeableListItem from "components/SwipeableListItemProps";
+import { useEffect, useState } from "react";
 
 interface ApplicationProps {
   application: Application;
   completeApplicationHandle: (applicationId: string, rating: number) => void;
   acceptApplicationHandle: (applicationId: string) => void;
   deliteApplicationHandle: (applicationId: string) => void;
-  completeApplicationIsLoading: boolean | string;
-  deliteApplicationIsLoading: boolean | string;
+  completeApplicationIsLoading: string[];
+  deliteApplicationIsLoading: string[];
 }
 export const ApplicationComponent = (props: ApplicationProps) => {
   const {
@@ -36,7 +39,15 @@ export const ApplicationComponent = (props: ApplicationProps) => {
   } = props;
 
   const { currentUser } = useAppSelector((state) => state.authReducer);
-  const { openTelegramLink } = useTg();
+  const { openTelegramLink, isMobile } = useTg();
+
+  const [isOpenDelite, setIsOpenDelite] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+  useEffect(() => {
+    if (application.shouldDelite) {
+      setIsOpen(false);
+    }
+  }, [application.shouldDelite]);
 
   const { forPaymentArr } = useCurrencies();
   const paymentMethod = getLabel(
@@ -59,141 +70,185 @@ export const ApplicationComponent = (props: ApplicationProps) => {
   const onDelite = () => {
     deliteApplicationHandle(application._id);
   };
-  const completeIsLoading = completeApplicationIsLoading === application._id;
-  const deliteIsLoading = deliteApplicationIsLoading === application._id;
+  const completeIsLoading = completeApplicationIsLoading.includes(
+    application._id
+  );
+  const deliteIsLoading = deliteApplicationIsLoading.includes(application._id);
   const isDisable = completeIsLoading || deliteIsLoading;
+
+  const isConfirmationWaitingForMe =
+    (application.status === "CONFIRMATION" &&
+      isSell &&
+      !application.rating.seller) ||
+    (application.status === "CONFIRMATION" &&
+      !isSell &&
+      !application.rating.buyer);
+
   return (
-    <>
-      <ApplicationBody square>
-        <Column style={{ maxWidth: "220px" }}>
-          {!!application?.partnerData && (
-            <Label>
-              <AvatarContainer>
-                <Avatar
-                  avatar={application?.partnerData?.avatar || ""}
-                  size={26}
-                />
-              </AvatarContainer>
-
-              {application?.partnerData?.nickname}
-
-              {(application.status === "PENDING" ||
-                application.status === "CONFIRMATION") && (
-                <StyledLink onClick={goToChat}>Перейти в чат</StyledLink>
-              )}
-
-              {application.status === "NEW" && (
-                <IconStatus>
-                  <FiberNewIcon />
-                </IconStatus>
-              )}
-            </Label>
-          )}
-
-          <IconTitle>
-            {isSell ? (
-              <SellOutlinedIcon />
-            ) : (
-              <AccountBalanceWalletOutlinedIcon />
-            )}
-            <Column style={{ gap: "4px" }}>
-              <Value>
-                <Price value={application.quantity} />
-                {getLabel(forPaymentArr, application.currency)}
-              </Value>
+    <Collapse in={isOpen}>
+      <SwipeableListItem
+        onClick={() => setIsOpenDelite(true)}
+        isDisabled={application.status === "COMPLETED"}
+      >
+        <ApplicationBody square>
+          <Column style={{ maxWidth: "220px" }}>
+            {!!application?.partnerData && (
               <Label>
-                <Price value={application.price * application.quantity} />
-                {getLabel(forPaymentArr, application.forPayment)}
-                <Label>{!!paymentMethod && paymentMethod}</Label>
+                <AvatarContainer>
+                  <Avatar
+                    avatar={application?.partnerData?.avatar || ""}
+                    size={26}
+                  />
+                </AvatarContainer>
+
+                {application?.partnerData?.nickname}
+
+                {(application.status === "PENDING" ||
+                  application.status === "CONFIRMATION") && (
+                  <StyledLink onClick={goToChat}>Перейти в чат</StyledLink>
+                )}
+
+                {application.status === "NEW" && (
+                  <IconStatus>
+                    <FiberNewIcon />
+                  </IconStatus>
+                )}
               </Label>
-            </Column>
-          </IconTitle>
-        </Column>
+            )}
 
-        <Column>
-          {application.status === "PENDING" && (
-            <>
-              <CompliteDialog
-                handleClick={() => {}}
-                onConfirm={onComplite}
-                text=""
-                icon={<DoneIcon />}
-                disabled={isDisable}
-                isLoading={completeIsLoading}
-              />
-              <DeliteDialog
-                handleClick={() => {}}
-                onConfirm={onDelite}
-                text=""
-                icon={<DoDisturbAltOutlinedIcon />}
-                disabled={isDisable}
-                isLoading={deliteIsLoading}
-              />
-            </>
-          )}
-          {((application.status === "CONFIRMATION" &&
-            isSell &&
-            application.rating.seller) ||
-            (application.status === "CONFIRMATION" &&
-              !isSell &&
-              application.rating.buyer)) && (
-            <>
-              <IconTitle>
-                <DoneIcon />
-              </IconTitle>
-            </>
-          )}
-          {((application.status === "CONFIRMATION" &&
-            isSell &&
-            !application.rating.seller) ||
-            (application.status === "CONFIRMATION" &&
-              !isSell &&
-              !application.rating.buyer)) && (
-            <>
-              <CompliteDialog
-                handleClick={() => {}}
-                onConfirm={onComplite}
-                text=""
-                icon={<DoneIcon />}
-                disabled={isDisable}
-                isLoading={completeIsLoading}
-              />
-
-              <DeliteDialog
-                handleClick={() => {}}
-                onConfirm={onDelite}
-                text=""
-                icon={<DoDisturbAltOutlinedIcon />}
-                disabled={isDisable}
-                isLoading={deliteIsLoading}
-              />
-            </>
-          )}
-          {application.status === "NEW" &&
-            (isSell ? (
-              <MainButton
-                handleClick={onAccept}
-                text="Принять"
-                disabled={isDisable}
-                isLoading={completeIsLoading}
-              />
-            ) : (
-              <DeliteDialog
-                handleClick={() => {}}
-                onConfirm={onDelite}
-                text="Удалить"
-                disabled={isDisable}
-                isLoading={deliteIsLoading}
-              />
-            ))}
-          {application.status === "COMPLETED" && (
             <IconTitle>
-              <DoneAllIcon />
+              {isSell ? (
+                <SellOutlinedIcon />
+              ) : (
+                <AccountBalanceWalletOutlinedIcon />
+              )}
+              <Column style={{ gap: "4px" }}>
+                <Value>
+                  <Price value={application.quantity} />
+                  {getLabel(forPaymentArr, application.currency)}
+                </Value>
+                <Label>
+                  <Price
+                    value={(1 / application.price) * application.quantity}
+                  />
+                  {getLabel(forPaymentArr, application.forPayment)}
+                  <Label>{!!paymentMethod && paymentMethod}</Label>
+                </Label>
+                {isConfirmationWaitingForMe && (
+                  <Label>
+                    {isSell
+                      ? "Покупатель подтвердил сделку"
+                      : "Продавец подтвердил сделку"}
+                  </Label>
+                )}
+              </Column>
             </IconTitle>
-          )}
-        </Column>
-      </ApplicationBody>
-    </>
+          </Column>
+
+          <Column>
+            {application.status === "PENDING" && (
+              <>
+                <CompliteDialog
+                  handleClick={() => {}}
+                  onConfirm={onComplite}
+                  text=""
+                  icon={<DoneIcon />}
+                  disabled={isDisable}
+                  isLoading={completeIsLoading}
+                />
+                <DeliteDialog
+                  handleClick={() => {}}
+                  onConfirm={onDelite}
+                  text=""
+                  isOpen={isOpenDelite}
+                  onClose={() => setIsOpenDelite(false)}
+                  icon={<DoDisturbAltOutlinedIcon />}
+                  disabled={isDisable}
+                  isLoading={deliteIsLoading}
+                  noBtn={isMobile}
+                />
+              </>
+            )}
+            {application.status === "CONFIRMATION" &&
+              !isConfirmationWaitingForMe && (
+                <>
+                  <IconTitle>
+                    <DoneIcon />
+                  </IconTitle>
+                </>
+              )}
+            {isConfirmationWaitingForMe && (
+              <>
+                <CompliteDialog
+                  handleClick={() => {}}
+                  onConfirm={onComplite}
+                  text=""
+                  icon={<DoneAllIcon />}
+                  disabled={isDisable}
+                  isLoading={completeIsLoading}
+                />
+
+                {/* <DeliteDialog
+                handleClick={() => {}}
+                onConfirm={onDelite}
+                text=""
+                icon={<DoDisturbAltOutlinedIcon />}
+                disabled={isDisable}
+                isLoading={deliteIsLoading}
+              /> */}
+              </>
+            )}
+            {application.status === "NEW" &&
+              (isSell ? (
+                <>
+                  <MainButton
+                    handleClick={onAccept}
+                    text="Принять"
+                    disabled={isDisable}
+                    isLoading={completeIsLoading}
+                  />
+                  <DeliteDialog
+                    handleClick={() => {}}
+                    onConfirm={onDelite}
+                    text="Удалить"
+                    isOpen={isOpenDelite}
+                    onClose={() => setIsOpenDelite(false)}
+                    // icon={<DoDisturbAltOutlinedIcon />}
+                    disabled={isDisable}
+                    isLoading={deliteIsLoading}
+                    noBtn={isMobile}
+                  />
+                </>
+              ) : (
+                <>
+                  {isMobile && (
+                    <IconTitle style={{ alignItems: "end" }}>
+                      <IconStatus>
+                        <HourglassTopIcon />
+                      </IconStatus>
+                    </IconTitle>
+                  )}
+                  <DeliteDialog
+                    handleClick={() => {}}
+                    onConfirm={onDelite}
+                    text="Удалить"
+                    disabled={isDisable}
+                    isLoading={deliteIsLoading}
+                    isOpen={isOpenDelite}
+                    onClose={() => setIsOpenDelite(false)}
+                    noBtn={isMobile}
+                  />
+                </>
+              ))}
+            {application.status === "COMPLETED" && (
+              <IconTitle>
+                <DoneAllIcon />
+              </IconTitle>
+            )}
+          </Column>
+        </ApplicationBody>
+      </SwipeableListItem>
+    </Collapse>
   );
 };
 
@@ -203,7 +258,7 @@ const ApplicationBody = styled(Paper)`
     color: ${theme.palette.text.primary};
     padding: 8px 16px;
     min-height: 96px;
-    width: 100%;
+    width: calc(100% - 32px);
     display: flex;
     justify-content: space-between;
     align-items: center;

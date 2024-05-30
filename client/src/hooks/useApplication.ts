@@ -10,6 +10,7 @@ import {
   updateApplicationStatusEvent,
   addNewApplicationEvent,
   deliteApplicationEvent,
+  shouldDeliteApplicationEvent,
 } from "store/reducers/application/ActionCreators";
 import socket from "socket";
 
@@ -35,7 +36,10 @@ export const useApplication = () => {
     });
     socket.on("deliteApplication", (applicationId) => {
       console.log("deliteApplication:", applicationId);
-      dispatch(deliteApplicationEvent(applicationId));
+      dispatch(shouldDeliteApplicationEvent(applicationId));
+      setTimeout(() => {
+        dispatch(deliteApplicationEvent(applicationId));
+      }, 1000);
     });
     return () => {
       socket.off("applicationStatusUpdate");

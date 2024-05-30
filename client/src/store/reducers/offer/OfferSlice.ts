@@ -118,7 +118,6 @@ export const offerSlice = createSlice({
       if (offer.price) {
         price = 1 / offer.price;
       }
-      console.log(232323, interestPrice, offer.interestPrice);
       state.offerIsLoading = false;
       state.newOffer = { ...offer, typeOfPrice, interestPrice, price };
       state.error = "";
