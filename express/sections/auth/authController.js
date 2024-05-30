@@ -10,8 +10,8 @@ const { getAvatar } = require("../../utils/apiService");
 const { generateNickname } = require("../../utils/generateNickname");
 // const { createAvatar } = require("@dicebear/core");
 // const { thumbs } = require("@dicebear/collection");
-
-const BOT_TOKEN = config.get("BOT_TOKEN");
+const isProduction = process.env.NODE_ENV === "production";
+const BOT_TOKEN = config.get(isProduction ? "BOT_TOKEN_PROD" : "BOT_TOKEN");
 
 const generateAccessToken = (id, name, isSuspicious) => {
   const payload = {

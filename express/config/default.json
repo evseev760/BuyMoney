@@ -1,12 +1,16 @@
 {
   "dbUrl": "mongodb+srv://admin:admin123@cluster0.rx50cdv.mongodb.net/test?retryWrites=true&w=majority",
+  "dbUrlProd": "mongodb+srv://pavelevseev94:902100Qq@prod.n61c0kn.mongodb.net/Prod?retryWrites=true&w=majority",
   "secretKey": "1c99a0e42119ca9ca43cce1d8aed630b85bfb7f039fb90701f0d669823f1c5ff",
   "walletSecret": "zxUMpnRSaxVSOoePsAeQ1un6nuL9Gk4p",
   "PORT": "443",
   "WS_PORT": "3002",
   "BOT_TOKEN": "7048530034:AAHBxVCmGKbg2bBgZrTsKzRzt3Wk_6xoMUY",
+  "BOT_TOKEN_PROD": "7441285931:AAF2yvQRgE6g7NsextHcfAJAolz8xLvu118",
 
   "APP_URL": "https://af39-123-19-31-114.ngrok-free.app/",
   "APP_DOMEN": "af39-123-19-31-114.ngrok-free.app",
+  "APP_URL_PROD": "https://pocketmoneytg.ru/",
+  "APP_DOMEN_PROD": "pocketmoneytg.ru",
   "X-CMC_PRO_API_KEY": "40e182b8-e141-42c8-b704-5b6cd7dcea17"
 }
