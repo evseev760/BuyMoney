@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Currency } from "models/Currency";
-import { string } from "prop-types";
 
 interface item {
   isLoading: boolean;

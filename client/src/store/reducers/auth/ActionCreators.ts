@@ -13,7 +13,6 @@ export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
     const response = await axios.get<any>(`${API_URL}${api.auth.auth}`, auth());
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
-    const path = window.location.pathname;
   } catch (e: any) {
     dispatch(authSlice.actions.authError(""));
     dispatch(fetchLogin(tg));

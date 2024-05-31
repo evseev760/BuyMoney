@@ -1,5 +1,3 @@
-import { Switch, SwitchProps } from "@material-ui/core";
-import { StyledSwitch } from "components/StyledSwitch";
 import { DeliveryValues } from "models/IOffer";
 import CurrencyInput from "react-currency-input-field";
 import styled, { DefaultTheme, css } from "styled-components";
@@ -12,44 +10,44 @@ interface DeliveryProps {
 }
 export const Delivery = (props: DeliveryProps) => {
   const { isValid, onChange, deliveryValues, currency } = props;
-  const handleChangeMaxDistance = (value: any, name: any, values: any) => {
-    onChange({ ...deliveryValues, distance: values.float });
-  };
+  // const handleChangeMaxDistance = (value: any, name: any, values: any) => {
+  //   onChange({ ...deliveryValues, distance: values.float });
+  // };
   const handleChangeDeliveryPrice = (value: any, name: any, values: any) => {
     onChange({ ...deliveryValues, price: values.float });
   };
-  const handleChangeIsDelivered = (value: boolean) => {
-    onChange({
-      ...deliveryValues,
-      isDelivered: value,
-      price: undefined,
-      distance: undefined,
-    });
-  };
+  // const handleChangeIsDelivered = (value: boolean) => {
+  //   onChange({
+  //     ...deliveryValues,
+  //     isDelivered: value,
+  //     price: undefined,
+  //     distance: undefined,
+  //   });
+  // };
   return (
     <>
       {/* <Title>Доставка</Title> */}
-      <SwitchContainer>
+      {/* <SwitchContainer>
         <Title>Есть доставка</Title>
         <StyledSwitch
           isOn={!!deliveryValues?.isDelivered}
           handleChangeSwitch={handleChangeIsDelivered}
         />
-      </SwitchContainer>
-      <Container>
-        {/* <Title>Максимальное расстояние</Title> */}
-        <QuantityInput
+      </SwitchContainer> */}
+      {/* <Container> */}
+      {/* <Title>Максимальное расстояние</Title> */}
+      {/* <QuantityInput
           onValueChange={handleChangeMaxDistance}
           value={deliveryValues?.distance}
           placeholder={"Максимальное расстояние"}
           disabled={!deliveryValues?.isDelivered}
           style={{ borderRadius: "12px 12px 0 0" }}
         />
-        <StyledSuffix isValid={isValid}>km.</StyledSuffix>
-      </Container>
+        <StyledSuffix isValid={isValid}>km.</StyledSuffix> */}
+      {/* </Container> */}
 
       <Container style={{ marginTop: "1px" }}>
-        {/* <Title>Стоимость доставки</Title> */}
+        <Title>Стоимость доставки</Title>
         <QuantityInput
           onValueChange={handleChangeDeliveryPrice}
           value={deliveryValues?.price}

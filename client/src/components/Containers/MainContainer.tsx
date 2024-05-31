@@ -36,15 +36,7 @@ const StyledContainer = styled(Container)`
     padding-bottom: 12px;
   `}
 `;
-const StyledTonConnectButton = styled(TonConnectButton)`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    & button {
-      flex-grow: 1;
-      height: 32px;
-      border-radius: 12px;
-    }
-  `}
-`;
+
 const ButtonContainer = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     display: flex;

@@ -1,8 +1,5 @@
-import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import styled, { css, DefaultTheme } from "styled-components";
-
-const getRandomWidth = () => `${Math.random() * (70 - 30) + 30}%`;
 
 const SkeletonContainer = styled.div`
   display: flex;

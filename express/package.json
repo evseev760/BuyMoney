@@ -16,6 +16,7 @@
     "@dicebear/core": "^8.0.1",
     "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "config": "^3.3.9",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",

@@ -1,17 +1,13 @@
-import { Avatar } from "components/Avatar";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useTg } from "hooks/useTg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 import styled, { css, DefaultTheme } from "styled-components";
-import StarIcon from "@mui/icons-material/Star";
-import Price from "components/Price";
 import ListDividers from "components/List";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Switch } from "@material-ui/core";
 import { fetchMyOffers } from "store/reducers/offer/ActionCreators";
 import { OfferView } from "components/OfferView";
 import { NoResults } from "components/NoResults";
