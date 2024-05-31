@@ -7,6 +7,7 @@ import { useTheme } from "styled-components";
 import { MyOffers } from "pages/MyOffers";
 import EditOffer from "pages/EditOffer";
 import { AccountSettings } from "pages/AccountSettings";
+import { OfferDetails } from "pages/OfferDetails";
 
 const Mainpage = lazy(() => import("pages/MainPage"));
 const Offers = lazy(() => import("pages/Offers"));
@@ -22,6 +23,7 @@ export enum RouteNames {
   SETTINGS = "/settings",
   EDITOFFER = "/editOffer",
   ACCOUNTSETTINGS = "/accountSettings",
+  OFFERDETAILS = "/offerDetails",
 }
 
 const Fallback = () => {
@@ -110,6 +112,16 @@ export const Router = () => {
               <MainContainer>
                 <Suspense fallback={<Fallback />}>
                   <AccountSettings />
+                </Suspense>
+              </MainContainer>
+            }
+          />
+          <Route
+            path={`${RouteNames.OFFERDETAILS}/:id`}
+            element={
+              <MainContainer>
+                <Suspense fallback={<Fallback />}>
+                  <OfferDetails />
                 </Suspense>
               </MainContainer>
             }

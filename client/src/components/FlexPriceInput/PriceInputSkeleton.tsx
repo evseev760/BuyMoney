@@ -17,6 +17,7 @@ const SkeletonTitle = styled(Skeleton)`
       width: 200px;
       height: 18px;
       border-radius: 8px;
+      background-color: ${theme.palette.background.secondary};
     }
   `}
 `;
@@ -28,6 +29,7 @@ const SkeletonInput = styled(Skeleton)<{ isValid: boolean }>`
       height: 48px;
       border-radius: 12px; /* Применяем border-radius к Input */
       width: 100%;
+      background-color: ${theme.palette.background.secondary};
     }
   `}
 `;

@@ -9,19 +9,22 @@ interface listItem {
   value?: any;
 }
 interface ListProps {
-  listArr: ListItemProps[];
+  listArr: (ListItemProps | false)[];
 }
 
 export default function ListDividers(props: ListProps) {
   const { listArr } = props;
   return (
     <StyledList aria-label="mailbox folders">
-      {listArr.map((item, index) => (
-        <>
-          <ListItemComponent {...item} />
-          {listArr.length - 1 !== index && <Divider component="li" />}
-        </>
-      ))}
+      {listArr.map(
+        (item, index) =>
+          !!item && (
+            <>
+              <ListItemComponent {...item} />
+              {listArr.length - 1 !== index && <Divider component="li" />}
+            </>
+          )
+      )}
     </StyledList>
   );
 }

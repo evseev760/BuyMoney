@@ -17,6 +17,7 @@ import { OfferView } from "components/OfferView";
 import { NoResults } from "components/NoResults";
 import { OfferViewSkeleton } from "components/OfferView/Skeleton";
 import { StyledSwitch } from "components/StyledSwitch";
+import { UserInfo } from "components/UserInfo";
 
 export const MyOffers = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
@@ -64,25 +65,11 @@ export const MyOffers = () => {
   ];
   return (
     <StyledContainer>
-      <Avatar avatar={currentUser.avatar} size={60} />
-      <Title>{currentUser.nickname}</Title>
-      <SecondaryText>
-        Это имя будет вашим ID для операций в приложении
-      </SecondaryText>
-      <StatisticContainer>
-        <StatisticBlok>
-          <StatisticValue>
-            <Price value={currentUser.ratings.count} />
-          </StatisticValue>
-          <StatisticDescription>Количество сделок</StatisticDescription>
-        </StatisticBlok>
-        <StatisticBlok>
-          <StatisticValue>
-            <Price value={currentUser.ratings.average} /> <StarIcon />
-          </StatisticValue>
-          <StatisticDescription>Средняя оценка</StatisticDescription>
-        </StatisticBlok>
-      </StatisticContainer>
+      <UserInfo
+        currentUser={currentUser}
+        textDescription={"Это имя будет вашим ID для операций в приложении"}
+      />
+
       <ListDividers listArr={listArr} />
       <div>
         <Title>Мои объявления</Title>
@@ -118,67 +105,7 @@ const Title = styled.div`
     font-size: 18px;
   `}
 `;
-const SecondaryText = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    color: ${theme.palette.text.secondary};
-    font-size: 14px;
-    text-align: center;
-    max-width: 210px;
-    white-space: normal;
-  `}
-`;
-const StatisticContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  width: 100%;
-`;
-const StatisticBlok = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    padding: 16px;
-    background-color: ${theme.palette.background.secondary};
-    border-radius: 12px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 8px;
-    flex-basis: 100%;
-  `}
-`;
-const StatisticValue = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    font-size: 18px;
-    color: ${theme.palette.text.primary};
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    & svg {
-      fill: ${theme.palette.button.primary};
-    }
-  `}
-`;
-const StatisticDescription = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    font-size: 14px;
-    color: ${theme.palette.text.secondary};
-    white-space: normal;
-  `}
-`;
-// const StyledSwitch = styled(Switch)`
-//   ${({ theme }: { theme: DefaultTheme }) => css`
-//     .MuiSwitch-colorSecondary.Mui-checked {
-//       color: ${theme.palette.button.primary};
-//     }
-//     .MuiSwitch-switchBase {
-//       color: ${theme.palette.button.secondary};
-//     }
-//     .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
-//       background-color: ${theme.palette.text.secondary};
-//     }
-//     .MuiSwitch-track {
-//       background-color: ${theme.palette.background.secondary};
-//     }
-//   `}
-// `;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

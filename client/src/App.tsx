@@ -10,6 +10,7 @@ import { lightTheme, darkTheme } from "./theme";
 import { Theme } from "models/Theme";
 import BackendTokenProvider from "TonConnectVerification";
 import { useConnectUserRoom } from "hooks/useConnectUserRoom";
+// import "./i18n";
 
 function App() {
   const dispatch = useAppDispatch();
