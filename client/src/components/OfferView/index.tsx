@@ -71,7 +71,7 @@ export const OfferView = (props: OfferViewProps) => {
   return (
     <BorderRadius>
       <SwipeableListItem onClick={() => {}} isDisabled={!isMy}>
-        <Container>
+        <Container id={offer._id}>
           <StyledHeader>
             <ColumnContainer>
               <PriceRow>
@@ -152,77 +152,88 @@ export const OfferView = (props: OfferViewProps) => {
                 </LeftBlock>
               </InfoRow>
             )}
-            <div style={{ marginBottom: "8px" }}></div>
-            {!!offer.paymentMethods?.length && (
-              <InfoRow>
-                <LeftBlock>
-                  <Label>Оплата</Label>
-                </LeftBlock>
-                <RightBlock>
-                  <GradeCount>
-                    {offer.paymentMethods.map((item) => (
-                      <span>{getLabel(getCurrencyPaymentMethods(), item)}</span>
-                    ))}
-                  </GradeCount>
-                </RightBlock>
-              </InfoRow>
-            )}
-            <InfoRow>
-              <LeftBlock>
-                <Label>Лимиты</Label>
-              </LeftBlock>
-              <RightBlock>
-                <Value>
-                  {/* <Price value={offer.minQuantity} /> */}
-                  <Numeral value={offer.minQuantity} />
-                  {" - "}
-                  {/* <Price value={offer.quantity} /> */}
-                  <Numeral value={offer.quantity} />
-                  <span>{!isRevers ? getMainUnit() : getSecondUnit()}</span>
-                </Value>
-              </RightBlock>
-            </InfoRow>
 
-            {offer.distance && (
-              <InfoRow>
-                <LeftBlock>
-                  <Label>От вас</Label>
-                </LeftBlock>
-                <RightBlock>
-                  <Value>
-                    <span>≈</span>
-                    <Price value={getDistance()} />
-                    <span>km</span>
-                  </Value>
-                </RightBlock>
-              </InfoRow>
-            )}
-            {offer?.delivery?.distance && (
-              <InfoRow>
-                <LeftBlock>
-                  <Label>Доставка</Label>
-                </LeftBlock>
-                <RightBlock>
-                  <Value>
-                    <span>до</span>
-                    <Price value={offer?.delivery?.distance} />
-                    <span>km</span>
-                    {offer?.delivery.price ? (
-                      <Label>
-                        <Secondary>
-                          <Price value={offer?.delivery?.price} />
-                        </Secondary>
+            <div style={{ marginBottom: "8px" }}></div>
+            <StyledInfoContainer
+              onClick={() =>
+                navigate(`${RouteNames.OFFERDETAILS}/${offer._id}`, {
+                  state: { from: `${RouteNames.OFFERS}#${offer._id}` },
+                })
+              }
+            >
+              {!!offer.paymentMethods?.length && (
+                <InfoRow>
+                  <LeftBlock>
+                    <Label>Оплата</Label>
+                  </LeftBlock>
+                  <RightBlock>
+                    <GradeCount>
+                      {offer.paymentMethods.map((item) => (
                         <span>
-                          {isRevers ? getMainUnit() : getSecondUnit()}
+                          {getLabel(getCurrencyPaymentMethods(), item)}
                         </span>
-                      </Label>
-                    ) : (
-                      <Label></Label>
-                    )}
+                      ))}
+                    </GradeCount>
+                  </RightBlock>
+                </InfoRow>
+              )}
+              <InfoRow>
+                <LeftBlock>
+                  <Label>Лимиты</Label>
+                </LeftBlock>
+                <RightBlock>
+                  <Value>
+                    {/* <Price value={offer.minQuantity} /> */}
+                    <Numeral value={offer.minQuantity} />
+                    {" - "}
+                    {/* <Price value={offer.quantity} /> */}
+                    <Numeral value={offer.quantity} />
+                    <span>{!isRevers ? getMainUnit() : getSecondUnit()}</span>
                   </Value>
                 </RightBlock>
               </InfoRow>
-            )}
+
+              {offer.distance && (
+                <InfoRow>
+                  <LeftBlock>
+                    <Label>От вас</Label>
+                  </LeftBlock>
+                  <RightBlock>
+                    <Value>
+                      <span>≈</span>
+                      <Price value={getDistance()} />
+                      <span>km</span>
+                    </Value>
+                  </RightBlock>
+                </InfoRow>
+              )}
+              {offer?.delivery?.distance && (
+                <InfoRow>
+                  <LeftBlock>
+                    <Label>Доставка</Label>
+                  </LeftBlock>
+                  <RightBlock>
+                    <Value>
+                      <span>до</span>
+                      <Price value={offer?.delivery?.distance} />
+                      <span>km</span>
+                      {offer?.delivery.price ? (
+                        <Label>
+                          <Secondary>
+                            <Price value={offer?.delivery?.price} />
+                          </Secondary>
+                          <span>
+                            {isRevers ? getMainUnit() : getSecondUnit()}
+                          </span>
+                        </Label>
+                      ) : (
+                        <Label></Label>
+                      )}
+                    </Value>
+                  </RightBlock>
+                </InfoRow>
+              )}
+            </StyledInfoContainer>
           </StyledBody>
         </Container>
       </SwipeableListItem>
@@ -262,6 +273,17 @@ const StyledBody = styled.div`
     /* min-height: 128px; */
     border-radius: 0 0 12px 12px;
     padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  `}
+`;
+const StyledInfoContainer = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    /* background-color: ${theme.palette.background.secondary}; */
+    /* min-height: 128px; */
+
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     gap: 4px;

@@ -26,7 +26,7 @@ export const ListItemComponent = ({
   return (
     <>
       {isLoading ? (
-        <Skeleton height={48} />
+        <ListItemSkeleton />
       ) : (
         <ListItemContainer>
           <StyledListItem
@@ -46,6 +46,40 @@ export const ListItemComponent = ({
     </>
   );
 };
+const getRandomWidth = () => `${Math.random() * (70 - 30) + 30}%`;
+const ListItemSkeleton = () => (
+  <ListItemContainer>
+    <StyledSkeleton variant="rect" height={48} />
+    <SkeletonTextContainer>
+      <StyledSkeletonText variant="text" width={"60%"} />
+      <StyledSkeletonText variant="text" width={"30%"} />
+    </SkeletonTextContainer>
+  </ListItemContainer>
+);
+
+const StyledSkeleton = styled(Skeleton)`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    background-color: ${theme.palette.background.secondary};
+  `}
+`;
+
+const StyledSkeletonText = styled(Skeleton)`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    /* background-color: ${theme.palette.background.secondary}; */
+    margin: 4px 0;
+  `}
+`;
+
+const SkeletonTextContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 8px;
+  width: calc(100% - 32px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 const StyledListItem = styled(ListItem)`
   ${({ theme }: { theme: DefaultTheme }) => css`

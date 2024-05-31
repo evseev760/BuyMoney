@@ -16,9 +16,11 @@ import { TonConnectButton } from "@tonconnect/ui-react";
 import { useCurrencies } from "hooks/useCurrencies";
 import { MyDeals } from "components/MyDeals";
 import { useAppSelector } from "hooks/redux";
+// import { useTranslation } from "react-i18next";
 
 const Mainpage = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
+  // const { t } = useTranslation();
   const navigate = useNavigate();
   const { onToggleBackButton } = useTg();
   const {} = useCurrencies();
@@ -49,13 +51,11 @@ const Mainpage = () => {
   return (
     <MainPageContainer className="mainPage_container">
       <Animation
-        type={currentUser.isSuspicious ? Animations.HELLO : Animations.HELLO}
+        type={currentUser?.isSuspicious ? Animations.HELLO : Animations.HELLO}
       />
 
-      <Title>P2P маркет наличных</Title>
-      <Description>
-        Покупайте и продавайте наличные где бы вы ни были
-      </Description>
+      {/* <Title>{t("mainTitle")}</Title>
+      <Description>{t("mainDescription")}</Description> */}
 
       <ButtonContainer>
         <StyledTonConnectButton />
@@ -95,7 +95,7 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
-  max-width: 260px;
+  max-width: 240px;
   white-space: normal;
   font-size: 13px;
   margin: 0;

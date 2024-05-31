@@ -1,17 +1,10 @@
-// export const API_URL = `https://pocketmoneytg.ru/`;
-// export const WS_URL = `wss://pocketmoneytg.ru:3002/`;
-
-// export const API_URL = `http://localhost:443/`;
-// export const WS_URL = `http://localhost:3002/`;
-
+const envName = "production";
+// const envName = "development";
 export const API_URL =
-  process.env.NODE_ENV === "production"
+  process.env.NODE_ENV === envName
     ? `https://pocketmoneytg.ru/`
-    : `https://af39-123-19-31-114.ngrok-free.app/`;
+    : `https://230c-123-19-31-114.ngrok-free.app/`;
 export const WS_URL =
-  process.env.NODE_ENV === "production"
+  process.env.NODE_ENV === envName
     ? `wss://pocketmoneytg.ru/`
-    : `wss://af39-123-19-31-114.ngrok-free.app/`;
-
-// export const API_URL = `https://pocketmoneytg.ru/`;
-// export const WS_URL = `wss://pocketmoneytg.ru/`;
+    : `wss://230c-123-19-31-114.ngrok-free.app/`;

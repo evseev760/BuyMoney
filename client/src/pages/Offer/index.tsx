@@ -10,7 +10,7 @@ import { Currency } from "models/Currency";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "router";
-
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { fetchOffer } from "store/reducers/offer/ActionCreators";
 import styled, { css, DefaultTheme } from "styled-components";
 import SkeletonOffer from "./Skeleton";
@@ -244,7 +244,12 @@ export const Offer = () => {
     },
     {
       label: "Детали объявления",
-      handleClick: () => {},
+      handleClick: () =>
+        currentOfferData &&
+        navigate(`${RouteNames.OFFERDETAILS}/${currentOfferData._id}`, {
+          state: { from: `${RouteNames.OFFER}/${currentOfferData._id}` },
+        }),
+      value: <ArrowForwardIosIcon />,
     },
   ];
 
