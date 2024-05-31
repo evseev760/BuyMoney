@@ -5,9 +5,8 @@ import { api, auth } from "store/api";
 import { verifySlice } from "./VerificationSlice";
 
 import { API_URL } from "config";
-import { EmptyOfferData, OfferData } from "models/IOffer";
 
-import { TonAccount, TonProof } from "models/Verify";
+import { TonProof } from "models/Verify";
 import { Account, ConnectAdditionalRequest } from "@tonconnect/ui-react";
 
 export const generatePayload = () => async (dispatch: AppDispatch) => {

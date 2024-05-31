@@ -21,13 +21,13 @@ import { FixPriceInput } from "components/FixPriceInput";
 import { FlexPriceInput } from "components/FlexPriceInput";
 import { YourFlexPrice } from "components/YourFlexPrice";
 import { Quantity } from "components/Quantity";
-import { Delivery } from "components/Delivery";
 import { DeliveryValues } from "models/IOffer";
 import { Currency } from "models/Currency";
 import { useCurrencies } from "hooks/useCurrencies";
 import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { Container, Title } from "components/Styles/Styles";
+import { Delivery } from "components/Delivery";
 
 interface Drawers {
   fiatCurrency: JSX.Element;
@@ -437,7 +437,7 @@ const EditOffer = () => {
         onChange={onCommentChange}
         value={newOffer.comment}
       />
-      {/* {!currenciesIsloading && (
+      {!currenciesIsloading && (
         <>
           <Delivery
             deliveryValues={newOffer.delivery}
@@ -446,7 +446,7 @@ const EditOffer = () => {
             isValid={true}
           />
         </>
-      )} */}
+      )}
       <DrawerComponent
         isOpen={!!currentDrawer}
         onClose={() => changeDrawer(undefined)}

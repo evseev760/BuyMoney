@@ -73,7 +73,7 @@ export const setCurrencies =
   (currencies: any) => async (dispatch: AppDispatch) => {
     try {
       // dispatch(currencySlice.actions.currenciesFetching());
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}${api.currency.setCurrencies}`,
         { data: currencies },
         auth()

@@ -38,7 +38,6 @@ export const fetchOffers =
 export const fetchMyOffers = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(offerSlice.actions.myOffersFetching());
-    let url = `${API_URL}${api.offer.getOffers}`;
 
     const response = await axios.get<OfferData[]>(
       `${API_URL}${api.offer.getMyOffers}`,

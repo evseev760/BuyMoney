@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Router } from "./router";
 import "./App.css";
 import { fetchAuth, fetchLogin } from "./store/reducers/auth/ActionCreators";
@@ -10,7 +10,7 @@ import { lightTheme, darkTheme } from "./theme";
 import { Theme } from "models/Theme";
 import BackendTokenProvider from "TonConnectVerification";
 import { useConnectUserRoom } from "hooks/useConnectUserRoom";
-// import "./i18n";
+import "./i18n";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -21,21 +21,27 @@ function App() {
   const bgColor = theme.palette.background.primary;
   useEffect(() => {
     const token = localStorage.getItem("token");
-    !token && dispatch(fetchLogin(tg));
-    token && dispatch(fetchAuth(tg));
-    tg.setBackgroundColor(`#${bgColor.substring(1)}`);
-    tg.setHeaderColor(`#${bgColor.substring(1)}`);
-    document
-      .querySelector("body")
-      ?.setAttribute("style", "background-color: " + bgColor);
-  }, []);
+    if (tg.initData) {
+      !token && dispatch(fetchLogin(tg));
+      token && dispatch(fetchAuth(tg));
+      tg.setBackgroundColor(`#${bgColor.substring(1)}`);
+      tg.setHeaderColor(`#${bgColor.substring(1)}`);
+      document
+        .querySelector("body")
+        ?.setAttribute("style", "background-color: " + bgColor);
+    }
+  }, [bgColor, tg]);
 
   return (
     <BackendTokenProvider>
       <div style={{ backgroundColor: bgColor }} className="App">
-        <ThemeProvider theme={theme}>
-          <Router />
-        </ThemeProvider>
+        {tg.initData ? (
+          <ThemeProvider theme={theme}>
+            <Router />
+          </ThemeProvider>
+        ) : (
+          <div>Это приложение для Telegram</div>
+        )}
       </div>
     </BackendTokenProvider>
   );

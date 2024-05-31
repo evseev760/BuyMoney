@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTg } from "hooks/useTg";
 import { ActionButton } from "components/Button";
 import styled, { css, DefaultTheme } from "styled-components";
@@ -16,14 +16,14 @@ import { TonConnectButton } from "@tonconnect/ui-react";
 import { useCurrencies } from "hooks/useCurrencies";
 import { MyDeals } from "components/MyDeals";
 import { useAppSelector } from "hooks/redux";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const Mainpage = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { onToggleBackButton } = useTg();
-  const {} = useCurrencies();
+  useCurrencies();
   useEffect(() => {
     onToggleBackButton(false);
   }, []);
@@ -54,8 +54,8 @@ const Mainpage = () => {
         type={currentUser?.isSuspicious ? Animations.HELLO : Animations.HELLO}
       />
 
-      {/* <Title>{t("mainTitle")}</Title>
-      <Description>{t("mainDescription")}</Description> */}
+      <Title>{t("mainTitle")}</Title>
+      <Description>{t("mainDescription")}</Description>
 
       <ButtonContainer>
         <StyledTonConnectButton />

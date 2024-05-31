@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LocalStorageKey } from "hooks/useLocalStorage";
-import { Currency } from "models/Currency";
 import { FiatCurrency, CryptoCurrency } from "utils/Currency";
 
 export interface Filter {

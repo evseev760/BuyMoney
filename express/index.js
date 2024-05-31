@@ -7,6 +7,7 @@ const cronJobs = require("./cronJobs");
 const fs = require("fs");
 const https = require("https");
 const { createServer } = require("http");
+const compression = require("compression");
 
 const { initializeSocket } = require("./socketHandler");
 
@@ -22,6 +23,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(compression());
 app.use("/auth", authRouter);
 app.use("/offer", offerRouter);
 app.use("/verify", verificationRouter);
