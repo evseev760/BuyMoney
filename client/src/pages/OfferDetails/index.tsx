@@ -12,12 +12,14 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { fetchOffer } from "store/reducers/offer/ActionCreators";
 import styled, { css, DefaultTheme } from "styled-components";
 import { getLabel } from "utils/Currency";
+import { useTranslation } from "react-i18next";
 
 export const OfferDetails = () => {
   const { currentOfferData, offerIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
   const location = useLocation();
+  const { t } = useTranslation();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,12 +43,13 @@ export const OfferDetails = () => {
     onToggleBackButton(true);
     setBackButtonCallBack(backButtonHandler);
     tg.MainButton.show();
-    onToggleMainButton(true, "Назад");
+    onToggleMainButton(true, t("back"));
     tg.onEvent("mainButtonClicked", backButtonHandler);
 
     return () => {
       tg.offEvent("mainButtonClicked", backButtonHandler);
       offBackButtonCallBack(backButtonHandler);
+      onToggleMainButton(false, t("back"));
       tg.MainButton.hide();
     };
   }, []);
@@ -57,7 +60,7 @@ export const OfferDetails = () => {
   );
   const listArr = [
     {
-      label: `Цена за 1 ${currency}`,
+      label: `${t("priceFor1")} ${currency}`,
       handleClick: () => {},
       value: !!currentOfferData?.price ? (
         <Primary>
@@ -69,7 +72,7 @@ export const OfferDetails = () => {
       isLoading: offerIsLoading,
     },
     {
-      label: `Цена за 1 ${forPayment}`,
+      label: `${t("priceFor1")} ${forPayment}`,
       handleClick: () => {},
       value: !!currentOfferData?.price ? (
         <Primary>
@@ -81,7 +84,7 @@ export const OfferDetails = () => {
       isLoading: offerIsLoading,
     },
     {
-      label: "Лимиты",
+      label: t("limits"),
       handleClick: () => {},
       value: currentOfferData ? (
         <Column>
@@ -110,7 +113,7 @@ export const OfferDetails = () => {
       isLoading: offerIsLoading,
     },
     {
-      label: `Методы оплаты`,
+      label: t("paymentMethods"),
       handleClick: () => {},
       value: (
         <Column>
@@ -128,25 +131,25 @@ export const OfferDetails = () => {
       isLoading: offerIsLoading,
     },
     {
-      label: `Доставка`,
+      label: t("delivery"),
       handleClick: () => {},
       value: (
         <Primary>
-          {currentOfferData?.delivery.isDelivered ? "Есть" : "Нет"}
+          {currentOfferData?.delivery.isDelivered ? t("available") : t("no")}
         </Primary>
       ),
       isLoading: offerIsLoading,
     },
     !!currentOfferData?.delivery.isDelivered &&
       !!currentOfferData?.delivery.distance && {
-        label: `Максимальное расстояние`,
+        label: t("maximumDistance"),
         handleClick: () => {},
         value: <Primary>{currentOfferData?.delivery.distance}</Primary>,
         isLoading: offerIsLoading,
       },
     !!currentOfferData?.delivery.isDelivered &&
       !!currentOfferData?.delivery.price && {
-        label: `Цена доставки`,
+        label: t("deliveryPrice"),
         handleClick: () => {},
         value: <Primary>{currentOfferData?.delivery.price}</Primary>,
         isLoading: offerIsLoading,
@@ -161,7 +164,7 @@ export const OfferDetails = () => {
       {!offerIsLoading && currentOfferData?.comment && (
         <CommentPaper>
           <CommentTitle>
-            <ChatBubbleOutlineIcon /> {" Комментарий"}
+            <ChatBubbleOutlineIcon /> {` ${t("comment")}`}
           </CommentTitle>
           {currentOfferData?.comment}
         </CommentPaper>

@@ -1,14 +1,9 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@material-ui/core";
-import { Rating } from "@material-ui/lab";
+import { Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import { MainButton } from "components/MainButton";
 import { SecondButton } from "components/SecondButton";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled, { css, DefaultTheme } from "styled-components";
 
 interface DeliteDialogProps {
@@ -23,6 +18,7 @@ interface DeliteDialogProps {
   noBtn?: boolean;
 }
 export const DeliteDialog = (props: DeliteDialogProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -52,12 +48,12 @@ export const DeliteDialog = (props: DeliteDialogProps) => {
         aria-describedby="alert-dialog-description"
       >
         <StyledDialogTitle id="alert-dialog-title">
-          Удалить заявку?
+          {t("deleteTheApplication")}
         </StyledDialogTitle>
 
         <DialogActions>
-          <SecondButton handleClick={handleClose} text="Отмена" />
-          <MainButton handleClick={handleConfirm} text="Подтвердить" />
+          <SecondButton handleClick={handleClose} text={t("cancel")} />
+          <MainButton handleClick={handleConfirm} text={t("confirm")} />
         </DialogActions>
       </StyledDialog>
     </>

@@ -16,6 +16,7 @@ import styled, { css, DefaultTheme } from "styled-components";
 import SkeletonOffer from "./Skeleton";
 import Price from "components/Price";
 import { useApplication } from "hooks/useApplication";
+import { useTranslation } from "react-i18next";
 
 interface Drawers {
   paymentMethods: JSX.Element;
@@ -36,6 +37,7 @@ const getDisplayedPrice = (
 };
 
 export const Offer = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ export const Offer = () => {
       tg.BackButton.show();
     } else {
       navigate(RouteNames.OFFERS);
-      onToggleMainButton(false, "Купить");
+      onToggleMainButton(false, t("buy"));
       dispatch(
         editApplication({
           ...application,
@@ -115,12 +117,12 @@ export const Offer = () => {
     const callback = () => {
       tg.MainButton.hideProgress();
       offMainButtonCallBack(submitCreateOffer);
-      onToggleMainButton(false, "Купить");
+      onToggleMainButton(false, t("buy"));
       navigate(RouteNames.MAIN);
     };
     const onError = () => {
       tg.MainButton.hideProgress();
-      onToggleMainButton(false, "Купить");
+      onToggleMainButton(false, t("buy"));
     };
     tg.MainButton.showProgress();
     if (!isLoading) dispatch(createApplication(application, callback, onError));
@@ -134,11 +136,9 @@ export const Offer = () => {
     let maxQuantity;
 
     if (isReversePrice) {
-      // При обратной цене используем прямые значения minQuantity и quantity
       minQuantity = currentOfferData.minQuantity;
       maxQuantity = currentOfferData.quantity;
     } else {
-      // При прямой цене корректируем значения minQuantity и quantity с учетом viewPrice
       minQuantity = currentOfferData.minQuantity * (1 / viewPrice);
       maxQuantity = currentOfferData.quantity * (1 / viewPrice);
     }
@@ -152,13 +152,13 @@ export const Offer = () => {
     if (!application) return;
 
     if (isValidQuantity()) {
-      onToggleMainButton(true, "Купить");
+      onToggleMainButton(true, t("buy"));
       tg.onEvent("mainButtonClicked", submitCreateOffer);
       return () => {
         tg.offEvent("mainButtonClicked", submitCreateOffer);
       };
     } else {
-      onToggleMainButton(false, "Купить");
+      onToggleMainButton(false, t("buy"));
     }
   }, [application]);
 
@@ -227,7 +227,7 @@ export const Offer = () => {
 
   const listArr = [
     {
-      label: "Способ оплаты",
+      label: t("paymentMethod"),
       handleClick: () => changeDrawer("paymentMethods"),
       value:
         paymentMethodsList?.find(
@@ -237,13 +237,13 @@ export const Offer = () => {
       isSelect: true,
     },
     {
-      label: "Лимиты",
+      label: t("limits"),
       value: getLimits(),
       handleClick: () => {},
       isLoading: currenciesIsloading,
     },
     {
-      label: "Детали объявления",
+      label: t("offerDetails"),
       handleClick: () =>
         currentOfferData &&
         navigate(`${RouteNames.OFFERDETAILS}/${currentOfferData._id}`, {
@@ -284,7 +284,7 @@ export const Offer = () => {
       <Header>
         <Avatar avatar={currentOfferData?.sellerData?.avatar || ""} size={40} />
         <Title>
-          Вы {isReversePrice ? `покупаете у` : "отдадите"}{" "}
+          {isReversePrice ? t("youBuyFrom") : t("youGive")}{" "}
           <b>{currentOfferData?.sellerData?.nickname}</b>
         </Title>
       </Header>
@@ -299,12 +299,12 @@ export const Offer = () => {
       />
       {isRevers ? (
         <StyledPriceInfo>
-          Цена за 1 {getLabel(displayedCurrency)} ≈{" "}
+          {t("priceFor1")} {getLabel(displayedCurrency)} ≈{" "}
           <Price value={1 / displayedPrice} /> {getLabel(displayedForPayment)}
         </StyledPriceInfo>
       ) : (
         <StyledPriceInfo>
-          Цена за 1 {getLabel(displayedForPayment)} ≈{" "}
+          {t("priceFor1")} {getLabel(displayedForPayment)} ≈{" "}
           <Price value={displayedPrice} /> {getLabel(displayedCurrency)}
         </StyledPriceInfo>
       )}

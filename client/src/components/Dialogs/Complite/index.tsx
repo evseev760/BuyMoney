@@ -11,6 +11,7 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useState } from "react";
 import styled, { css, DefaultTheme } from "styled-components";
+import { useTranslation } from "react-i18next";
 
 interface CompliteDialogProps {
   text: string;
@@ -21,6 +22,7 @@ interface CompliteDialogProps {
   isLoading?: boolean;
 }
 export const CompliteDialog = (props: CompliteDialogProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<number>(5);
 
@@ -48,7 +50,7 @@ export const CompliteDialog = (props: CompliteDialogProps) => {
         aria-describedby="alert-dialog-description"
       >
         <StyledDialogTitle id="alert-dialog-title">
-          Оцените сделку
+          {t("rateTheDeal")}
         </StyledDialogTitle>
         <StyledDialogContent>
           <StyledRating
@@ -61,8 +63,8 @@ export const CompliteDialog = (props: CompliteDialogProps) => {
           />
         </StyledDialogContent>
         <DialogActions>
-          <SecondButton handleClick={handleClose} text="Отмена" />
-          <MainButton handleClick={handleConfirm} text="Подтвердить" />
+          <SecondButton handleClick={handleClose} text={t("cancel")} />
+          <MainButton handleClick={handleConfirm} text={t("confirm")} />
         </DialogActions>
       </StyledDialog>
     </>

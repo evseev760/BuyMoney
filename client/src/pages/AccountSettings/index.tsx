@@ -16,12 +16,14 @@ import { DrawerComponent } from "components/Drawer";
 import { PrimaryBtn } from "components/Styles/Styles";
 import { UpdateUserData } from "models/Auth";
 import { updateUserData } from "store/reducers/auth/ActionCreators";
+import { useTranslation } from "react-i18next";
 interface Drawers {
   distance: JSX.Element;
 }
 type Drawer = "distance" | undefined;
 
 export const AccountSettings = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const [isAnOffice, setIsAnOffice] = useState<boolean>(currentUser.isAnOffice);
   const [isDelivered, setIsDelivered] = useState<boolean>(
@@ -76,7 +78,7 @@ export const AccountSettings = () => {
 
   const listArr = [
     {
-      label: "Есть офис",
+      label: t("thereIsAnOffice"),
       icon: <BusinessOutlinedIcon />,
       handleClick: () => setIsAnOffice(!isAnOffice),
       value: (
@@ -85,7 +87,7 @@ export const AccountSettings = () => {
     },
 
     {
-      label: "Есть доставка",
+      label: t("deliveryAvailable"),
       icon: <DeliveryDiningOutlinedIcon />,
       handleClick: () => setIsDelivered(!isDelivered),
       value: (
@@ -97,7 +99,7 @@ export const AccountSettings = () => {
     },
 
     {
-      label: "Максимальная дистанция",
+      label: t("maximumDistance"),
       icon: <SocialDistanceOutlinedIcon />,
       handleClick: () => setCurrentDrawer("distance"),
       value: (
@@ -116,7 +118,7 @@ export const AccountSettings = () => {
           onChange={handleChangeDistance}
           value={distance}
           isValid={true}
-          label="Максимальная дистанция"
+          label={t("maximumDistance")}
           currency={"km"}
           focus
         />
@@ -132,14 +134,6 @@ export const AccountSettings = () => {
         onClose={() => setCurrentDrawer(undefined)}
         component={currentDrawer ? drawers[currentDrawer] : <></>}
       />
-      {/* <>
-        <Delivery
-          deliveryValues={newOffer.delivery}
-          onChange={onDeliveryChange}
-          currency={getLabel(currencies.data, newOffer.currency)}
-          isValid={true}
-        />
-      </> */}
     </>
   );
 };

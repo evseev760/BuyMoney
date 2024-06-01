@@ -12,6 +12,7 @@ import { Tabs } from "@material-ui/core";
 import Price from "components/Price";
 import { ArrayConfirmButton } from "components/ArrayConfirmButton";
 import { LocationComponent } from "components/Location";
+import { useTranslation } from "react-i18next";
 
 type Draver =
   | "currency"
@@ -51,8 +52,8 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     setPaymentMethods,
     setSum,
     setDistance,
-    handleFetchOffers,
   } = useFilter();
+  const { t } = useTranslation();
 
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
   useEffect(() => {
@@ -73,13 +74,13 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
       items: currencies.data,
       currentValue: getLabel(currency),
       onSelect: () => changeDrawer("currency"),
-      label: "Влюта",
+      label: t("currency"),
     },
     {
       items: forPaymentArr,
       currentValue: getLabel(forPayment),
       onSelect: () => changeDrawer("forPayment"),
-      label: "К оплате",
+      label: t("toPay"),
     },
     {
       items:
@@ -91,22 +92,22 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           <span>{paymentMethods?.length}</span>
         </FlexContainer>
       ),
-      placeholder: "Все",
+      placeholder: t("all"),
       onSelect: () => changeDrawer("paymentMethods"),
-      label: "Оплата",
+      label: t("payment"),
     },
     {
       items: [],
       currentValue: sum ? <Price value={sum} /> : sum,
       onSelect: () => changeDrawer("sum"),
-      label: "Сумма",
+      label: t("sum"),
       placeholder: "00.0",
     },
     {
       items: [],
       currentValue: <Price value={distance / 1000} />,
       onSelect: () => changeDrawer("distance"),
-      label: "Дист.(km)",
+      label: t("distanceReduced"),
       placeholder: "1",
     },
   ];
@@ -168,7 +169,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           onChange={setSum}
           value={sum}
           isValid={true}
-          label="Сумма для обмена"
+          label={"amountToExchange"}
           currency={getLabel(currency) || ""}
           focus
         />
@@ -181,7 +182,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           onChange={setDistance}
           defaultValue={distance / 1000}
           isValid={true}
-          label="Дистанция"
+          label={"amount"}
           currency={"кm"}
           focus
         />
