@@ -193,7 +193,7 @@ export const OfferView = (props: OfferViewProps) => {
                 </RightBlock>
               </InfoRow>
 
-              {offer.distance && (
+              {!!offer.distance && (
                 <InfoRow>
                   <LeftBlock>
                     <Label>От вас</Label>
@@ -207,7 +207,7 @@ export const OfferView = (props: OfferViewProps) => {
                   </RightBlock>
                 </InfoRow>
               )}
-              {offer?.delivery?.distance && (
+              {!!offer?.delivery?.distance && (
                 <InfoRow>
                   <LeftBlock>
                     <Label>Доставка</Label>
@@ -217,7 +217,7 @@ export const OfferView = (props: OfferViewProps) => {
                       <span>до</span>
                       <Price value={offer?.delivery?.distance} />
                       <span>km</span>
-                      {offer?.delivery.price ? (
+                      {!!offer?.delivery.price ? (
                         <Label>
                           <Secondary>
                             <Price value={offer?.delivery?.price} />

@@ -1,5 +1,6 @@
 import { Skeleton } from "@material-ui/lab";
 import Price from "components/Price";
+import { useTranslation } from "react-i18next";
 import styled, { DefaultTheme, css } from "styled-components";
 
 interface MarketPriceProps {
@@ -11,19 +12,20 @@ interface MarketPriceProps {
 }
 
 export const MarketPrice = (props: MarketPriceProps) => {
+  const { t } = useTranslation();
   const { first, second, price, isLoading, isReversePrice } = props;
   return !isLoading ? (
     <StyledBlock>
-      {`Рыночная цена:   `}
+      {`${t("marketPrice")}:   `}
       {!isReversePrice ? (
         <>
-          {`за 1 ${second} `}
+          {`${t("for1")} ${second} `}
           <Price value={1 / price} />
           {` ${first}`}
         </>
       ) : (
         <>
-          {`за 1 ${first} `}
+          {`${t("for1")} ${first} `}
           <Price value={price} />
           {` ${second}`}
         </>

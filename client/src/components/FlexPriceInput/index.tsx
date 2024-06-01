@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { PriceInputSkeleton } from "./PriceInputSkeleton";
 import {
   Container,
@@ -13,6 +14,7 @@ interface FlexPriceProps {
 }
 export const FlexPriceInput = (props: FlexPriceProps) => {
   const { onChange, value, isValid, isLoading } = props;
+  const { t } = useTranslation();
   const handleChange = (value: any, name: any, values: any) => {
     onChange(values.float);
   };
@@ -20,7 +22,7 @@ export const FlexPriceInput = (props: FlexPriceProps) => {
     <PriceInputSkeleton />
   ) : (
     <Container>
-      <Title>Процент от рыночной цены</Title>
+      <Title>{t("percentageOfMarketPrice")}</Title>
       <StiledCurrencyInput
         id="input-example"
         name="input-name"

@@ -30,7 +30,7 @@ const Mainpage = () => {
 
   const listArr = [
     {
-      label: "Мои обьявления",
+      label: t("myOffers"),
       icon: <PersonOutlineOutlinedIcon />,
       handleClick: () => {
         navigate(RouteNames.MYOFFERS);
@@ -38,7 +38,7 @@ const Mainpage = () => {
     },
 
     {
-      label: "Уведомления",
+      label: t("notifications"),
       icon: <NotificationsNoneOutlinedIcon />,
       handleClick: () => {},
     },
@@ -62,12 +62,12 @@ const Mainpage = () => {
       </ButtonContainer>
       <ButtonsContainer className="mainPage_buttonsContainer">
         <ActionButton
-          text="Купить"
+          text={t("buy")}
           handleClick={() => navigate(RouteNames.OFFERS)}
           icon={<AccountBalanceWalletOutlinedIcon />}
         />
         <ActionButton
-          text="Продать"
+          text={t("sell")}
           handleClick={() => navigate(RouteNames.ADD_OFFER)}
           icon={<SellOutlinedIcon />}
         />
