@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { Tabs } from "@material-ui/core";
 import Price from "components/Price";
 import { ArrayConfirmButton } from "components/ArrayConfirmButton";
+import { LocationComponent } from "components/Location";
 
 type Draver =
   | "currency"
@@ -50,6 +51,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     setPaymentMethods,
     setSum,
     setDistance,
+    handleFetchOffers,
   } = useFilter();
 
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
@@ -133,6 +135,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     setForPayment(value);
     closeDrawer();
   };
+
   const drawers: Drawers = {
     currency: (
       <CurrencySelect
@@ -196,6 +199,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           ))}
         </Container>
       </Tabs>
+      <LocationComponent />
       <DrawerComponent
         isOpen={!!currentDrawer}
         onClose={() => changeDrawer(undefined)}
@@ -208,7 +212,7 @@ const Container = styled.div`
   display: flex;
   gap: 8px;
   position: relative;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
 `;
 const FlexContainer = styled.div`
   display: flex;

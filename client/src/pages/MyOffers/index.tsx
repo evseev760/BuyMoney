@@ -14,12 +14,14 @@ import { NoResults } from "components/NoResults";
 import { OfferViewSkeleton } from "components/OfferView/Skeleton";
 import { StyledSwitch } from "components/StyledSwitch";
 import { UserInfo } from "components/UserInfo";
+import { useTranslation } from "react-i18next";
 
 export const MyOffers = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const { myOffers, offersIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
+  const { t } = useTranslation();
   const { price } = useAppSelector((state) => state.currencyReducer);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -41,14 +43,14 @@ export const MyOffers = () => {
   };
   const listArr = [
     {
-      label: "Настройки аккаунта",
+      label: t("accountSettings"),
       icon: <PersonIcon />,
       handleClick: () => navigate(RouteNames.ACCOUNTSETTINGS),
       value: <ArrowForwardIosIcon />,
     },
 
     {
-      label: "Торги",
+      label: t("bargain"),
       icon: <PublishedWithChangesIcon />,
       handleClick: () => {},
       value: (
@@ -63,12 +65,12 @@ export const MyOffers = () => {
     <StyledContainer>
       <UserInfo
         currentUser={currentUser}
-        textDescription={"Это имя будет вашим ID для операций в приложении"}
+        textDescription={t("yourIdDescription")}
       />
 
       <ListDividers listArr={listArr} />
       <div>
-        <Title>Мои объявления</Title>
+        <Title>{t("myOffers")}</Title>
       </div>
 
       {offersIsLoading || price.isLoading ? (
@@ -82,7 +84,7 @@ export const MyOffers = () => {
               <OfferView key={offer._id} offer={offer} isMy />
             ))
           ) : (
-            <NoResults />
+            <NoResults text={t("noResults2")} noAnimation />
           )}
         </Container>
       )}

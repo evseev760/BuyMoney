@@ -5,11 +5,13 @@ import StarIcon from "@mui/icons-material/Star";
 import { CurrentUser } from "models/Auth";
 import { User } from "models/User";
 import { Skeleton } from "@material-ui/lab";
+import { useTranslation } from "react-i18next";
 interface UserInfoProps {
   currentUser?: CurrentUser | User;
   textDescription?: string;
 }
 export const UserInfo = (props: UserInfoProps) => {
+  const { t } = useTranslation();
   const { currentUser, textDescription } = props;
   return currentUser ? (
     <StyledContainer>
@@ -21,13 +23,13 @@ export const UserInfo = (props: UserInfoProps) => {
           <StatisticValue>
             <Price value={currentUser.ratings.count} />
           </StatisticValue>
-          <StatisticDescription>Количество сделок</StatisticDescription>
+          <StatisticDescription>{t("amountOfDeals")}</StatisticDescription>
         </StatisticBlok>
         <StatisticBlok>
           <StatisticValue>
             <Price value={currentUser.ratings.average} /> <StarIcon />
           </StatisticValue>
-          <StatisticDescription>Средняя оценка</StatisticDescription>
+          <StatisticDescription>{t("averageRating")}</StatisticDescription>
         </StatisticBlok>
       </StatisticContainer>
     </StyledContainer>

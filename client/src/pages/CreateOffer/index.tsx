@@ -28,6 +28,8 @@ import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { Container, Title } from "components/Styles/Styles";
 import { useTranslation } from "react-i18next";
+import { LocationComponent } from "components/Location";
+import { NoResults } from "components/NoResults";
 // import { setCurrencies } from "store/reducers/currency/ActionCreators";
 // import criptoList from "utils/criptocurrency.json";
 // import fiat from "utils/currency.json";
@@ -60,6 +62,9 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   const dispatch = useAppDispatch();
   const { newOffer, createOfferIsLoading } = useAppSelector(
     (state) => state.offerReducer
+  );
+  const { currentUser, isLoading } = useAppSelector(
+    (state) => state.authReducer
   );
   const {
     price,
@@ -361,7 +366,12 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       />
     ),
   };
-  return (
+  return !currentUser.location?.coordinates[0] ? (
+    <Container>
+      <LocationComponent />
+      <NoResults text={t("noResults3")} />
+    </Container>
+  ) : (
     <>
       <Container>
         <Title>{t("createAnOffer")}</Title>
@@ -423,6 +433,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
         currency={getLabel(currencies.data, newOffer.currency)}
         label={t("minimumTransactionAmount")}
         isLoading={currenciesIsloading}
+        placeholder="min"
       />
       <Quantity
         isValid={true}
@@ -431,6 +442,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
         currency={getLabel(currencies.data, newOffer.currency)}
         label={t("maximumTransactionAmount")}
         isLoading={currenciesIsloading}
+        placeholder="max"
       />
       <CommentInput
         isValid={true}

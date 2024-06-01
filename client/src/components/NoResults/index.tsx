@@ -1,10 +1,15 @@
 import { Animation, Animations } from "components/Animation";
 import styled, { css, DefaultTheme } from "styled-components";
-export const NoResults = () => {
+interface NoResultsProps {
+  text: string;
+  noAnimation?: boolean;
+}
+export const NoResults = (props: NoResultsProps) => {
+  const { text, noAnimation } = props;
   return (
     <Container>
-      <Title>Активных предложений нет, попробуйте изменить фильтры</Title>
-      <Animation size={150} type={Animations.OH} />
+      <Title>{text}</Title>
+      {!noAnimation && <Animation size={150} type={Animations.OH} />}
     </Container>
   );
 };

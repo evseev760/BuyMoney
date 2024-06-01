@@ -54,3 +54,25 @@ export const updateUserData =
       dispatch(authSlice.actions.updateUserDataError(e.response.data.message));
     }
   };
+
+export const updateUserLocation =
+  (
+    data: { latitude: number; longitude: number },
+    callback?: () => void,
+    errorCallback?: () => void
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(authSlice.actions.updateUserDataFetching());
+      const response = await axios.post(
+        `${API_URL}${api.auth.updateUserLocation}`,
+        data,
+        auth()
+      );
+      dispatch(authSlice.actions.updateUserDataSuccess(response.data));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(authSlice.actions.updateUserDataError(e.response.data.message));
+    }
+  };

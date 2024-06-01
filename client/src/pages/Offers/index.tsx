@@ -1,16 +1,23 @@
 import { Filter } from "components/Filter";
 import { NoResults } from "components/NoResults";
 import { OfferView } from "components/OfferView";
+
 import { OfferViewSkeleton } from "components/OfferView/Skeleton";
 import { useAppSelector } from "hooks/redux";
 import { useTg } from "hooks/useTg";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
 import styled from "styled-components";
+import { useFilter } from "hooks/useFilter";
 
 const Offers = () => {
   const navigate = useNavigate();
+  const { currentUser, isLoading } = useAppSelector(
+    (state) => state.authReducer
+  );
+  const { t } = useTranslation();
   const {
     onToggleBackButton,
     setBackButtonCallBack,
@@ -40,9 +47,10 @@ const Offers = () => {
     };
   }, [isOpenDrawer]);
   return (
-    <>
+    <StyledBody>
       <Filter drawerCallback={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
-      {offersIsLoading || price.isLoading ? (
+      {offersIsLoading ||
+      (price.isLoading && currentUser?.location?.coordinates[0]) ? (
         <Container>
           <OfferViewSkeleton />
           <OfferViewSkeleton />
@@ -50,20 +58,29 @@ const Offers = () => {
         </Container>
       ) : (
         <Container>
-          {offers.length ? (
-            offers.map((offer) => <OfferView key={offer._id} offer={offer} />)
+          {currentUser?.location?.coordinates[0] ? (
+            offers.length ? (
+              offers.map((offer) => <OfferView key={offer._id} offer={offer} />)
+            ) : (
+              <NoResults text={t("noResults1")} />
+            )
           ) : (
-            <NoResults />
+            <NoResults text={t("noResults3")} />
           )}
         </Container>
       )}
-    </>
+    </StyledBody>
   );
 };
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+const StyledBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export default Offers;

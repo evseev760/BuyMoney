@@ -14,6 +14,7 @@ interface QuantityProps {
   defaultValue?: number;
   currency: string;
   label: string;
+  placeholder?: string;
   isLoading?: boolean;
   focus?: boolean;
 }
@@ -28,6 +29,7 @@ export const Quantity = (props: QuantityProps) => {
     label,
     isLoading,
     focus,
+    placeholder,
   } = props;
   const handleChange = (value: any, name: any, values: any) => {
     onChange(values.float);
@@ -48,7 +50,7 @@ export const Quantity = (props: QuantityProps) => {
         onValueChange={handleChange}
         value={value}
         isValid={isValid}
-        placeholder={label}
+        placeholder={placeholder}
         defaultValue={defaultValue}
       />
       <StyledSuffix isValid={isValid}>{currency}</StyledSuffix>

@@ -85,6 +85,15 @@ bot.on("callback_query", async (query) => {
   await editApplicationMessage(bot, application, buyerUser, sellerUser);
 });
 
+bot.on("web_app_data", (msg) => {
+  const chatId = msg.chat.id;
+  console.log(11111, msg.web_app_data);
+  const data = JSON.parse(msg.web_app_data.data);
+  const { latitude, longitude } = data;
+
+  bot.sendMessage(chatId, `Latitude: ${latitude}, Longitude: ${longitude}`);
+});
+
 bot.on("location", async (msg) => {
   const chatId = msg.chat.id;
   const latitude = msg.location.latitude;

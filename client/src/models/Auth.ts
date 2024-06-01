@@ -16,6 +16,12 @@ export interface CurrentUser {
     average: number;
     count: number;
   };
+  location?: {
+    City: string;
+    Country: string;
+    coordinates: number[];
+    type: string;
+  };
 }
 
 export interface UpdateUserData {

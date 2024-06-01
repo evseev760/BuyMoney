@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import styled, { css, DefaultTheme } from "styled-components";
 import { SelectItem, getLabel } from "utils/Currency";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useTranslation } from "react-i18next";
 
 type Draver = "dealsType" | undefined;
 interface Drawers {
@@ -23,6 +24,7 @@ interface Drawers {
 }
 
 const MyDealsWrapped = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
   const [dealsType, setDealsType] = useState<string>("active");
@@ -55,11 +57,11 @@ const MyDealsWrapped = () => {
   const dealsTypes: SelectItem[] = [
     {
       code: "active",
-      label: "Активные",
+      label: t("active"),
     },
     {
       code: "completed",
-      label: "Завершенные",
+      label: t("completed"),
     },
   ];
   const drawers: Drawers = useMemo(
@@ -114,7 +116,7 @@ const MyDealsWrapped = () => {
             disableRipple
             onClick={() => changeDrawer("dealsType")}
           >
-            <ListItemText primary={"Мои сделки"} />
+            <ListItemText primary={t("myDeals")} />
             <StyledValue>
               {getLabel(dealsTypes, dealsType)} <ArrowDropDownIcon />
             </StyledValue>
@@ -129,9 +131,9 @@ const MyDealsWrapped = () => {
           <StyledBody>
             {!applicationsArr.length ? (
               dealsType === "active" ? (
-                <Title>У вас пока нет активных сделок</Title>
+                <Title>{t("noActive")}</Title>
               ) : (
-                <Title>У вас пока нет завершенных сделок</Title>
+                <Title>{t("noCompleted")}</Title>
               )
             ) : (
               applicationsArr.map((application, index) => (
