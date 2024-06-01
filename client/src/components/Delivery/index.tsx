@@ -1,5 +1,7 @@
+import { useAppSelector } from "hooks/redux";
 import { DeliveryValues } from "models/IOffer";
 import CurrencyInput from "react-currency-input-field";
+import { useTranslation } from "react-i18next";
 import styled, { DefaultTheme, css } from "styled-components";
 
 interface DeliveryProps {
@@ -9,51 +11,22 @@ interface DeliveryProps {
   currency: string;
 }
 export const Delivery = (props: DeliveryProps) => {
+  const { t } = useTranslation();
   const { isValid, onChange, deliveryValues, currency } = props;
-  // const handleChangeMaxDistance = (value: any, name: any, values: any) => {
-  //   onChange({ ...deliveryValues, distance: values.float });
-  // };
+  const { currentUser } = useAppSelector((state) => state.authReducer);
   const handleChangeDeliveryPrice = (value: any, name: any, values: any) => {
     onChange({ ...deliveryValues, price: values.float });
   };
-  // const handleChangeIsDelivered = (value: boolean) => {
-  //   onChange({
-  //     ...deliveryValues,
-  //     isDelivered: value,
-  //     price: undefined,
-  //     distance: undefined,
-  //   });
-  // };
-  return (
-    <>
-      {/* <Title>Доставка</Title> */}
-      {/* <SwitchContainer>
-        <Title>Есть доставка</Title>
-        <StyledSwitch
-          isOn={!!deliveryValues?.isDelivered}
-          handleChangeSwitch={handleChangeIsDelivered}
-        />
-      </SwitchContainer> */}
-      {/* <Container> */}
-      {/* <Title>Максимальное расстояние</Title> */}
-      {/* <QuantityInput
-          onValueChange={handleChangeMaxDistance}
-          value={deliveryValues?.distance}
-          placeholder={"Максимальное расстояние"}
-          disabled={!deliveryValues?.isDelivered}
-          style={{ borderRadius: "12px 12px 0 0" }}
-        />
-        <StyledSuffix isValid={isValid}>km.</StyledSuffix> */}
-      {/* </Container> */}
 
-      <Container style={{ marginTop: "1px" }}>
-        <Title>Стоимость доставки</Title>
+  return currentUser.delivery.isDelivered ? (
+    <>
+      <Container>
+        <Title>{t("costOfDelivery")}</Title>
         <QuantityInput
           onValueChange={handleChangeDeliveryPrice}
           value={deliveryValues?.price}
-          placeholder={"Стоимость доставки"}
-          disabled={!deliveryValues?.isDelivered}
-          style={{ borderRadius: "0 0 12px 12px" }}
+          placeholder={t("costOfDelivery")}
+          disabled={false}
         />
         <StyledSuffix isValid={isValid}>{currency}</StyledSuffix>
       </Container>
@@ -61,6 +34,8 @@ export const Delivery = (props: DeliveryProps) => {
       <br />
       <br />
     </>
+  ) : (
+    <></>
   );
 };
 
@@ -79,13 +54,7 @@ const Container = styled.div`
   position: relative;
   margin-top: 16px;
 `;
-const SwitchContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  align-items: center;
-  margin-top: 16px;
-`;
+
 const QuantityInput = styled(CurrencyInput)<{ disabled: boolean }>`
   ${({ theme, disabled }: { theme: DefaultTheme; disabled: boolean }) => css`
     ::placeholder {
@@ -119,20 +88,3 @@ const StyledSuffix = styled.div<{ isValid: boolean }>`
     gap: 8px;
   `}
 `;
-
-// const StyledSwitch = styled(Switch)`
-//   ${({ theme }: { theme: DefaultTheme }) => css`
-//     .MuiSwitch-colorSecondary.Mui-checked {
-//       color: ${theme.palette.button.primary};
-//     }
-//     .MuiSwitch-switchBase {
-//       color: ${theme.palette.button.secondary};
-//     }
-//     .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
-//       background-color: ${theme.palette.text.secondary};
-//     }
-//     .MuiSwitch-track {
-//       background-color: ${theme.palette.background.secondary};
-//     }
-//   `}
-// `;

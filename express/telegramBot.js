@@ -6,6 +6,7 @@ const Offer = require("./models/Offer");
 const Application = require("./models/Application");
 const { getAvatar, getGeolocationData } = require("./utils/apiService");
 const { editApplicationMessage } = require("./utils/telegramUtils");
+const { generateNickname } = require("./utils/generateNickname");
 const { sendApplicationStatusUpdate } = require("./socketHandler");
 const isProduction = process.env.NODE_ENV === "production";
 const webAppUrl = config.get(isProduction ? "APP_URL_PROD" : "APP_URL");
@@ -37,6 +38,7 @@ bot.on("message", async (msg) => {
         await User.updateOne({ telegramId: msg.chat.id }, { chatId: chatId });
       } else {
         const avatar = await getAvatar(msg.chat.id);
+        const nickname = generateNickname();
         // Если пользователь еще не существует, создаем нового и добавляем его в базу
         user = new User({
           telegramId: msg.chat.id,
@@ -48,6 +50,7 @@ bot.on("message", async (msg) => {
           authDate: new Date(),
           chatId: chatId,
           avatar,
+          nickname,
         });
         await user.save();
       }
@@ -122,6 +125,7 @@ bot.on("location", async (msg) => {
       );
     } else {
       const avatar = await getAvatar(msg.chat.id);
+      const nickname = generateNickname();
       // Если пользователь еще не существует, создаем нового и добавляем его в базу
       const newUser = new User({
         telegramId: msg.chat.id,
@@ -142,6 +146,7 @@ bot.on("location", async (msg) => {
             geolocationData?.address.village,
         },
         avatar,
+        nickname,
       });
       await newUser.save();
       console.log(`Пользователь с telegramId ${chatId} не найден.`);

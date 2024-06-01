@@ -27,6 +27,7 @@ import { useCurrencies } from "hooks/useCurrencies";
 import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { Container, Title } from "components/Styles/Styles";
+import { useTranslation } from "react-i18next";
 // import { setCurrencies } from "store/reducers/currency/ActionCreators";
 // import criptoList from "utils/criptocurrency.json";
 // import fiat from "utils/currency.json";
@@ -45,6 +46,7 @@ type Draver =
   | undefined;
 
 const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const {
     tg,
@@ -52,7 +54,6 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     setBackButtonCallBack,
     offBackButtonCallBack,
     onToggleMainButton,
-    setMainButtonCallBack,
     offMainButtonCallBack,
   } = useTg();
   const { setLocalValue, LocalStorageKey } = useLocalStorage();
@@ -108,17 +109,18 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       getPrice(newOffer.currency, newOffer.forPayment);
     }
   }, [newOffer.currency, newOffer.forPayment, currencies, cripto]);
+  const createText = t("create");
   const submitCreateOffer = useCallback(() => {
     const callback = () => {
       tg.MainButton.hideProgress();
       offMainButtonCallBack(submitCreateOffer);
-      onToggleMainButton(false, "Создать");
+      onToggleMainButton(false, createText);
       dispatch(clearNewOffer());
       navigate(RouteNames.MYOFFERS);
     };
     const onError = () => {
       tg.MainButton.hideProgress();
-      onToggleMainButton(false, "Создать");
+      onToggleMainButton(false, createText);
     };
     tg.MainButton.showProgress();
     const price = newOffer?.price ? 1 / newOffer.price : undefined;
@@ -146,13 +148,13 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       newOffer.quantity &&
       !currentDrawer
     ) {
-      onToggleMainButton(true, "Создать");
+      onToggleMainButton(true, createText);
       tg.onEvent("mainButtonClicked", submitCreateOffer);
       return () => {
         tg.offEvent("mainButtonClicked", submitCreateOffer);
       };
     } else {
-      onToggleMainButton(false, "Создать");
+      onToggleMainButton(false, createText);
       tg.MainButton.hide();
     }
   }, [newOffer, currentDrawer]);
@@ -274,30 +276,30 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   const priceTypes: SelectItem[] = [
     {
       code: "fix",
-      label: "Фиксированная",
+      label: t("fixPrice"),
     },
     {
       code: "flex",
-      label: "Плавающая",
+      label: t("flexPrice"),
     },
   ];
   const offerParams = [
     {
-      label: "Продать валюту",
+      label: t("sellCurrency"),
       handleClick: () => changeDrawer("fiatCurrency"),
       value: getListViewValue(currencies.data, newOffer.currency),
       isLoading: currenciesIsloading,
       isSelect: true,
     },
     {
-      label: "Принимаю к оплате",
+      label: t("acceptPayment"),
       handleClick: () => changeDrawer("cryptoCurrency"),
       value: getListViewValue(forPaymentArr, newOffer.forPayment),
       isLoading: currenciesIsloading,
       isSelect: true,
     },
     {
-      label: "Способ оплаты",
+      label: t("paymentMethods"),
       handleClick: () => changeDrawer("paymentMethods"),
       value: newOffer.paymentMethods?.length
         ? `${getListViewValue(
@@ -315,7 +317,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       isSelect: true,
     },
     {
-      label: "Тип цены",
+      label: t("priceType"),
       handleClick: () => changeDrawer("priceType"),
       value: getListViewValue(priceTypes, newOffer.typeOfPrice),
       isLoading: currenciesIsloading,
@@ -362,7 +364,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   return (
     <>
       <Container>
-        <Title>Создайте объявление</Title>
+        <Title>{t("createAnOffer")}</Title>
         <ListDividers listArr={offerParams} />
       </Container>
       {newOffer.typeOfPrice === "fix" && (
@@ -413,20 +415,21 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
             isReversePrice={!isReversePrice}
           />
         )}
-      <Quantity
-        isValid={true}
-        onChange={onQuantityChange}
-        value={newOffer.quantity}
-        currency={getLabel(currencies.data, newOffer.currency)}
-        label="Количество на продажу"
-        isLoading={currenciesIsloading}
-      />
+
       <Quantity
         isValid={isValidMinQuantity()}
         onChange={onMinQuantityChange}
         value={newOffer.minQuantity}
         currency={getLabel(currencies.data, newOffer.currency)}
-        label="Сумма минимальной сделки"
+        label={t("minimumTransactionAmount")}
+        isLoading={currenciesIsloading}
+      />
+      <Quantity
+        isValid={true}
+        onChange={onQuantityChange}
+        value={newOffer.quantity}
+        currency={getLabel(currencies.data, newOffer.currency)}
+        label={t("maximumTransactionAmount")}
         isLoading={currenciesIsloading}
       />
       <CommentInput
@@ -434,7 +437,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
         onChange={onCommentChange}
         value={newOffer.comment}
       />
-      {/* {!currenciesIsloading && (
+      {!currenciesIsloading && (
         <>
           <Delivery
             deliveryValues={newOffer.delivery}
@@ -443,7 +446,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
             isValid={true}
           />
         </>
-      )} */}
+      )}
       <DrawerComponent
         isOpen={!!currentDrawer}
         onClose={() => changeDrawer(undefined)}

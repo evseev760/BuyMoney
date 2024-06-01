@@ -8,6 +8,7 @@ import {
   Title,
 } from "components/Styles/Styles";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface FlexPriceProps {
   onChange: (value: number) => void;
@@ -20,6 +21,7 @@ interface FlexPriceProps {
   isLoading?: boolean;
 }
 export const FixPriceInput = (props: FlexPriceProps) => {
+  const { t } = useTranslation();
   const [showInput, setShowInput] = useState(true);
   const {
     onChange,
@@ -55,12 +57,12 @@ export const FixPriceInput = (props: FlexPriceProps) => {
     <PriceInputSkeleton />
   ) : (
     <Container>
-      <Title>Фиксированная цена</Title>
+      <Title>{t("fixPriceLabel")}</Title>
 
       <StiledCurrencyInput
-        placeholder={`${isReversePrice ? "Отдам" : "Получу"} за 1 ${
-          isReversePrice ? secondCurrency : firstCurrency
-        } `}
+        placeholder={`${isReversePrice ? t("giveBack") : t("getIt")} ${t(
+          "for1"
+        )} ${isReversePrice ? secondCurrency : firstCurrency} `}
         defaultValue={value}
         decimalsLimit={10}
         onValueChange={handleChange}
