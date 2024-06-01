@@ -12,16 +12,27 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 
 export const useFilter = () => {
   const dispatch = useAppDispatch();
+  const { currentUser, isLoading } = useAppSelector(
+    (state) => state.authReducer
+  );
   const { currency, forPayment, paymentMethods, sum, distance } =
     useAppSelector((state) => state.filterReducer);
   const { setLocalValue, LocalStorageKey } = useLocalStorage();
   const handleFetchOffers = useMemo(() => {
     return () => {
-      dispatch(
-        fetchOffers({ currency, forPayment, paymentMethods, sum, distance })
-      );
+      currentUser.location?.coordinates[0] &&
+        dispatch(
+          fetchOffers({ currency, forPayment, paymentMethods, sum, distance })
+        );
     };
-  }, [currency, forPayment, paymentMethods, sum, distance]);
+  }, [
+    currency,
+    forPayment,
+    paymentMethods,
+    sum,
+    distance,
+    currentUser.location,
+  ]);
 
   useEffect(() => {
     handleFetchOffers();
@@ -56,5 +67,6 @@ export const useFilter = () => {
     setPaymentMethods,
     setSum,
     setDistance,
+    handleFetchOffers,
   };
 };

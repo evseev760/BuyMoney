@@ -9,5 +9,10 @@ router.post("/login", controller.handleAuth);
 router.get("/users", roleMiddleware(["ADMIN"]), controller.getUsers);
 router.get("/auth", authMiddleware, controller.auth);
 router.post("/updateUserData", authMiddleware, controller.updateUserData);
+router.post(
+  "/updateUserLocation",
+  authMiddleware,
+  controller.updateUserLocation
+);
 
 module.exports = router;

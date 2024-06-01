@@ -6,7 +6,7 @@ const config = require("config");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
 const { default: axios } = require("axios");
-const { getAvatar } = require("../../utils/apiService");
+const { getAvatar, getGeolocationData } = require("../../utils/apiService");
 const { generateNickname } = require("../../utils/generateNickname");
 // const { createAvatar } = require("@dicebear/core");
 // const { thumbs } = require("@dicebear/collection");
@@ -196,6 +196,78 @@ class authController {
       console.log(e);
     }
   }
+  async updateUserLocation(req, res) {
+    try {
+      const { latitude, longitude } = req.body;
+      console.log(3333, latitude, longitude);
+      // Получение данных о геолокации
+      const geolocationData = await getGeolocationData(latitude, longitude);
+
+      const user = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        {
+          location: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+            Country: geolocationData?.address.country,
+            City:
+              geolocationData?.address.city ||
+              geolocationData?.address.town ||
+              geolocationData?.address.village,
+          },
+        },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await Offer.updateMany(
+        { seller: mongoose.Types.ObjectId(req.user.id) },
+        {
+          $set: {
+            "location.type": "Point",
+            "location.coordinates": [longitude, latitude],
+            "location.Country": geolocationData?.address.country,
+            "location.City":
+              geolocationData?.address.city ||
+              geolocationData?.address.town ||
+              geolocationData?.address.village,
+          },
+        }
+      );
+
+      const responseUser = {
+        telegramId: user.telegramId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        languageCode: user.languageCode,
+        allowsWriteToPm: user.allowsWriteToPm,
+        authDate: user.authDate,
+        location: user.location,
+        id: user.id,
+        avatar: user.avatar,
+        isSuspicious: user.isSuspicious,
+        nickname: user.nickname,
+        ratings: user.ratings,
+        isAnOffice: user.isAnOffice,
+        delivery: user.delivery,
+      };
+
+      return res.json(responseUser);
+    } catch (error) {
+      console.error(
+        "Ошибка при обновлении местоположения пользователя:",
+        error
+      );
+      return res
+        .status(500)
+        .json({ message: "Ошибка при обновлении местоположения пользователя" });
+    }
+  }
+
   async getUsers(req, res) {
     try {
       const users = await User.find({}, { password: false });

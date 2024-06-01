@@ -19,6 +19,7 @@ import { CompliteDialog } from "components/Dialogs/Complite";
 import { DeliteDialog } from "components/Dialogs/Delite";
 import SwipeableListItem from "components/SwipeableListItemProps";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationProps {
   application: Application;
@@ -29,6 +30,7 @@ interface ApplicationProps {
   deliteApplicationIsLoading: string[];
 }
 export const ApplicationComponent = (props: ApplicationProps) => {
+  const { t } = useTranslation();
   const {
     application,
     completeApplicationHandle,
@@ -105,7 +107,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
 
                 {(application.status === "PENDING" ||
                   application.status === "CONFIRMATION") && (
-                  <StyledLink onClick={goToChat}>Перейти в чат</StyledLink>
+                  <StyledLink onClick={goToChat}>{t("goToChat")}</StyledLink>
                 )}
 
                 {application.status === "NEW" && (
@@ -136,9 +138,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                 </Label>
                 {isConfirmationWaitingForMe && (
                   <Label>
-                    {isSell
-                      ? "Покупатель подтвердил сделку"
-                      : "Продавец подтвердил сделку"}
+                    {isSell ? t("buyerConfirmed") : t("sellerConfirmed")}
                   </Label>
                 )}
               </Column>
@@ -203,14 +203,14 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                 <>
                   <MainButton
                     handleClick={onAccept}
-                    text="Принять"
+                    text={t("accept")}
                     disabled={isDisable}
                     isLoading={completeIsLoading}
                   />
                   <DeliteDialog
                     handleClick={() => {}}
                     onConfirm={onDelite}
-                    text="Удалить"
+                    text={t("delete")}
                     isOpen={isOpenDelite}
                     onClose={() => setIsOpenDelite(false)}
                     // icon={<DoDisturbAltOutlinedIcon />}
@@ -231,7 +231,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                   <DeliteDialog
                     handleClick={() => {}}
                     onConfirm={onDelite}
-                    text="Удалить"
+                    text={t("delete")}
                     disabled={isDisable}
                     isLoading={deliteIsLoading}
                     isOpen={isOpenDelite}
