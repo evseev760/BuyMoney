@@ -15,15 +15,16 @@ import { getLabel } from "utils/Currency";
 import { Numeral } from "components/Numeral";
 import EditIcon from "@mui/icons-material/Edit";
 import SwipeableListItem from "components/SwipeableListItemProps";
+import { useTranslation } from "react-i18next";
 
 interface OfferViewProps {
   offer: OfferData;
   isMy?: boolean;
 }
 export const OfferView = (props: OfferViewProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { forPaymentArr } = useCurrencies();
-  const { price } = useAppSelector((state) => state.currencyReducer);
 
   const { offer, isMy } = props;
 
@@ -80,7 +81,7 @@ export const OfferView = (props: OfferViewProps) => {
               </PriceRow>
               <Label>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
-                  <span>Цена за 1 {getSecondUnit()}</span>
+                  <span>{`${t("priceFor1")} ${getSecondUnit()}`}</span>
 
                   <IconsContainer>
                     {offer.sellerData.isAnOffice && <BusinessOutlinedIcon />}
@@ -101,7 +102,7 @@ export const OfferView = (props: OfferViewProps) => {
                   icon={<EditIcon />}
                 />
               ) : (
-                <MainButton handleClick={onGoToOffer} text="Купить" />
+                <MainButton handleClick={onGoToOffer} text={t("buy")} />
               )}
             </ButtonContainer>
           </StyledHeader>
@@ -133,7 +134,7 @@ export const OfferView = (props: OfferViewProps) => {
                         size="small"
                       />
                       <GradeCount>
-                        Всего оценок{" "}
+                        {t("totalMarks")}{" "}
                         <Secondary>
                           <Price value={offer.sellerData.ratings.count} />
                         </Secondary>
@@ -164,7 +165,7 @@ export const OfferView = (props: OfferViewProps) => {
               {!!offer.paymentMethods?.length && (
                 <InfoRow>
                   <LeftBlock>
-                    <Label>Оплата</Label>
+                    <Label>{t("payment")}</Label>
                   </LeftBlock>
                   <RightBlock>
                     <GradeCount>
@@ -179,14 +180,12 @@ export const OfferView = (props: OfferViewProps) => {
               )}
               <InfoRow>
                 <LeftBlock>
-                  <Label>Лимиты</Label>
+                  <Label>{t("limits")}</Label>
                 </LeftBlock>
                 <RightBlock>
                   <Value>
-                    {/* <Price value={offer.minQuantity} /> */}
                     <Numeral value={offer.minQuantity} />
                     {" - "}
-                    {/* <Price value={offer.quantity} /> */}
                     <Numeral value={offer.quantity} />
                     <span>{!isRevers ? getMainUnit() : getSecondUnit()}</span>
                   </Value>
@@ -196,7 +195,7 @@ export const OfferView = (props: OfferViewProps) => {
               {!!offer.distance && (
                 <InfoRow>
                   <LeftBlock>
-                    <Label>От вас</Label>
+                    <Label>{t("fromYou")}</Label>
                   </LeftBlock>
                   <RightBlock>
                     <Value>
@@ -210,11 +209,11 @@ export const OfferView = (props: OfferViewProps) => {
               {!!offer?.delivery?.distance && (
                 <InfoRow>
                   <LeftBlock>
-                    <Label>Доставка</Label>
+                    <Label>{t("delivery")}</Label>
                   </LeftBlock>
                   <RightBlock>
                     <Value>
-                      <span>до</span>
+                      <span>{t("upTo")}</span>
                       <Price value={offer?.delivery?.distance} />
                       <span>km</span>
                       {!!offer?.delivery.price ? (

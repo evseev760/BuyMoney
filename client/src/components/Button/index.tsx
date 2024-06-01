@@ -9,7 +9,6 @@ interface ButtonProps {
 }
 export const ActionButton = (props: ButtonProps) => {
   const { text, handleClick, icon } = props;
-  const { themeParams } = useTg();
   return (
     <StyledButton disableRipple onClick={handleClick}>
       {icon && <IconContainer>{icon}</IconContainer>}

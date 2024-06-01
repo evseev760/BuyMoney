@@ -28,6 +28,7 @@ import { CommentInput } from "components/Comment";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { Container, Title } from "components/Styles/Styles";
 import { Delivery } from "components/Delivery";
+import { useTranslation } from "react-i18next";
 
 interface Drawers {
   fiatCurrency: JSX.Element;
@@ -43,6 +44,7 @@ type Draver =
   | undefined;
 
 const EditOffer = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -117,13 +119,13 @@ const EditOffer = () => {
     const callback = () => {
       tg.MainButton.hideProgress();
       offMainButtonCallBack(submitEditOffer);
-      onToggleMainButton(false, "Изменить");
+      onToggleMainButton(false, t("change"));
       dispatch(clearNewOffer());
       backButtonHandler();
     };
     const onError = () => {
       tg.MainButton.hideProgress();
-      onToggleMainButton(false, "Изменить");
+      onToggleMainButton(false, t("change"));
     };
     tg.MainButton.showProgress();
     const price = newOffer?.price ? 1 / newOffer.price : undefined;
@@ -152,13 +154,13 @@ const EditOffer = () => {
       newOffer.quantity &&
       !currentDrawer
     ) {
-      onToggleMainButton(true, "Изменить");
+      onToggleMainButton(true, t("change"));
       tg.onEvent("mainButtonClicked", submitEditOffer);
       return () => {
         tg.offEvent("mainButtonClicked", submitEditOffer);
       };
     } else {
-      onToggleMainButton(false, "Изменить");
+      onToggleMainButton(false, t("change"));
       tg.MainButton.hide();
     }
   }, [newOffer, currentDrawer]);
@@ -232,14 +234,7 @@ const EditOffer = () => {
 
     changeDrawer(undefined);
   };
-  // const onPriceChange = (value: number) => {
-  //   if (isReversePrice) {
-  //     const reversePrice = value ? 1 / value : undefined;
-  //     dispatch(setNewOffer({ ...newOffer, price: reversePrice }));
-  //   } else {
-  //     dispatch(setNewOffer({ ...newOffer, price: value }));
-  //   }
-  // };
+
   const onPriceChange = (value: number) => {
     const price = isReversePrice ? (value ? 1 / value : undefined) : value;
     dispatch(setNewOffer({ ...newOffer, price }));
@@ -269,38 +264,37 @@ const EditOffer = () => {
   };
   const getFixPriceValue = (value?: number) => {
     if (isReversePrice) {
-      // Если цена обратная, то делаем обратное преобразование
-      return value ? 1 / value : undefined; // Возвращаем обратное значение
+      return value ? 1 / value : undefined;
     }
     return value;
   };
   const priceTypes: SelectItem[] = [
     {
       code: "fix",
-      label: "Фиксированная",
+      label: t("fixPrice"),
     },
     {
       code: "flex",
-      label: "Плавающая",
+      label: t("flexPrice"),
     },
   ];
   const offerParams = [
     {
-      label: "Продать валюту",
+      label: t("sellCurrency"),
       handleClick: () => changeDrawer("fiatCurrency"),
       value: getListViewValue(currencies.data, newOffer.currency),
       isLoading: isLoading,
       isSelect: true,
     },
     {
-      label: "Принимаю к оплате",
+      label: t("acceptPayment"),
       handleClick: () => changeDrawer("cryptoCurrency"),
       value: getListViewValue(forPaymentArr, newOffer.forPayment),
       isLoading: isLoading,
       isSelect: true,
     },
     {
-      label: "Способ оплаты",
+      label: t("paymentMethods"),
       handleClick: () => changeDrawer("paymentMethods"),
       value: newOffer.paymentMethods?.length
         ? `${getListViewValue(
@@ -318,7 +312,7 @@ const EditOffer = () => {
       isSelect: true,
     },
     {
-      label: "Тип цены",
+      label: t("priceType"),
       handleClick: () => changeDrawer("priceType"),
       value: getListViewValue(priceTypes, newOffer.typeOfPrice),
       isLoading: isLoading,
@@ -365,7 +359,7 @@ const EditOffer = () => {
   return (
     <>
       <Container>
-        <Title>Измените объявление</Title>
+        <Title>{t("changeYourAd")}</Title>
         <ListDividers listArr={offerParams} />
       </Container>
       {newOffer.typeOfPrice === "fix" && (
@@ -417,19 +411,19 @@ const EditOffer = () => {
           />
         )}
       <Quantity
-        isValid={true}
-        onChange={onQuantityChange}
-        value={newOffer.quantity}
-        currency={getLabel(currencies.data, newOffer.currency)}
-        label="Количество на продажу"
-        isLoading={isLoading}
-      />
-      <Quantity
         isValid={isValidMinQuantity()}
         onChange={onMinQuantityChange}
         value={newOffer.minQuantity}
         currency={getLabel(currencies.data, newOffer.currency)}
-        label="Сумма минимальной сделки"
+        label={t("minimumTransactionAmount")}
+        isLoading={isLoading}
+      />
+      <Quantity
+        isValid={true}
+        onChange={onQuantityChange}
+        value={newOffer.quantity}
+        currency={getLabel(currencies.data, newOffer.currency)}
+        label={t("maximumTransactionAmount")}
         isLoading={isLoading}
       />
       <CommentInput
