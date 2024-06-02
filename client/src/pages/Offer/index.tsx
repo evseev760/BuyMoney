@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { fetchOffer } from "store/reducers/offer/ActionCreators";
 import styled, { css, DefaultTheme } from "styled-components";
 import SkeletonOffer from "./Skeleton";
 import Price from "components/Price";
@@ -21,6 +20,7 @@ import { NoResults } from "components/NoResults";
 import { MainButton } from "components/MainButton";
 import { SecondButton } from "components/SecondButton";
 import { sendPhoneNumberInstructions } from "store/reducers/auth/ActionCreators";
+import { useOffer } from "hooks/useOffer";
 
 interface Drawers {
   paymentMethods: JSX.Element;
@@ -45,6 +45,7 @@ export const Offer = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { getOffer } = useOffer();
   const { getLabel, currenciesIsloading, forPaymentArr } = useCurrencies();
   const { application, isLoading, createApplication, editApplication } =
     useApplication();
@@ -64,7 +65,7 @@ export const Offer = () => {
     offMainButtonCallBack,
     tg,
   } = useTg();
-  const [isReversePrice, setIsReversePrice] = useState<boolean>(false);
+  const [isReversePrice, setIsReversePrice] = useState<boolean>(true);
   const [currentDrawer, setCurrentDrawer] = useState<Drawer>(undefined);
   const isRevers = currentOfferData?.price && !(currentOfferData?.price > 100);
 
@@ -88,7 +89,7 @@ export const Offer = () => {
     if (application.quantity) {
       onQuantityChange(
         isReversePrice
-          ? application.quantity * getViewPrice()
+          ? application.quantity / getViewPrice()
           : application.quantity
       );
     }
@@ -103,7 +104,15 @@ export const Offer = () => {
   }, [currentDrawer]);
 
   useEffect(() => {
-    if (id) dispatch(fetchOffer(id));
+    getOffer(id);
+    return () => {
+      dispatch(
+        editApplication({
+          ...application,
+          quantity: 0,
+        })
+      );
+    };
   }, [id]);
 
   useEffect(() => {
@@ -195,7 +204,9 @@ export const Offer = () => {
         currentValue={application.paymentMethod}
         array={
           paymentMethodsList?.filter((item) =>
-            currentOfferData?.paymentMethods?.includes(item.code)
+            currentOfferData?.paymentMethods?.length
+              ? currentOfferData?.paymentMethods?.includes(item.code)
+              : true
           ) || []
         }
       />
@@ -273,6 +284,7 @@ export const Offer = () => {
         quantity: adjustedValue,
       })
     );
+    console.log(666, application, value, isReversePrice);
   };
   const sendInstructions = () => {
     dispatch(sendPhoneNumberInstructions(() => tg.close()));
@@ -287,6 +299,7 @@ export const Offer = () => {
     currentOfferData?.currency,
     currentOfferData?.forPayment
   );
+
   if (!currentUser?.username && !currentUser?.phoneNumber && !isLoadingUser) {
     return (
       <StyledContainer>

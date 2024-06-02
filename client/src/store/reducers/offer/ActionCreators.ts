@@ -2,14 +2,14 @@ import { AppDispatch } from "store";
 import axios from "axios";
 import { api, auth } from "store/api";
 
-import { offerSlice } from "./OfferSlice";
+import { LastOfferReqest, offerSlice } from "./OfferSlice";
 
 import { API_URL } from "config";
 import { EmptyOfferData, OfferData } from "models/IOffer";
 import { Filter } from "../filter/FilterSlice";
 
 export const fetchOffers =
-  (filter?: Filter) => async (dispatch: AppDispatch) => {
+  (filter?: Filter, callback?: () => void) => async (dispatch: AppDispatch) => {
     try {
       dispatch(offerSlice.actions.offersFetching());
       let url = `${API_URL}${api.offer.getOffers}`;
@@ -30,6 +30,7 @@ export const fetchOffers =
       }
       const response = await axios.get<OfferData[]>(url, auth());
       dispatch(offerSlice.actions.offersSuccess(response.data));
+      callback && callback();
     } catch (e: any) {
       dispatch(offerSlice.actions.offersError(e.response.data.message));
     }
@@ -139,3 +140,12 @@ export const fetchMyOffer = (id: string) => async (dispatch: AppDispatch) => {
     dispatch(offerSlice.actions.offerError(e.response.data.message));
   }
 };
+
+export const putOffer = (data: OfferData) => async (dispatch: AppDispatch) => {
+  dispatch(offerSlice.actions.offerSuccess(data));
+};
+
+export const setLastOfferReqest =
+  (data: LastOfferReqest) => async (dispatch: AppDispatch) => {
+    dispatch(offerSlice.actions.setLastOfferReqest({ data }));
+  };

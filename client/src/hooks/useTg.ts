@@ -20,7 +20,6 @@ export const useTg = () => {
   const onClose = () => {
     WebApp.close();
   };
-  console.log(1111, WebApp);
   const setMainButtonCallBack = (callBack: () => void) => {
     WebApp.MainButton.onClick(callBack);
   };

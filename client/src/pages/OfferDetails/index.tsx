@@ -2,17 +2,17 @@ import { Paper } from "@material-ui/core";
 import ListDividers from "components/List";
 import Price from "components/Price";
 import { UserInfo } from "components/UserInfo";
-import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { useAppSelector } from "hooks/redux";
 import { useCurrencies } from "hooks/useCurrencies";
 import { useTg } from "hooks/useTg";
 import { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
-import { fetchOffer } from "store/reducers/offer/ActionCreators";
 import styled, { css, DefaultTheme } from "styled-components";
 import { getLabel } from "utils/Currency";
 import { useTranslation } from "react-i18next";
+import { useOffer } from "hooks/useOffer";
 
 export const OfferDetails = () => {
   const { currentOfferData, offerIsLoading } = useAppSelector(
@@ -20,10 +20,10 @@ export const OfferDetails = () => {
   );
   const location = useLocation();
   const { t } = useTranslation();
+  const { getOffer } = useOffer();
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { forPaymentArr } = useCurrencies();
   const {
     onToggleBackButton,
@@ -36,7 +36,7 @@ export const OfferDetails = () => {
   const backButtonHandler = () => navigate(wayBack);
 
   useEffect(() => {
-    if (id) dispatch(fetchOffer(id));
+    getOffer(id);
   }, [id]);
 
   useEffect(() => {

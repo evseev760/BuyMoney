@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./redux";
 import {
   editCurrency,
@@ -17,13 +17,20 @@ export const useFilter = () => {
   );
   const { currency, forPayment, paymentMethods, sum, distance } =
     useAppSelector((state) => state.filterReducer);
+  const { offersTimestamp } = useAppSelector((state) => state.offerReducer);
+
+  const [shouldUpdate, setShouldUpdate] = useState(!offersTimestamp);
   const { setLocalValue, LocalStorageKey } = useLocalStorage();
   const handleFetchOffers = useMemo(() => {
     return () => {
-      currentUser.location?.coordinates[0] &&
+      if (currentUser.location?.coordinates[0]) {
         dispatch(
-          fetchOffers({ currency, forPayment, paymentMethods, sum, distance })
+          fetchOffers(
+            { currency, forPayment, paymentMethods, sum, distance },
+            () => setShouldUpdate(false)
+          )
         );
+      }
     };
   }, [
     currency,
@@ -35,25 +42,38 @@ export const useFilter = () => {
   ]);
 
   useEffect(() => {
+    const timestamp = new Date().getTime();
+    const needPast = 60 * 1000;
+    if (
+      !shouldUpdate &&
+      offersTimestamp &&
+      timestamp - Number(offersTimestamp) < needPast
+    )
+      return;
     handleFetchOffers();
   }, [handleFetchOffers]);
 
   const setCurrency = (value: string) => {
     dispatch(editCurrency(value));
     setLocalValue(LocalStorageKey.filterCurrency, value);
+    setShouldUpdate(true);
   };
   const setForPayment = (value: string) => {
     dispatch(editForPayment(value));
     setLocalValue(LocalStorageKey.filterForPayment, value);
+    setShouldUpdate(true);
   };
   const setPaymentMethods = (value: string[]) => {
     dispatch(editPaymentMethods(value.length ? value : undefined));
+    setShouldUpdate(true);
   };
   const setSum = (value?: number) => {
     dispatch(editSum(value));
+    setShouldUpdate(true);
   };
   const setDistance = (value?: number) => {
     dispatch(editDistance(value ? value * 1000 : 1000));
+    setShouldUpdate(true);
   };
 
   return {
