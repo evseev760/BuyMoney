@@ -6,6 +6,7 @@ interface IApi {
     users: string;
     updateUserData: string;
     updateUserLocation: string;
+    sendPhoneNumberInstructions: string;
   };
   offer: {
     createOffer: string;
@@ -44,6 +45,7 @@ export const api: IApi = {
     users: "auth/users",
     updateUserData: "auth/updateUserData",
     updateUserLocation: "auth/updateUserLocation",
+    sendPhoneNumberInstructions: "auth/sendPhoneNumberInstructions",
   },
   offer: {
     createOffer: "offer/createOffer",

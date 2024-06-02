@@ -249,8 +249,6 @@ class offerController {
           },
           {
             $project: {
-              "sellerData.firstName": 0,
-              "sellerData.lastName": 0,
               "sellerData.allowsWriteToPm": 0,
               "sellerData.__v": 0,
               "sellerData.telegramId": 0,
@@ -337,8 +335,6 @@ class offerController {
           },
           {
             $project: {
-              "sellerData.firstName": 0,
-              "sellerData.lastName": 0,
               "sellerData.allowsWriteToPm": 0,
               "sellerData.__v": 0,
               "sellerData.telegramId": 0,
@@ -362,7 +358,7 @@ class offerController {
       } else {
         const offer = await Offer.findOne({ _id: offerId }).populate(
           "seller",
-          "-firstName -lastName -allowsWriteToPm -__v -telegramId -location -chatId -authDate"
+          " -allowsWriteToPm -__v -telegramId -location -chatId -authDate"
         );
 
         if (!offer) {
@@ -399,8 +395,6 @@ class offerController {
         },
         {
           $project: {
-            "sellerData.firstName": 0,
-            "sellerData.lastName": 0,
             "sellerData.allowsWriteToPm": 0,
             "sellerData.__v": 0,
             "sellerData.telegramId": 0,

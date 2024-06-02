@@ -39,6 +39,7 @@
   "noResults1": "No active ads, try changing the filters",
   "noResults2": "You have no ads yet",
   "noResults3": "Please send us your location by clicking the button above or send it to the bot in the chat",
+  "noResults4": "To allow other users to contact you, please share your phone number or either create a Telegram username",
   "geolocationErrorAlert": "No access to your current location :( You can send your location directly to the bot in the chat",
   "sendLocation": "Send location",
   "active": "Active",
@@ -77,5 +78,7 @@
   "youGive": "You give",
   "back": "Back",
   "available": "Available",
-  "no": "No"
+  "no": "No",
+  "review": "Review",
+  "share": "Share"
 }

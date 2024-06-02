@@ -236,19 +236,7 @@ class applicationApiController {
       //   userId
       // );
       sendApplicationStatusUpdate(application);
-      message &&
-        telegramBot.sendMessage(sellerUser.telegramId, message, {
-          // reply_markup: {
-          //   inline_keyboard: [
-          //     [
-          //       {
-          //         text: "👍 Принять заявку",
-          //         callback_data: `${application._id}`,
-          //       },
-          //     ],
-          //   ],
-          // },
-        });
+      message && telegramBot.sendMessage(sellerUser.telegramId, message);
       res.status(200).json({ message: "complited" });
     } catch (e) {
       console.log(e);

@@ -2,7 +2,8 @@ import { IRole } from "./IRole";
 
 export interface CurrentUser {
   id: string;
-  username: string;
+  username?: string;
+  phoneNumber?: string;
   roles: IRole[];
   avatar: string;
   isSuspicious: boolean;

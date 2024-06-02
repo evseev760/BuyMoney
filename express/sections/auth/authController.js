@@ -8,8 +8,8 @@ const crypto = require("crypto");
 const { default: axios } = require("axios");
 const { getAvatar, getGeolocationData } = require("../../utils/apiService");
 const { generateNickname } = require("../../utils/generateNickname");
-// const { createAvatar } = require("@dicebear/core");
-// const { thumbs } = require("@dicebear/collection");
+const { phoneNumberInstructions } = require("../../utils/telegramUtils");
+const telegramBot = require("../../telegramBot");
 const isProduction = process.env.NODE_ENV === "production";
 const BOT_TOKEN = config.get(isProduction ? "BOT_TOKEN_PROD" : "BOT_TOKEN");
 
@@ -21,7 +21,22 @@ const generateAccessToken = (id, name, isSuspicious) => {
   };
   return jwt.sign(payload, config.get("secretKey"), { expiresIn: "24h" });
 };
-
+const formatUserResponse = (user) => ({
+  telegramId: user.telegramId,
+  username: user.username,
+  phoneNumber: user.phoneNumber,
+  languageCode: user.languageCode,
+  allowsWriteToPm: user.allowsWriteToPm,
+  authDate: user.authDate,
+  location: user.location,
+  id: user.id,
+  avatar: user.avatar,
+  isSuspicious: user.isSuspicious,
+  nickname: user.nickname,
+  ratings: user.ratings,
+  isAnOffice: user.isAnOffice,
+  delivery: user.delivery,
+});
 const verifyTelegramWebAppData = async (telegramInitData) => {
   const encoded = decodeURIComponent(telegramInitData);
 
@@ -42,12 +57,12 @@ const verifyTelegramWebAppData = async (telegramInitData) => {
 };
 
 class authController {
-  async handleAuth(req, res) {
+  async login(req, res) {
     const errors = validationResult(req);
     try {
-      const { username } = req.body;
+      const { userData } = req.body;
 
-      const params = new URLSearchParams(username);
+      const params = new URLSearchParams(userData);
       const initData = {};
       params.forEach((value, key) => {
         initData[key] = value;
@@ -57,11 +72,9 @@ class authController {
         return res.status(400).json({ message: "Недействительные данные" });
       }
 
-      // Проверяем, существует ли пользователь с указанным telegramId
       const telegramId = JSON.parse(initData.user).id;
       let user = await User.findOne({ telegramId });
 
-      // Если пользователь не найден, создаем нового пользователя
       if (!user) {
         const avatar = await getAvatar(telegramId);
         const userData = JSON.parse(initData.user);
@@ -69,16 +82,19 @@ class authController {
           avatar,
           telegramId,
           nickname: generateNickname(),
-          firstName: userData.first_name,
-          lastName: userData.last_name,
           username: userData.username,
           languageCode: userData.language_code,
           allowsWriteToPm: userData.allows_write_to_pm,
           authDate: new Date(initData.auth_date * 1000),
         });
         user = await newUser.save();
+      } else {
+        const userData = JSON.parse(initData.user);
+        if (userData.username && user.username !== userData.username) {
+          user.username = userData.username;
+          await user.save();
+        }
       }
-      // Создаем токен доступа
       const token = generateAccessToken(
         user.id,
         initData.username,
@@ -86,22 +102,7 @@ class authController {
       );
       return res.json({
         token,
-        user: {
-          telegramId: user.telegramId,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          username: user.username,
-          languageCode: user.languageCode,
-          allowsWriteToPm: user.allowsWriteToPm,
-          authDate: user.authDate,
-          id: user.id,
-          avatar: user.avatar,
-          isSuspicious: user.isSuspicious,
-          nickname: user.nickname,
-          ratings: user.ratings,
-          isAnOffice: user.isAnOffice,
-          delivery: user.delivery,
-        },
+        user: formatUserResponse(user),
       });
     } catch (e) {
       console.log(e);
@@ -123,23 +124,7 @@ class authController {
       }
       return res.json({
         token,
-        user: {
-          telegramId: user.telegramId,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          username: user.username,
-          languageCode: user.languageCode,
-          allowsWriteToPm: user.allowsWriteToPm,
-          authDate: user.authDate,
-          location: user.location,
-          id: user.id,
-          avatar: user.avatar,
-          isSuspicious: user.isSuspicious,
-          nickname: user.nickname,
-          ratings: user.ratings,
-          isAnOffice: user.isAnOffice,
-          delivery: user.delivery,
-        },
+        user: formatUserResponse(user),
       });
     } catch (e) {
       console.log(e);
@@ -173,25 +158,7 @@ class authController {
         }
       );
 
-      const responseUser = {
-        telegramId: user.telegramId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        languageCode: user.languageCode,
-        allowsWriteToPm: user.allowsWriteToPm,
-        authDate: user.authDate,
-        location: user.location,
-        id: user.id,
-        avatar: user.avatar,
-        isSuspicious: user.isSuspicious,
-        nickname: user.nickname,
-        ratings: user.ratings,
-        isAnOffice: user.isAnOffice,
-        delivery: user.delivery,
-      };
-
-      return res.json(responseUser);
+      return res.json(formatUserResponse(user));
     } catch (e) {
       console.log(e);
     }
@@ -199,7 +166,6 @@ class authController {
   async updateUserLocation(req, res) {
     try {
       const { latitude, longitude } = req.body;
-      console.log(3333, latitude, longitude);
       // Получение данных о геолокации
       const geolocationData = await getGeolocationData(latitude, longitude);
 
@@ -238,25 +204,7 @@ class authController {
         }
       );
 
-      const responseUser = {
-        telegramId: user.telegramId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        languageCode: user.languageCode,
-        allowsWriteToPm: user.allowsWriteToPm,
-        authDate: user.authDate,
-        location: user.location,
-        id: user.id,
-        avatar: user.avatar,
-        isSuspicious: user.isSuspicious,
-        nickname: user.nickname,
-        ratings: user.ratings,
-        isAnOffice: user.isAnOffice,
-        delivery: user.delivery,
-      };
-
-      return res.json(responseUser);
+      return res.json(formatUserResponse(user));
     } catch (error) {
       console.error(
         "Ошибка при обновлении местоположения пользователя:",
@@ -268,9 +216,20 @@ class authController {
     }
   }
 
+  async sendPhoneNumberInstructions(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.user.id });
+      await phoneNumberInstructions(telegramBot, user.telegramId);
+      console.log("444444!!!!!!!");
+      res.json({ massage: "success" });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async getUsers(req, res) {
     try {
-      const users = await User.find({}, { password: false });
+      const users = await User.find({});
       res.json(users);
     } catch (e) {
       console.log(e);

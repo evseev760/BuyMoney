@@ -2,6 +2,16 @@
 const Currency = require("../models/Currency");
 const Cripto = require("../models/Cripto");
 
+const getUserChatUrl = (user) => {
+  if (user.username) {
+    return `https://t.me/${user.username}`;
+  } else if (user.phoneNumber) {
+    return `https://t.me/+${user.phoneNumber}`;
+  } else {
+    return null;
+  }
+};
+
 const sendApplicationMessage = async (
   telegramBot,
   application,
@@ -22,12 +32,18 @@ const sendApplicationMessage = async (
     🏷️ Цена: ${application.price}
     💰 Сумма: ${application.quantity}
     💱 Валюта: ${currencyItem.label}
-    💸 К оплате: ${forPaymentItem.label}` +
+    💸 К оплате: ${forPaymentItem.label}
+    ` +
     (paymentMethodItem
       ? `💳 Способ оплаты: ${paymentMethodItem}
     `
       : "") +
-    `👤 Покупатель: ${buyerUser.username}`;
+    `👤 Покупатель: ${
+      buyerUser.ratings.average.toFixed(2) +
+      "/" +
+      buyerUser.ratings.count +
+      " ⭐"
+    }`;
 
   const sentMessage = await telegramBot.sendMessage(
     sellerUser.telegramId,
@@ -37,7 +53,7 @@ const sendApplicationMessage = async (
         inline_keyboard: [
           [
             {
-              text: "👍 Принять заявку",
+              text: "	✅ Принять заявку",
               callback_data: `${application._id}`,
             },
           ],
@@ -59,8 +75,8 @@ const editApplicationMessage = async (
   buyerUser,
   sellerUser
 ) => {
-  const buyerChatUrl = `https://t.me/${buyerUser.username}`;
-  const sellerChatUrl = `https://t.me/${sellerUser.username}`;
+  const buyerChatUrl = getUserChatUrl(buyerUser);
+  const sellerChatUrl = getUserChatUrl(sellerUser);
 
   const newKeyboard = {
     inline_keyboard: [
@@ -139,8 +155,24 @@ const deliteApplicationMessage = async (
   }
 };
 
+const phoneNumberInstructions = async (bot, chatId) => {
+  await bot.sendMessage(
+    chatId,
+    "Чтобы отправить свой номер телефона, нажмите на кнопку 'Поделиться номером' ниже.",
+    {
+      reply_markup: {
+        keyboard: [[{ text: "Поделиться номером", request_contact: true }]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    }
+  );
+};
+
 module.exports = {
   sendApplicationMessage,
   editApplicationMessage,
   deliteApplicationMessage,
+  getUserChatUrl,
+  phoneNumberInstructions,
 };
