@@ -6,6 +6,7 @@ import { LocalStorageKey } from "hooks/useLocalStorage";
 
 interface IOfferState {
   offers: OfferData[];
+  offersTimestamp?: number;
   offersIsLoading: boolean;
   offerIsLoading: boolean;
   createOfferIsLoading: boolean;
@@ -15,6 +16,11 @@ interface IOfferState {
   message: string;
   newOffer: EmptyOfferData;
   myOffers: OfferData[];
+  lastOfferReqest: LastOfferReqest;
+}
+export interface LastOfferReqest {
+  id?: string;
+  timestamp?: number;
 }
 const emptyOfferData: EmptyOfferData = {
   currency:
@@ -46,6 +52,7 @@ const initialState: IOfferState = {
   currentOfferData: undefined,
   myOffers: [],
   newOffer: emptyOfferData,
+  lastOfferReqest: {},
 };
 
 export const offerSlice = createSlice({
@@ -58,6 +65,7 @@ export const offerSlice = createSlice({
     offersSuccess: (state, action: PayloadAction<OfferData[]>) => {
       state.offersIsLoading = false;
       state.offers = action.payload;
+      state.offersTimestamp = new Date().getTime();
       state.error = "";
     },
     offersError: (state, action: PayloadAction<string>) => {
@@ -140,6 +148,12 @@ export const offerSlice = createSlice({
           localStorage.getItem(LocalStorageKey.newOfferForPayment) ||
           CryptoCurrency.USDT,
       };
+    },
+    setLastOfferReqest: (
+      state,
+      action: PayloadAction<{ data: LastOfferReqest }>
+    ) => {
+      state.lastOfferReqest = action.payload.data;
     },
   },
 });
