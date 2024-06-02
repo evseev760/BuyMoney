@@ -25,9 +25,8 @@ export const useOffer = () => {
       timestamp - Number(lastOfferReqest.timestamp) < needPast
     )
       return;
-    let availableOffer;
     if (offers.length && timestamp - Number(offersTimestamp) < needPast) {
-      availableOffer = offers.find((item) => item._id === id);
+      const availableOffer = offers.find((item) => item._id === id);
       if (availableOffer) return dispatch(putOffer(availableOffer));
     }
 

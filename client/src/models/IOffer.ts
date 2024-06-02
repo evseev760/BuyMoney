@@ -1,3 +1,4 @@
+import { CurrentUser } from "./Auth";
 import { User } from "./User";
 
 export interface DeliveryValues {
@@ -21,6 +22,7 @@ export interface OfferData {
   paymentMethods?: string[];
   comment?: string;
   applications: string[];
+  location: CurrentUser["location"];
   id?: string;
   _id: string;
 }

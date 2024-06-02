@@ -284,7 +284,6 @@ export const Offer = () => {
         quantity: adjustedValue,
       })
     );
-    console.log(666, application, value, isReversePrice);
   };
   const sendInstructions = () => {
     dispatch(sendPhoneNumberInstructions(() => tg.close()));

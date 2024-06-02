@@ -30,6 +30,7 @@ const User = new Schema({
   chatId: { type: String },
   avatar: { type: String },
   isSuspicious: { type: Boolean, default: false },
+  tradingDisabled: { type: Boolean, default: false },
   ratings: {
     average: { type: Number, default: 0 },
     count: { type: Number, default: 0 },

@@ -57,7 +57,7 @@
   "all": "All",
   "payment": "Payment",
   "sum": "Sum",
-  "amount": "Distance",
+  "distance": "Distance",
   "distanceReduced": "Dist. (km)",
   "amountToExchange": "Amount to exchange",
   "rateTheDeal": "Rate the deal",

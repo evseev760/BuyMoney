@@ -47,5 +47,8 @@ const ButtonContainer = styled.div`
 const StyledTabs = styled(Tabs)`
   ${({ theme }: { theme: DefaultTheme }) => css`
     max-height: 100vh;
+    & > .MuiTabs-scroller {
+      overflow-x: hidden;
+    }
   `}
 `;

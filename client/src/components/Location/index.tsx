@@ -4,6 +4,7 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { updateUserLocation } from "store/reducers/auth/ActionCreators";
 import { Skeleton } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
+import { getLocationTitle } from "utils/location";
 
 export const LocationComponent = () => {
   const { t } = useTranslation();
@@ -35,9 +36,9 @@ export const LocationComponent = () => {
       <>
         <MyLocationIcon onClick={handleSendLocation} />
         {currentUser?.location?.Country ? (
-          <span
-            onClick={handleSendLocation}
-          >{`${currentUser.location?.Country}, ${currentUser.location.City}`}</span>
+          <span onClick={handleSendLocation}>
+            {getLocationTitle(currentUser.location)}
+          </span>
         ) : (
           <span onClick={handleSendLocation}>{t("sendLocation")}</span>
         )}

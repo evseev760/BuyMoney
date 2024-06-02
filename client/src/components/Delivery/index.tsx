@@ -30,9 +30,6 @@ export const Delivery = (props: DeliveryProps) => {
         />
         <StyledSuffix isValid={isValid}>{currency}</StyledSuffix>
       </Container>
-      <br />
-      <br />
-      <br />
     </>
   ) : (
     <></>
@@ -52,7 +49,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 8px;
   position: relative;
-  margin-top: 16px;
+  margin: 16px 0;
 `;
 
 const QuantityInput = styled(CurrencyInput)<{ disabled: boolean }>`

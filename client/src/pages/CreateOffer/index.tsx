@@ -99,9 +99,12 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     };
   }, [currentDrawer]);
 
-  // useEffect(() => {
-  //   dispatch(setCurrencies({ fiat, cripto: criptoList }));
-  // }, []);
+  useEffect(() => {
+    // dispatch(setCurrencies({ fiat, cripto: criptoList }));
+    return () => {
+      tg.MainButton.hide();
+    };
+  }, []);
 
   useEffect(() => {
     if (
