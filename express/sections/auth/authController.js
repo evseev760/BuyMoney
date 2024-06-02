@@ -220,7 +220,6 @@ class authController {
     try {
       const user = await User.findOne({ _id: req.user.id });
       await phoneNumberInstructions(telegramBot, user.telegramId);
-      console.log("444444!!!!!!!");
       res.json({ massage: "success" });
     } catch (e) {
       console.log(e);

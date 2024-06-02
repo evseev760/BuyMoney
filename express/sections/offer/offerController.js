@@ -209,6 +209,7 @@ class offerController {
         }
       });
       filter.seller = { $ne: mongoose.Types.ObjectId(req.user.id) };
+      filter.tradingDisabled = { $ne: true };
 
       let offers;
       if (
@@ -255,6 +256,7 @@ class offerController {
               "sellerData.location": 0,
               "sellerData.chatId": 0,
               "sellerData.authDate": 0,
+              "location.coordinates": 0,
             },
           },
           {
@@ -341,6 +343,7 @@ class offerController {
               "sellerData.location": 0,
               "sellerData.chatId": 0,
               "sellerData.authDate": 0,
+              "location.coordinates": 0,
             },
           },
           {
@@ -363,6 +366,12 @@ class offerController {
 
         if (!offer) {
           return res.status(404).json({ message: "Offer не найден", errors });
+        }
+        if (offer.location) {
+          offer.location = {
+            ...offer.location.toObject(),
+            coordinates: undefined,
+          };
         }
         const updatedOffers = await calculateOfferPrices([offer]);
         res.json(updatedOffers[0]);

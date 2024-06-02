@@ -169,7 +169,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           onChange={setSum}
           value={sum}
           isValid={true}
-          label={"amountToExchange"}
+          label={t("amountToExchange")}
           currency={getLabel(currency) || ""}
           focus
         />
@@ -182,7 +182,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
           onChange={setDistance}
           defaultValue={distance / 1000}
           isValid={true}
-          label={"amount"}
+          label={t("distance")}
           currency={"кm"}
           focus
         />
@@ -193,13 +193,17 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
 
   return (
     <>
-      <Tabs variant="scrollable" scrollButtons="auto">
+      <StyledTabs
+        orientation="horizontal"
+        variant="scrollable"
+        scrollButtons="auto"
+      >
         <Container>
           {filterList.map((item) => (
             <FilterItem {...item} isLoading={currenciesIsloading} />
           ))}
         </Container>
-      </Tabs>
+      </StyledTabs>
       <LocationComponent />
       <DrawerComponent
         isOpen={!!currentDrawer}
@@ -209,6 +213,11 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     </>
   );
 };
+const StyledTabs = styled(Tabs)`
+  & > .MuiTabs-scroller {
+    overflow-y: hidden;
+  }
+`;
 const Container = styled.div`
   display: flex;
   gap: 8px;

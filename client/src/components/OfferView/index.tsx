@@ -16,6 +16,7 @@ import { Numeral } from "components/Numeral";
 import EditIcon from "@mui/icons-material/Edit";
 import SwipeableListItem from "components/SwipeableListItemProps";
 import { useTranslation } from "react-i18next";
+import { getLocationTitle } from "utils/location";
 
 interface OfferViewProps {
   offer: OfferData;
@@ -25,6 +26,7 @@ export const OfferView = (props: OfferViewProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { forPaymentArr } = useCurrencies();
+  const { currentUser } = useAppSelector((state) => state.authReducer);
 
   const { offer, isMy } = props;
 
@@ -229,6 +231,17 @@ export const OfferView = (props: OfferViewProps) => {
                         <Label></Label>
                       )}
                     </Value>
+                  </RightBlock>
+                </InfoRow>
+              )}
+              {getLocationTitle(currentUser.location) !==
+                getLocationTitle(offer.location) && (
+                <InfoRow>
+                  <LeftBlock></LeftBlock>
+                  <RightBlock>
+                    <Label>
+                      <Comment>{getLocationTitle(offer.location)}</Comment>
+                    </Label>
                   </RightBlock>
                 </InfoRow>
               )}
