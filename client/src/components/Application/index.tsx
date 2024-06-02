@@ -60,7 +60,10 @@ export const ApplicationComponent = (props: ApplicationProps) => {
   const isSell = currentUser.id === application.seller;
   const goToChat = () => {
     application.partnerData &&
-      openTelegramLink(application.partnerData?.username);
+      openTelegramLink(
+        application.partnerData?.username ||
+          application.partnerData?.phoneNumber
+      );
   };
   const onComplite = (rating: number) => {
     if (!application._id) return;

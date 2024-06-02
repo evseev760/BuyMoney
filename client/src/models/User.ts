@@ -1,6 +1,7 @@
 export interface User {
   _id: string;
-  username: string;
+  username?: string;
+  phoneNumber?: string;
   avatar: string;
   isSuspicious: boolean;
   languageCode: string;

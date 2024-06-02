@@ -5,6 +5,7 @@ interface AuthState {
   token: string;
   error: string;
   isLoading: boolean;
+  sendPhoneNumberInstructionsIsLoading: boolean;
   message?: string;
   isAuth: boolean;
   currentUser: CurrentUser;
@@ -16,6 +17,7 @@ const initialState: AuthState = {
   error: "",
   message: "",
   isAuth: false,
+  sendPhoneNumberInstructionsIsLoading: false,
   currentUser: {
     id: "",
     username: "",
@@ -85,6 +87,16 @@ export const authSlice = createSlice({
     updateUserDataError: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.message = action.payload;
+    },
+
+    sendPhoneNumberInstructionsFetching: (state) => {
+      state.sendPhoneNumberInstructionsIsLoading = true;
+    },
+    sendPhoneNumberInstructionsSuccess: (state) => {
+      state.sendPhoneNumberInstructionsIsLoading = false;
+    },
+    sendPhoneNumberInstructionsError: (state) => {
+      state.sendPhoneNumberInstructionsIsLoading = false;
     },
   },
 });

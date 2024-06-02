@@ -13,6 +13,9 @@ export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
     const response = await axios.get<any>(`${API_URL}${api.auth.auth}`, auth());
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
+    if (response?.data.user?.username !== tg?.initDataUnsafe?.user?.username) {
+      dispatch(fetchLogin(tg));
+    }
   } catch (e: any) {
     dispatch(authSlice.actions.authError(""));
     dispatch(fetchLogin(tg));
@@ -27,8 +30,8 @@ export const fetchLogin = (tg: any) => async (dispatch: AppDispatch) => {
 
     dispatch(authSlice.actions.loginFetching());
     const response = await axios.post<any>(`${API_URL}${api.auth.login}`, {
-      username: tg.initData,
-      password: hash,
+      userData: tg.initData,
+      hash: hash,
     });
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
@@ -74,5 +77,22 @@ export const updateUserLocation =
     } catch (e: any) {
       errorCallback && errorCallback();
       dispatch(authSlice.actions.updateUserDataError(e.response.data.message));
+    }
+  };
+export const sendPhoneNumberInstructions =
+  (callback?: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(authSlice.actions.sendPhoneNumberInstructionsFetching());
+      await axios.post(
+        `${API_URL}${api.auth.sendPhoneNumberInstructions}`,
+        {},
+        auth()
+      );
+      dispatch(authSlice.actions.sendPhoneNumberInstructionsSuccess());
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(authSlice.actions.sendPhoneNumberInstructionsError());
     }
   };

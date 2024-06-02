@@ -34,19 +34,20 @@ bot.on("message", async (msg) => {
       let user = await User.findOne({ telegramId: msg.chat.id });
 
       if (user) {
-        // Если пользователь уже существует в базе, обновляем его chatId
-        await User.updateOne({ telegramId: msg.chat.id }, { chatId: chatId });
+        const updateData = { chatId: chatId };
+        if (msg.chat.username && user.username !== msg.chat.username) {
+          updateData.username = msg.chat.username;
+        }
+        await User.updateOne({ telegramId: msg.chat.id }, updateData);
       } else {
         const avatar = await getAvatar(msg.chat.id);
         const nickname = generateNickname();
         // Если пользователь еще не существует, создаем нового и добавляем его в базу
         user = new User({
           telegramId: msg.chat.id,
-          firstName: msg.chat.first_name,
-          lastName: msg.chat.last_name,
           username: msg.chat.username,
           languageCode: msg.from.language_code,
-          allowsWriteToPm: true, // Здесь можете установить значение по умолчанию
+          allowsWriteToPm: true,
           authDate: new Date(),
           chatId: chatId,
           avatar,
@@ -55,16 +56,35 @@ bot.on("message", async (msg) => {
         await user.save();
       }
 
-      // Отправляем сообщение пользователю
-      bot.sendMessage(chatId, "Добро пожаловать! Отправьте свою геолокацию.", {
-        reply_markup: {
-          keyboard: [
-            [{ text: "Отправить геолокацию", request_location: true }],
-          ],
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
-      });
+      if (!msg.chat.username && !user.phoneNumber) {
+        await bot.sendMessage(
+          chatId,
+          "Чтобы другие пользователи могли с вами связаться, пожалуйста, создайте юзернейм в Telegram или поделитесь своим номером телефона.",
+          {
+            reply_markup: {
+              keyboard: [
+                [{ text: "Поделиться номером", request_contact: true }],
+              ],
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          }
+        );
+      } else {
+        await bot.sendMessage(
+          chatId,
+          "Добро пожаловать! Отправьте свою геолокацию.",
+          {
+            reply_markup: {
+              keyboard: [
+                [{ text: "Отправить геолокацию", request_location: true }],
+              ],
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.error("Ошибка при обработке команды /start:", error);
       bot.sendMessage(chatId, "Произошла ошибка при обработке вашего запроса.");
@@ -87,11 +107,52 @@ bot.on("callback_query", async (query) => {
 
 bot.on("web_app_data", (msg) => {
   const chatId = msg.chat.id;
-  console.log(11111, msg.web_app_data);
   const data = JSON.parse(msg.web_app_data.data);
   const { latitude, longitude } = data;
 
   bot.sendMessage(chatId, `Latitude: ${latitude}, Longitude: ${longitude}`);
+});
+bot.on("contact", async (msg) => {
+  const chatId = msg.chat.id;
+  const phoneNumber = msg.contact.phone_number;
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { telegramId: chatId },
+      { phoneNumber: phoneNumber },
+      { new: true }
+    );
+
+    if (user) {
+      console.log("Номер телефона пользователя успешно обновлен:", phoneNumber);
+
+      if (!user.location || !user.location.coordinates.length) {
+        await bot.sendMessage(
+          chatId,
+          "Спасибо за предоставленный номер телефона! Теперь, пожалуйста, отправьте свою геолокацию.",
+          {
+            reply_markup: {
+              keyboard: [
+                [{ text: "Отправить геолокацию", request_location: true }],
+              ],
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          }
+        );
+      } else {
+        await bot.sendMessage(chatId, "Ваш номер телефона успешно обновлен!");
+      }
+    } else {
+      console.error("Пользователь с telegramId не найден:", chatId);
+    }
+  } catch (error) {
+    console.error("Ошибка при обновлении номера телефона пользователя:", error);
+    bot.sendMessage(
+      chatId,
+      "Произошла ошибка при обновлении вашего номера телефона. Попробуйте еще раз позже."
+    );
+  }
 });
 
 bot.on("location", async (msg) => {
@@ -118,7 +179,7 @@ bot.on("location", async (msg) => {
 
     if (user) {
       await Offer.updateMany(
-        { seller: user._id }, // Находим все офферы этого пользователя
+        { seller: user._id },
         {
           "location.type": "Point",
           "location.coordinates": [longitude, latitude],
@@ -130,19 +191,17 @@ bot.on("location", async (msg) => {
         }
       );
       console.log(
-        `Местоположение пользователя ${user.firstName} успешно обновлено.`
+        `Местоположение пользователя ${user.nickname} успешно обновлено.`
       );
     } else {
       const avatar = await getAvatar(msg.chat.id);
       const nickname = generateNickname();
-      // Если пользователь еще не существует, создаем нового и добавляем его в базу
       const newUser = new User({
         telegramId: msg.chat.id,
-        firstName: msg.chat.first_name,
-        lastName: msg.chat.last_name,
+
         username: msg.chat.username,
         languageCode: msg.from.language_code,
-        allowsWriteToPm: true, // Здесь можете установить значение по умолчанию
+        allowsWriteToPm: true,
         authDate: new Date(),
         chatId: chatId,
         location: {
@@ -161,11 +220,9 @@ bot.on("location", async (msg) => {
       console.log(`Пользователь с telegramId ${chatId} не найден.`);
     }
 
-    // Отправляем сообщение пользователю о успешном обновлении местоположения
     bot.sendMessage(chatId, "Спасибо! Местоположение упешно обновлено!");
   } catch (error) {
     console.error("Ошибка при обновлении местоположения пользователя:", error);
-    // Отправляем сообщение об ошибке пользователю
     bot.sendMessage(
       chatId,
       "Произошла ошибка при обновлении вашего местоположения. Попробуйте еще раз позже."

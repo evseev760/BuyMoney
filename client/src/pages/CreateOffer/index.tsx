@@ -30,6 +30,10 @@ import { Container, Title } from "components/Styles/Styles";
 import { useTranslation } from "react-i18next";
 import { LocationComponent } from "components/Location";
 import { NoResults } from "components/NoResults";
+import { MainButton } from "components/MainButton";
+import { SecondButton } from "components/SecondButton";
+import { sendPhoneNumberInstructions } from "store/reducers/auth/ActionCreators";
+import styled from "styled-components";
 // import { setCurrencies } from "store/reducers/currency/ActionCreators";
 // import criptoList from "utils/criptocurrency.json";
 // import fiat from "utils/currency.json";
@@ -63,9 +67,8 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   const { newOffer, createOfferIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
-  const { currentUser, isLoading } = useAppSelector(
-    (state) => state.authReducer
-  );
+  const { currentUser, isLoading, sendPhoneNumberInstructionsIsLoading } =
+    useAppSelector((state) => state.authReducer);
   const {
     price,
     currencies,
@@ -78,8 +81,8 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
   } = useCurrencies();
 
   const [isReversePrice, setIsReversePrice] = useState<boolean>();
-
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
+
   const backButtonHandler = useCallback(() => {
     if (currentDrawer) {
       changeDrawer(undefined);
@@ -92,16 +95,12 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     onToggleBackButton(true);
     setBackButtonCallBack(backButtonHandler);
     return () => {
-      // onToggleBackButton(false);
       offBackButtonCallBack(backButtonHandler);
     };
   }, [currentDrawer]);
 
   // useEffect(() => {
   //   dispatch(setCurrencies({ fiat, cripto: criptoList }));
-  //   return () => {
-  //     tg.MainButton.hide();
-  //   };
   // }, []);
 
   useEffect(() => {
@@ -366,12 +365,35 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       />
     ),
   };
-  return !currentUser.location?.coordinates[0] ? (
+  const sendInstructions = () => {
+    dispatch(sendPhoneNumberInstructions(() => tg.close()));
+  };
+  if (!currentUser?.username && !currentUser?.phoneNumber && !isLoading) {
+    return (
+      <Container>
+        <NoResults text={t("noResults4")} />
+        <SendInstructionsContainer>
+          <SecondButton
+            disabled={sendPhoneNumberInstructionsIsLoading}
+            text={t("back")}
+            handleClick={backButtonHandler}
+          />
+          <MainButton
+            isLoading={sendPhoneNumberInstructionsIsLoading}
+            text={t("share")}
+            handleClick={sendInstructions}
+          />
+        </SendInstructionsContainer>
+      </Container>
+    );
+  }
+  if (!currentUser.location?.coordinates[0]) {
     <Container>
       <LocationComponent />
       <NoResults text={t("noResults3")} />
-    </Container>
-  ) : (
+    </Container>;
+  }
+  return (
     <>
       <Container>
         <Title>{t("createAnOffer")}</Title>
@@ -467,5 +489,14 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     </>
   );
 };
+
+const SendInstructionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  & button {
+    flex: 1;
+  }
+`;
 
 export default CreateOffer;

@@ -57,7 +57,8 @@ export const useTg = () => {
       WebApp.SettingsButton.onClick(callBack);
     }
   };
-  const openTelegramLink = (id: string) => {
+  const openTelegramLink = (id?: string) => {
+    if (!id) return;
     const url = `https://t.me/${id}`;
     WebApp.openTelegramLink(url);
   };

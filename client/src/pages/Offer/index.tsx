@@ -17,6 +17,10 @@ import SkeletonOffer from "./Skeleton";
 import Price from "components/Price";
 import { useApplication } from "hooks/useApplication";
 import { useTranslation } from "react-i18next";
+import { NoResults } from "components/NoResults";
+import { MainButton } from "components/MainButton";
+import { SecondButton } from "components/SecondButton";
+import { sendPhoneNumberInstructions } from "store/reducers/auth/ActionCreators";
 
 interface Drawers {
   paymentMethods: JSX.Element;
@@ -47,7 +51,11 @@ export const Offer = () => {
   const { currentOfferData, offerIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
-
+  const {
+    currentUser,
+    isLoading: isLoadingUser,
+    sendPhoneNumberInstructionsIsLoading,
+  } = useAppSelector((state) => state.authReducer);
   const {
     onToggleBackButton,
     setBackButtonCallBack,
@@ -266,6 +274,9 @@ export const Offer = () => {
       })
     );
   };
+  const sendInstructions = () => {
+    dispatch(sendPhoneNumberInstructions(() => tg.close()));
+  };
 
   const {
     price: displayedPrice,
@@ -276,7 +287,25 @@ export const Offer = () => {
     currentOfferData?.currency,
     currentOfferData?.forPayment
   );
-
+  if (!currentUser?.username && !currentUser?.phoneNumber && !isLoadingUser) {
+    return (
+      <StyledContainer>
+        <NoResults text={t("noResults4")} />
+        <SendInstructionsContainer>
+          <SecondButton
+            disabled={sendPhoneNumberInstructionsIsLoading}
+            text={t("back")}
+            handleClick={backButtonHandler}
+          />
+          <MainButton
+            isLoading={sendPhoneNumberInstructionsIsLoading}
+            text={t("share")}
+            handleClick={sendInstructions}
+          />
+        </SendInstructionsContainer>
+      </StyledContainer>
+    );
+  }
   return offerIsLoading || currenciesIsloading ? (
     <SkeletonOffer />
   ) : currentOfferData ? (
@@ -347,4 +376,13 @@ const Primary = styled.span`
     color: ${theme.palette.text.primary} !important;
   `}
 `;
+const SendInstructionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  & button {
+    flex: 1;
+  }
+`;
+
 export default Offer;

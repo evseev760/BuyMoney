@@ -12,6 +12,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useState } from "react";
 import styled, { css, DefaultTheme } from "styled-components";
 import { useTranslation } from "react-i18next";
+import { Textarea } from "components/Textarea";
 
 interface CompliteDialogProps {
   text: string;
@@ -25,6 +26,7 @@ export const CompliteDialog = (props: CompliteDialogProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<number>(5);
+  const [comment, setComment] = useState<string>("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -62,6 +64,12 @@ export const CompliteDialog = (props: CompliteDialogProps) => {
             onChange={handleChange}
           />
         </StyledDialogContent>
+        <Textarea
+          placeholder={t("review")}
+          onChange={setComment}
+          value={comment}
+        />
+
         <DialogActions>
           <SecondButton handleClick={handleClose} text={t("cancel")} />
           <MainButton handleClick={handleConfirm} text={t("confirm")} />

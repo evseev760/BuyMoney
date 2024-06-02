@@ -3,8 +3,7 @@ const { type } = require("os");
 
 const User = new Schema({
   telegramId: { type: Number, unique: true, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String },
+  phoneNumber: { type: String },
   username: { type: String },
   languageCode: { type: String },
   allowsWriteToPm: { type: Boolean },
