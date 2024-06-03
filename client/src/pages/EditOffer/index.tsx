@@ -307,7 +307,7 @@ const EditOffer = () => {
               ? " +" + Number(newOffer.paymentMethods?.length - 1)
               : ""
           }`
-        : "-",
+        : "",
       isLoading: isLoading,
       isSelect: true,
     },

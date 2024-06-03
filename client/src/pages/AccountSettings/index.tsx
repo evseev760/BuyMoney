@@ -3,24 +3,17 @@ import { StyledSwitch } from "components/StyledSwitch";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeliveryDiningOutlinedIcon from "@mui/icons-material/DeliveryDiningOutlined";
 import SocialDistanceOutlinedIcon from "@mui/icons-material/SocialDistanceOutlined";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useNavigate } from "react-router-dom";
 import { useTg } from "hooks/useTg";
 import { RouteNames } from "router";
 
-import { ArrayConfirmButton } from "components/ArrayConfirmButton";
-import { Quantity } from "components/Quantity";
-import Price from "components/Price";
-import { DrawerComponent } from "components/Drawer";
-import { PrimaryBtn } from "components/Styles/Styles";
 import { UpdateUserData } from "models/Auth";
 import { updateUserData } from "store/reducers/auth/ActionCreators";
 import { useTranslation } from "react-i18next";
-interface Drawers {
-  distance: JSX.Element;
-}
-type Drawer = "distance" | undefined;
+import styled, { css, DefaultTheme } from "styled-components";
+import CurrencyInput from "react-currency-input-field";
 
 export const AccountSettings = () => {
   const { t } = useTranslation();
@@ -32,27 +25,21 @@ export const AccountSettings = () => {
   const [distance, setDistance] = useState<number | undefined>(
     currentUser?.delivery?.distance
   );
-  const [currentDrawer, setCurrentDrawer] = useState<Drawer>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { onToggleBackButton, setBackButtonCallBack, offBackButtonCallBack } =
     useTg();
-  const backButtonHandler = useCallback(() => {
-    if (currentDrawer) {
-      setCurrentDrawer(undefined);
-    } else {
-      navigate(RouteNames.MYOFFERS);
-    }
-  }, [currentDrawer]);
+  const backButtonHandler = () => {
+    navigate(RouteNames.MYOFFERS);
+  };
 
   useEffect(() => {
     onToggleBackButton(true);
     setBackButtonCallBack(backButtonHandler);
     return () => {
-      // onToggleBackButton(false);
       offBackButtonCallBack(backButtonHandler);
     };
-  }, [currentDrawer]);
+  }, []);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -74,7 +61,6 @@ export const AccountSettings = () => {
     if (value && (value > 999 || value < 1)) return;
     setDistance(value);
   };
-  const closeDrawer = () => setCurrentDrawer(undefined);
 
   const listArr = [
     {
@@ -101,39 +87,45 @@ export const AccountSettings = () => {
     {
       label: t("maximumDistance"),
       icon: <SocialDistanceOutlinedIcon />,
-      handleClick: () => setCurrentDrawer("distance"),
+      handleClick: () => {},
       value: (
-        <PrimaryBtn>
-          {!!distance && <Price value={distance} />}
+        <>
+          <StiledCurrencyInput
+            value={distance || ""}
+            onValueChange={(value: any, name: any, values: any) =>
+              handleChangeDistance(values.float)
+            }
+            placeholder={`0`}
+            size={28}
+            maxLength={3}
+          />
           <span>{" km"}</span>
-        </PrimaryBtn>
+        </>
       ),
       disable: !isDelivered,
     },
   ];
-  const drawers: Drawers = {
-    distance: (
-      <>
-        <Quantity
-          onChange={handleChangeDistance}
-          value={distance}
-          isValid={true}
-          label={t("maximumDistance")}
-          currency={"km"}
-          focus
-        />
-        <ArrayConfirmButton handleConfirm={closeDrawer} />
-      </>
-    ),
-  };
+
   return (
     <>
       <ListDividers listArr={listArr} />
-      <DrawerComponent
-        isOpen={!!currentDrawer}
-        onClose={() => setCurrentDrawer(undefined)}
-        component={currentDrawer ? drawers[currentDrawer] : <></>}
-      />
     </>
   );
 };
+const StiledCurrencyInput = styled(CurrencyInput)<{ size: number }>`
+  ${({ theme, size }: { theme: DefaultTheme; size: number }) => css`
+    ::placeholder {
+      color: ${theme.palette.text.secondary};
+      opacity: 1;
+    }
+
+    color: ${size ? theme.palette.button.primary : "red"};
+    font-size: 16px;
+    max-width: ${size}px;
+    background-color: ${theme.palette.background.secondary};
+    height: 20px;
+    padding: 0;
+    outline: none;
+    border: none;
+  `}
+`;
