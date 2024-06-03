@@ -83,7 +83,7 @@ const SkeletonTextContainer = styled.div`
 
 const StyledListItem = styled(ListItem)`
   ${({ theme }: { theme: DefaultTheme }) => css`
-    background-color: ${theme.palette.background.secondary};
+    background-color: ${theme.palette.background.secondary} !important;
     color: ${theme.palette.text.primary};
     cursor: pointer;
     -webkit-user-select: none;
@@ -91,6 +91,11 @@ const StyledListItem = styled(ListItem)`
       fill: ${theme.palette.button.primary};
     }
     &:hover {
+      background-color: ${theme.palette.background.secondary};
+      color: ${theme.palette.text.primary};
+      opacity: 0.9;
+    }
+    &:active {
       background-color: ${theme.palette.background.secondary};
       color: ${theme.palette.text.primary};
       opacity: 0.9;

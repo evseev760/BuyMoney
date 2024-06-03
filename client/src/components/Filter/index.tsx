@@ -7,26 +7,19 @@ import { Currency } from "models/Currency";
 import { Quantity } from "components/Quantity";
 import { useEffect, useState } from "react";
 import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
-import styled from "styled-components";
-import { Tabs } from "@material-ui/core";
+import styled, { css, DefaultTheme } from "styled-components";
+import { Input, Tabs } from "@material-ui/core";
 import Price from "components/Price";
 import { ArrayConfirmButton } from "components/ArrayConfirmButton";
 import { LocationComponent } from "components/Location";
 import { useTranslation } from "react-i18next";
+import CurrencyInput from "react-currency-input-field";
 
-type Draver =
-  | "currency"
-  | "forPayment"
-  | "paymentMethods"
-  | "sum"
-  | "distance"
-  | undefined;
+type Draver = "currency" | "forPayment" | "paymentMethods" | undefined;
 interface Drawers {
   currency: JSX.Element;
   forPayment: JSX.Element;
   paymentMethods: JSX.Element;
-  sum: JSX.Element;
-  distance: JSX.Element;
 }
 interface FilterProps {
   drawerCallback: (value: boolean) => void;
@@ -98,15 +91,34 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     },
     {
       items: [],
-      currentValue: sum ? <Price value={sum} /> : sum,
-      onSelect: () => changeDrawer("sum"),
+      currentValue: (
+        <StiledCurrencyInput
+          value={sum}
+          onValueChange={(value: any, name: any, values: any) =>
+            setSum(values.float)
+          }
+          placeholder={`00.0 ${getLabel(currency)}`}
+          size={90}
+          maxLength={9}
+        />
+      ),
+      onSelect: () => {},
       label: t("sum"),
-      placeholder: "00.0",
+      placeholder: `00.0 ${getLabel(currency)}`,
     },
     {
       items: [],
-      currentValue: <Price value={distance / 1000} />,
-      onSelect: () => changeDrawer("distance"),
+      currentValue: (
+        <StiledCurrencyInput
+          value={distance / 1000}
+          onValueChange={(value: any, name: any, values: any) =>
+            setDistance(values.float)
+          }
+          size={55}
+          maxLength={5}
+        />
+      ),
+      onSelect: () => {},
       label: t("distanceReduced"),
       placeholder: "1",
     },
@@ -163,32 +175,6 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
         handleClose={closeDrawer}
       />
     ),
-    sum: (
-      <>
-        <Quantity
-          onChange={setSum}
-          value={sum}
-          isValid={true}
-          label={t("amountToExchange")}
-          currency={getLabel(currency) || ""}
-          focus
-        />
-        <ArrayConfirmButton handleConfirm={closeDrawer} />
-      </>
-    ),
-    distance: (
-      <>
-        <Quantity
-          onChange={setDistance}
-          defaultValue={distance / 1000}
-          isValid={true}
-          label={t("distance")}
-          currency={"кm"}
-          focus
-        />
-        <ArrayConfirmButton handleConfirm={closeDrawer} />
-      </>
-    ),
   };
 
   return (
@@ -228,4 +214,20 @@ const FlexContainer = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+`;
+const StiledCurrencyInput = styled(CurrencyInput)<{ size: number }>`
+  ${({ theme, size }: { theme: DefaultTheme; size: number }) => css`
+    ::placeholder {
+      color: ${theme.palette.text.secondary};
+      opacity: 1;
+    }
+    color: ${size ? theme.palette.button.primary : "red"};
+    font-size: 16px;
+    max-width: ${size}px;
+    background-color: ${theme.palette.button.secondary};
+    height: 20px;
+    padding: 0;
+    outline: none;
+    border: none;
+  `}
 `;
