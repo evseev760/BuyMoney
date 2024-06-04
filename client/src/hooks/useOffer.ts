@@ -8,14 +8,14 @@ import {
   putOffer,
 } from "store/reducers/offer/ActionCreators";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { getCommentsByUserId } from "store/reducers/application/ActionCreators";
 
 export const useOffer = () => {
-  const { lastOfferReqest, offers, offersTimestamp } = useAppSelector(
-    (state) => state.offerReducer
-  );
+  const { lastOfferReqest, offers, offersTimestamp, currentOfferData } =
+    useAppSelector((state) => state.offerReducer);
   const dispatch = useAppDispatch();
 
-  const getOffer = (id?: string) => {
+  const getOffer = (id?: string, userId?: string) => {
     if (!id) return;
 
     const timestamp = new Date().getTime();
@@ -25,14 +25,22 @@ export const useOffer = () => {
       timestamp - Number(lastOfferReqest.timestamp) < needPast
     )
       return;
-    if (offers.length && timestamp - Number(offersTimestamp) < needPast) {
+    if (
+      // id !== currentOfferData?._id &&
+      offers.length &&
+      timestamp - Number(offersTimestamp) < needPast
+    ) {
       const availableOffer = offers.find((item) => item._id === id);
-      if (availableOffer) return dispatch(putOffer(availableOffer));
+      if (availableOffer) {
+        if (userId) dispatch(getCommentsByUserId(userId));
+        return dispatch(putOffer(availableOffer));
+      }
     }
 
     try {
       dispatch(fetchOffer(id));
       dispatch(setLastOfferReqest({ id, timestamp }));
+      if (userId) dispatch(getCommentsByUserId(userId));
     } catch (error) {
       return;
     }

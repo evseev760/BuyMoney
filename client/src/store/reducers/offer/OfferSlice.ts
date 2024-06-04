@@ -17,6 +17,7 @@ interface IOfferState {
   newOffer: EmptyOfferData;
   myOffers: OfferData[];
   lastOfferReqest: LastOfferReqest;
+  deliteOfferIsLoading: string[];
 }
 export interface LastOfferReqest {
   id?: string;
@@ -53,6 +54,7 @@ const initialState: IOfferState = {
   myOffers: [],
   newOffer: emptyOfferData,
   lastOfferReqest: {},
+  deliteOfferIsLoading: [],
 };
 
 export const offerSlice = createSlice({
@@ -100,6 +102,27 @@ export const offerSlice = createSlice({
     },
     createOfferError: (state, action: PayloadAction<string>) => {
       state.createOfferIsLoading = false;
+      state.error = action.payload;
+    },
+
+    deliteOfferFetching: (state, action: PayloadAction<string>) => {
+      state.deliteOfferIsLoading = [
+        ...state.deliteOfferIsLoading,
+        action.payload,
+      ];
+    },
+    deliteOfferSuccess: (state, action: PayloadAction<string>) => {
+      state.deliteOfferIsLoading = state.deliteOfferIsLoading.filter(
+        (id) => id !== action.payload
+      );
+      state.myOffers = state.myOffers.filter(
+        (item) => item._id !== action.payload
+      );
+    },
+    deliteOfferError: (state, action: PayloadAction<string>) => {
+      state.deliteOfferIsLoading = state.deliteOfferIsLoading.filter(
+        (id) => id !== action.payload
+      );
       state.error = action.payload;
     },
 

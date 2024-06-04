@@ -14,6 +14,7 @@ interface IApi {
     getOffers: string;
     getMyOffers: string;
     getOffer: string;
+    deliteOffer: string;
     addProposal: string;
     getProposals: string;
   };
@@ -55,6 +56,7 @@ export const api: IApi = {
     getOffers: "offer/getOffers",
     getMyOffers: "offer/getMyOffers",
     getOffer: "offer/getOffer",
+    deliteOffer: "offer/deliteOffer",
     addProposal: "offer/addProposal",
     getProposals: "offer/getProposals",
   },

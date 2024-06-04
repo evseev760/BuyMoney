@@ -1,7 +1,7 @@
 const Application = require("../models/Application");
 const User = require("../models/User");
 
-const updateUserRating = async (userId, additionalRating) => {
+const updateUserRating = async (userId) => {
   const user = await User.findById(userId);
   if (!user) return;
 
@@ -17,9 +17,9 @@ const updateUserRating = async (userId, additionalRating) => {
     } else {
       return sum + (app.rating.buyer || 0);
     }
-  }, additionalRating);
+  }, 0);
 
-  const ratingCount = userApplications.length + 1;
+  const ratingCount = user.ratings.count ? user.ratings.count + 1 : 1;
 
   user.ratings.average = ratingCount ? totalRating / ratingCount : 0;
   user.ratings.count = ratingCount;

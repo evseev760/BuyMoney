@@ -30,7 +30,7 @@ const Mainpage = () => {
 
   const listArr = [
     {
-      label: t("myOffers"),
+      label: t("myAccount"),
       icon: <PersonOutlineOutlinedIcon />,
       handleClick: () => {
         navigate(RouteNames.MYOFFERS);

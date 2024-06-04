@@ -40,16 +40,14 @@ cron.schedule("*/10 * * * *", async () => {
     for (const application of applications) {
       application.status = "COMPLETED";
 
-      const buyerRating = application.rating.buyer || 5;
-      const sellerRating = application.rating.seller || 5;
-
+      application.rating.buyer = application.rating.buyer || 5;
+      application.rating.seller = application.rating.seller || 5;
+      await application.save();
       // Обновляем рейтинг только если заявка не исключена
       if (!application.isExcludedFromRating) {
-        await updateUserRating(application.user, buyerRating);
-        await updateUserRating(application.seller, sellerRating);
+        await updateUserRating(application.user);
+        await updateUserRating(application.seller);
       }
-
-      await application.save();
     }
 
     console.log("Заявки со статусом CONFIRMATION проверены и обновлены.");

@@ -265,9 +265,12 @@ export const Offer = () => {
       label: t("offerDetails"),
       handleClick: () =>
         currentOfferData &&
-        navigate(`${RouteNames.OFFERDETAILS}/${currentOfferData._id}`, {
-          state: { from: `${RouteNames.OFFER}/${currentOfferData._id}` },
-        }),
+        navigate(
+          `${RouteNames.OFFERDETAILS}/${currentOfferData._id}/${currentOfferData.sellerData._id}`,
+          {
+            state: { from: `${RouteNames.OFFER}/${currentOfferData._id}` },
+          }
+        ),
       value: <ArrowForwardIosIcon />,
     },
   ];
