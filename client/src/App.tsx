@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Router } from "./router";
 import "./App.css";
 import { fetchAuth, fetchLogin } from "./store/reducers/auth/ActionCreators";
@@ -6,7 +6,6 @@ import { useAppDispatch } from "./hooks/redux";
 import { useTg } from "./hooks/useTg";
 import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from "./theme";
-// import { darkTheme } from "theme/darkTheme";
 import { Theme } from "models/Theme";
 import BackendTokenProvider from "TonConnectVerification";
 import { useConnectUserRoom } from "hooks/useConnectUserRoom";
@@ -19,6 +18,25 @@ function App() {
   const isDark = tg.colorScheme === "dark";
   const theme: Theme = isDark ? darkTheme : lightTheme;
   const bgColor = theme.palette.background.primary;
+  const [contentHeight, setContentHeight] = useState("100%");
+  const [initialHeight, setInitialHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newHeight = window.innerHeight;
+      if (newHeight < initialHeight) {
+        setContentHeight(`${newHeight}px`);
+      } else {
+        setContentHeight("100%");
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [initialHeight]);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (tg.initData) {
@@ -44,7 +62,11 @@ function App() {
       <div style={{ backgroundColor: bgColor }} className="App">
         {tg.initData ? (
           <ThemeProvider theme={theme}>
-            <Router />
+            <div className="container">
+              <div className="content" style={{ height: contentHeight }}>
+                <Router />
+              </div>
+            </div>
           </ThemeProvider>
         ) : (
           <div>Это приложение для Telegram</div>

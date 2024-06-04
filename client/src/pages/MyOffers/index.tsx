@@ -11,15 +11,24 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { fetchMyOffers } from "store/reducers/offer/ActionCreators";
 import { OfferView } from "components/OfferView";
 import { NoResults } from "components/NoResults";
-import { OfferViewSkeleton } from "components/OfferView/Skeleton";
+import {
+  OfferViewSkeleton,
+  ReviewSkeleton,
+} from "components/OfferView/Skeleton";
 import { StyledSwitch } from "components/StyledSwitch";
 import { UserInfo } from "components/UserInfo";
 import { useTranslation } from "react-i18next";
+import { getMyComments } from "store/reducers/application/ActionCreators";
+import { Reviews } from "components/Reviews";
+import { TabsComponent } from "components/TabsComponent";
 
 export const MyOffers = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const { myOffers, offersIsLoading } = useAppSelector(
     (state) => state.offerReducer
+  );
+  const { myReviews, reviewsIsLoading } = useAppSelector(
+    (state) => state.applicationReducer
   );
   const { t } = useTranslation();
   const { price } = useAppSelector((state) => state.currencyReducer);
@@ -28,12 +37,14 @@ export const MyOffers = () => {
   const [isOn, setIsOn] = useState<boolean>(true);
   const { onToggleBackButton, setBackButtonCallBack, offBackButtonCallBack } =
     useTg();
+  const [currentTab, setCurrentTab] = useState<number>(0);
   const backButtonHandler = () => navigate(RouteNames.MAIN);
 
   useEffect(() => {
     onToggleBackButton(true);
     setBackButtonCallBack(backButtonHandler);
     dispatch(fetchMyOffers());
+    dispatch(getMyComments());
     return () => {
       offBackButtonCallBack(backButtonHandler);
     };
@@ -61,6 +72,9 @@ export const MyOffers = () => {
       ),
     },
   ];
+  const tabsArray = [t("myOffers"), t("myReviews")];
+
+  console.log(555555, currentTab);
   return (
     <StyledContainer>
       <UserInfo
@@ -70,24 +84,37 @@ export const MyOffers = () => {
 
       <ListDividers listArr={listArr} />
       <div>
-        <Title>{t("myOffers")}</Title>
+        <TabsComponent
+          array={tabsArray}
+          onChange={setCurrentTab}
+          value={currentTab}
+        />
       </div>
-
-      {offersIsLoading || price.isLoading ? (
-        <Container>
-          <OfferViewSkeleton />
-        </Container>
-      ) : (
-        <Container>
-          {myOffers.length ? (
-            myOffers.map((offer) => (
-              <OfferView key={offer._id} offer={offer} isMy />
-            ))
-          ) : (
-            <NoResults text={t("noResults2")} noAnimation />
-          )}
-        </Container>
-      )}
+      <Container>
+        {!currentTab ? (
+          <>
+            {offersIsLoading || price.isLoading ? (
+              <OfferViewSkeleton />
+            ) : myOffers.length ? (
+              myOffers.map((offer) => (
+                <OfferView key={offer._id} offer={offer} isMy />
+              ))
+            ) : (
+              <NoResults text={t("noResults2")} noAnimation />
+            )}
+          </>
+        ) : (
+          <>
+            {reviewsIsLoading ? (
+              <ReviewSkeleton />
+            ) : myReviews.length ? (
+              <Reviews reviewArray={myReviews} />
+            ) : (
+              <NoResults text={t("noResults5")} noAnimation />
+            )}
+          </>
+        )}
+      </Container>
     </StyledContainer>
   );
 };

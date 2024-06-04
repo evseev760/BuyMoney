@@ -29,16 +29,32 @@ export interface CreateApplicationRequest {
   offerId: string;
   seller: string;
 }
+interface UserRatings {
+  average: number;
+  count: number;
+}
 
+export interface ReviewDetails {
+  grade: number;
+  comment: string;
+  nickname: string;
+  avatar: string;
+  ratings: UserRatings;
+  updatedAt: number;
+}
 export interface ApplicationState {
   application: CreateApplicationRequest;
   isLoading: boolean;
+  reviewsIsLoading: boolean;
   error: string;
+  reviews: ReviewDetails[];
+  myReviews: ReviewDetails[];
   myApplications: Application[];
   myApplicationsIsloading: boolean;
   completeApplicationIsLoading: string[];
   deliteApplicationIsLoading: string[];
 }
+
 const emptyApplication = {
   quantity: 0,
   currency: "",
@@ -51,8 +67,11 @@ const emptyApplication = {
 const initialState: ApplicationState = {
   application: emptyApplication,
   isLoading: false,
+  reviewsIsLoading: false,
   error: "",
   myApplications: [],
+  reviews: [],
+  myReviews: [],
   myApplicationsIsloading: false,
   completeApplicationIsLoading: [],
   deliteApplicationIsLoading: [],
@@ -97,6 +116,25 @@ export const applicationSlice = createSlice({
     },
     getMyApplicationsError: (state, action: PayloadAction<string>) => {
       state.myApplicationsIsloading = false;
+      state.error = action.payload;
+    },
+
+    getCommentsByUserIdFetching: (state) => {
+      state.reviewsIsLoading = true;
+    },
+    getCommentsByUserIdSuccess: (
+      state,
+      action: PayloadAction<ReviewDetails[]>
+    ) => {
+      state.reviewsIsLoading = false;
+      state.reviews = action.payload;
+    },
+    getMyCommentsSuccess: (state, action: PayloadAction<ReviewDetails[]>) => {
+      state.reviewsIsLoading = false;
+      state.myReviews = action.payload;
+    },
+    getCommentsByUserIdError: (state, action: PayloadAction<string>) => {
+      state.reviewsIsLoading = false;
       state.error = action.payload;
     },
 

@@ -14,5 +14,11 @@ router.post(
 );
 router.post("/acceptApplication", authMiddleware, controller.acceptApplication);
 router.post("/deliteApplication", authMiddleware, controller.deliteApplication);
+router.get(
+  "/getCommentsByUserId",
+  authMiddleware,
+  controller.getCommentsByUserId
+);
+router.get("/getMyComments", authMiddleware, controller.getMyComments);
 
 module.exports = router;

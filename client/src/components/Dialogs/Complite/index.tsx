@@ -17,7 +17,7 @@ import { Textarea } from "components/Textarea";
 interface CompliteDialogProps {
   text: string;
   handleClick: () => void;
-  onConfirm: (value: number) => void;
+  onConfirm: (value: number, comment: string) => void;
   icon?: any;
   disabled?: boolean;
   isLoading?: boolean;
@@ -40,7 +40,8 @@ export const CompliteDialog = (props: CompliteDialogProps) => {
   };
   const handleConfirm = () => {
     handleClose();
-    props.onConfirm(value);
+    props.onConfirm(value, comment);
+    setComment("");
   };
   return (
     <>

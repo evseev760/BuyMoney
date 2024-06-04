@@ -91,3 +91,19 @@ export const OfferViewSkeleton = () => {
     </SkeletonContainer>
   );
 };
+export const ReviewSkeleton = () => {
+  return (
+    <SkeletonContainer>
+      <SkeletonHeader>
+        <SkeletonValue variant="text" />
+        <SkeletonLabel variant="text" />
+      </SkeletonHeader>
+      <SkeletonBody>
+        <SkeletonRow>
+          <SkeletonLabel variant="text" />
+          <SkeletonValue variant="text" />
+        </SkeletonRow>
+      </SkeletonBody>
+    </SkeletonContainer>
+  );
+};

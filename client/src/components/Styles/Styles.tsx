@@ -90,3 +90,61 @@ export const PrimaryBtn = styled.span`
     }
   `}
 `;
+export const Label = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.text.secondary};
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-weight: 300;
+    gap: 8px;
+    & * {
+      color: ${theme.palette.text.secondary};
+    }
+  `}
+`;
+
+export const Value = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.text.primary};
+    font-size: 16px;
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 300;
+  `}
+`;
+export const InfoRow = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `}
+`;
+export const IconTitle = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    color: ${theme.palette.text.primary};
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 300;
+    & svg {
+      fill: ${theme.palette.button.primary};
+      width: 30px;
+      height: 30px;
+    }
+  `}
+`;
+export const IconStatus = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    & svg {
+      fill: ${theme.palette.button.primary};
+      width: 20px;
+      height: 20px;
+    }
+  `}
+`;

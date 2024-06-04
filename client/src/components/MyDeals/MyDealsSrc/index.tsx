@@ -45,8 +45,12 @@ const MyDealsWrapped = () => {
   const changeDrawer = (value: Draver) => {
     setCurrentDrawer(value);
   };
-  const completeApplicationHandle = (applicationId: string, rating: number) => {
-    dispatch(completeApplication({ applicationId, rating }));
+  const completeApplicationHandle = (
+    applicationId: string,
+    rating: number,
+    comment: string
+  ) => {
+    dispatch(completeApplication({ applicationId, rating, comment }));
   };
   const acceptApplicationHandle = (applicationId: string) => {
     dispatch(acceptApplication({ applicationId }));
