@@ -141,6 +141,24 @@ export const fetchMyOffer = (id: string) => async (dispatch: AppDispatch) => {
   }
 };
 
+export const deliteOffer =
+  (
+    data: { offerId: string },
+    callback?: () => void,
+    errorCallback?: () => void
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(offerSlice.actions.deliteOfferFetching(data.offerId));
+      await axios.post(`${API_URL}${api.offer.deliteOffer}`, data, auth());
+      dispatch(offerSlice.actions.deliteOfferSuccess(data.offerId));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(offerSlice.actions.deliteOfferError(e.response.data.message));
+    }
+  };
+
 export const putOffer = (data: OfferData) => async (dispatch: AppDispatch) => {
   dispatch(offerSlice.actions.offerSuccess(data));
 };

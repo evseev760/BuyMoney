@@ -218,7 +218,7 @@ class applicationApiController {
             );
           }
           if (application.rating.seller) {
-            await updateUserRating(application.user, application.rating.seller);
+            await updateUserRating(application.user);
           }
         }
       }

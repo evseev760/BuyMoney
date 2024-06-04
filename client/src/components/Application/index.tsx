@@ -168,6 +168,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                   handleClick={() => {}}
                   onConfirm={onDelite}
                   text=""
+                  dialogText={t("deleteTheApplication")}
                   isOpen={isOpenDelite}
                   onClose={() => setIsOpenDelite(false)}
                   icon={<DoDisturbAltOutlinedIcon />}
@@ -220,6 +221,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                     onConfirm={onDelite}
                     text={t("delete")}
                     isOpen={isOpenDelite}
+                    dialogText={t("deleteTheApplication")}
                     onClose={() => setIsOpenDelite(false)}
                     // icon={<DoDisturbAltOutlinedIcon />}
                     disabled={isDisable}
@@ -241,6 +243,7 @@ export const ApplicationComponent = (props: ApplicationProps) => {
                     onConfirm={onDelite}
                     text={t("delete")}
                     disabled={isDisable}
+                    dialogText={t("deleteTheApplication")}
                     isLoading={deliteIsLoading}
                     isOpen={isOpenDelite}
                     onClose={() => setIsOpenDelite(false)}

@@ -16,6 +16,7 @@ interface DeliteDialogProps {
   isOpen?: boolean;
   onClose?: () => void;
   noBtn?: boolean;
+  dialogText: string;
 }
 export const DeliteDialog = (props: DeliteDialogProps) => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export const DeliteDialog = (props: DeliteDialogProps) => {
         aria-describedby="alert-dialog-description"
       >
         <StyledDialogTitle id="alert-dialog-title">
-          {t("deleteTheApplication")}
+          {props.dialogText}
         </StyledDialogTitle>
 
         <DialogActions>

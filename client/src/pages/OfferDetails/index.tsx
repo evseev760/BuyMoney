@@ -25,9 +25,9 @@ export const OfferDetails = () => {
   );
   const location = useLocation();
   const { t } = useTranslation();
+  const { id, userId } = useParams();
   const { getOffer } = useOffer();
 
-  const { id } = useParams();
   const navigate = useNavigate();
   const { forPaymentArr } = useCurrencies();
   const {
@@ -43,7 +43,7 @@ export const OfferDetails = () => {
   const backButtonHandler = () => navigate(wayBack);
 
   useEffect(() => {
-    getOffer(id);
+    getOffer(id, userId);
   }, [id]);
 
   useEffect(() => {
@@ -61,10 +61,10 @@ export const OfferDetails = () => {
       tg.MainButton.hide();
     };
   }, []);
-  useEffect(() => {
-    if (currentOfferData?.sellerData._id)
-      dispatch(getCommentsByUserId(currentOfferData?.sellerData._id));
-  }, [currentOfferData?.sellerData]);
+  // useEffect(() => {
+  //   if (currentOfferData?.sellerData._id)
+  //     dispatch(getCommentsByUserId(currentOfferData?.sellerData._id));
+  // }, [currentOfferData?.sellerData._id]);
   const currency = getLabel(forPaymentArr, currentOfferData?.currency);
   const forPayment = getLabel(forPaymentArr, currentOfferData?.forPayment);
   const forPaymentItem = forPaymentArr.find(

@@ -423,6 +423,31 @@ class offerController {
     }
   }
 
+  deliteOffer = async (req, res) => {
+    const { offerId } = req.body;
+    const userId = req.user.id;
+
+    try {
+      const offer = await Offer.findById(offerId);
+      if (!offer) {
+        return res.status(400).json({ message: "Заявка не найдена" });
+      }
+
+      if (offer.seller.toString() !== userId) {
+        return res
+          .status(403)
+          .json({ message: "Вы не имеете прав для удаления этого объявления" });
+      }
+
+      await offer.remove();
+
+      res.status(200).json({ message: "success" });
+    } catch (e) {
+      // console.log(e);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  };
+
   // async getPrice(req, res) {
   //   try {
   //     const errors = validationResult(req);

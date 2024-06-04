@@ -74,7 +74,6 @@ export const MyOffers = () => {
   ];
   const tabsArray = [t("myOffers"), t("myReviews")];
 
-  console.log(555555, currentTab);
   return (
     <StyledContainer>
       <UserInfo

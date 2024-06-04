@@ -117,7 +117,7 @@ export const Router = () => {
             }
           />
           <Route
-            path={`${RouteNames.OFFERDETAILS}/:id`}
+            path={`${RouteNames.OFFERDETAILS}/:id/:userId`}
             element={
               <MainContainer>
                 <Suspense fallback={<Fallback />}>

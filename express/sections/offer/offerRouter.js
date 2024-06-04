@@ -8,7 +8,6 @@ router.post("/editOffer", authMiddleware, controller.editOffer);
 router.get("/getOffers", authMiddleware, controller.getOffers);
 router.get("/getMyOffers", authMiddleware, controller.getMyOffers);
 router.get("/getOffer/:offerId", authMiddleware, controller.getOffer);
-// router.get("/getProposals/:offerId", authMiddleware, controller.getProposals);
-// router.post("/addProposal", authMiddleware, controller.addProposal);
+router.post("/deliteOffer", authMiddleware, controller.deliteOffer);
 
 module.exports = router;

@@ -4,7 +4,7 @@ import DeliveryDiningOutlinedIcon from "@mui/icons-material/DeliveryDiningOutlin
 import { Avatar } from "components/Avatar";
 import { MainButton } from "components/MainButton";
 import Price from "components/Price";
-import { useAppSelector } from "hooks/redux";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useCurrencies } from "hooks/useCurrencies";
 import { Rating } from "@material-ui/lab";
 import { OfferData } from "models/IOffer";
@@ -18,6 +18,9 @@ import SwipeableListItem from "components/SwipeableListItemProps";
 import { useTranslation } from "react-i18next";
 import { getLocationTitle } from "utils/location";
 import { InfoRow } from "components/Styles/Styles";
+import { deliteOffer } from "store/reducers/offer/ActionCreators";
+import { useState } from "react";
+import { DeliteDialog } from "components/Dialogs/Delite";
 
 interface OfferViewProps {
   offer: OfferData;
@@ -26,8 +29,14 @@ interface OfferViewProps {
 export const OfferView = (props: OfferViewProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { forPaymentArr, currenciesIsloading } = useCurrencies();
   const { currentUser } = useAppSelector((state) => state.authReducer);
+  const { deliteOfferIsLoading } = useAppSelector(
+    (state) => state.offerReducer
+  );
+
+  const [isOpenDelite, setIsOpenDelite] = useState(false);
 
   const { offer, isMy } = props;
 
@@ -74,9 +83,15 @@ export const OfferView = (props: OfferViewProps) => {
         : (offer.distance / 1000).toFixed(1)
     );
   };
+  const deliteOfferHandel = () => {
+    dispatch(deliteOffer({ offerId: offer._id }));
+  };
   return (
     <BorderRadius>
-      <SwipeableListItem onClick={() => {}} isDisabled={!isMy}>
+      <SwipeableListItem
+        onClick={() => setIsOpenDelite(true)}
+        isDisabled={!isMy}
+      >
         <Container id={offer._id}>
           <StyledHeader>
             <ColumnContainer>
@@ -86,7 +101,10 @@ export const OfferView = (props: OfferViewProps) => {
               </PriceRow>
               <Label>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
-                  <span>{`${t("priceFor1")} ${getSecondUnit()}`}</span>
+                  {/* <span> */}
+                  {`${t("priceFor1")} `}
+                  {getSecondUnit()}
+                  {/* </span> */}
 
                   <IconsContainer>
                     {offer.sellerData.isAnOffice && <BusinessOutlinedIcon />}
@@ -105,6 +123,8 @@ export const OfferView = (props: OfferViewProps) => {
                   handleClick={onGoToEditOffer}
                   text=""
                   icon={<EditIcon />}
+                  isLoading={deliteOfferIsLoading.includes(offer._id)}
+                  disabled={deliteOfferIsLoading.includes(offer._id)}
                 />
               ) : (
                 <MainButton handleClick={onGoToOffer} text={t("buy")} />
@@ -162,9 +182,12 @@ export const OfferView = (props: OfferViewProps) => {
             <div style={{ marginBottom: "8px" }}></div>
             <StyledInfoContainer
               onClick={() =>
-                navigate(`${RouteNames.OFFERDETAILS}/${offer._id}`, {
-                  state: { from: `${RouteNames.OFFERS}#${offer._id}` },
-                })
+                navigate(
+                  `${RouteNames.OFFERDETAILS}/${offer._id}/${offer.sellerData._id}`,
+                  {
+                    state: { from: `${RouteNames.OFFERS}#${offer._id}` },
+                  }
+                )
               }
             >
               {!!offer.paymentMethods?.length && (
@@ -249,6 +272,17 @@ export const OfferView = (props: OfferViewProps) => {
                 </InfoRow>
               )}
             </StyledInfoContainer>
+            <DeliteDialog
+              handleClick={() => {}}
+              onConfirm={deliteOfferHandel}
+              text={t("delete")}
+              dialogText={t("deleteTheAd")}
+              isOpen={isOpenDelite}
+              onClose={() => setIsOpenDelite(false)}
+              // icon={<DoDisturbAltOutlinedIcon />}
+
+              noBtn={true}
+            />
           </StyledBody>
         </Container>
       </SwipeableListItem>
