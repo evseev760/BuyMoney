@@ -4,7 +4,7 @@ import { api, auth } from "store/api";
 import { authSlice } from "./AuthSlice";
 
 import { API_URL } from "config";
-import { UpdateUserData } from "models/Auth";
+import { CurrentUser, UpdateUserData } from "models/Auth";
 
 export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
   try {
@@ -56,6 +56,11 @@ export const updateUserData =
       errorCallback && errorCallback();
       dispatch(authSlice.actions.updateUserDataError(e.response.data.message));
     }
+  };
+
+export const userDataWathUpdated =
+  (data: CurrentUser) => async (dispatch: AppDispatch) => {
+    dispatch(authSlice.actions.updateUserDataSuccess(data));
   };
 
 export const updateUserLocation =

@@ -13,6 +13,7 @@ import {
   shouldDeliteApplicationEvent,
 } from "store/reducers/application/ActionCreators";
 import socket from "socket";
+import { userDataWathUpdated } from "store/reducers/auth/ActionCreators";
 
 export const useApplication = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +42,11 @@ export const useApplication = () => {
         dispatch(deliteApplicationEvent(applicationId));
       }, 1000);
     });
+    socket.on("userDataWathUpdated", (user) => {
+      console.log("userDataWathUpdated:", user);
+      dispatch(userDataWathUpdated(user));
+    });
+
     return () => {
       socket.off("applicationStatusUpdate");
       socket.off("applicationStatusUpdate");

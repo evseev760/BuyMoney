@@ -9,6 +9,7 @@ const { default: axios } = require("axios");
 const { getAvatar, getGeolocationData } = require("../../utils/apiService");
 const { generateNickname } = require("../../utils/generateNickname");
 const { phoneNumberInstructions } = require("../../utils/telegramUtils");
+const { formatUserResponse } = require("../../utils/formatUserData");
 const telegramBot = require("../../telegramBot");
 const isProduction = process.env.NODE_ENV === "production";
 const BOT_TOKEN = config.get(isProduction ? "BOT_TOKEN_PROD" : "BOT_TOKEN");
@@ -21,22 +22,7 @@ const generateAccessToken = (id, name, isSuspicious) => {
   };
   return jwt.sign(payload, config.get("secretKey"), { expiresIn: "24h" });
 };
-const formatUserResponse = (user) => ({
-  telegramId: user.telegramId,
-  username: user.username,
-  phoneNumber: user.phoneNumber,
-  languageCode: user.languageCode,
-  allowsWriteToPm: user.allowsWriteToPm,
-  authDate: user.authDate,
-  location: user.location,
-  id: user.id,
-  avatar: user.avatar,
-  isSuspicious: user.isSuspicious,
-  nickname: user.nickname,
-  ratings: user.ratings,
-  isAnOffice: user.isAnOffice,
-  delivery: user.delivery,
-});
+
 const verifyTelegramWebAppData = async (telegramInitData) => {
   const encoded = decodeURIComponent(telegramInitData);
 

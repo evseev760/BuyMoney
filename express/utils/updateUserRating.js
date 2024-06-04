@@ -1,5 +1,7 @@
 const Application = require("../models/Application");
 const User = require("../models/User");
+const { sendUserUpdate } = require("../socketHandler");
+const { formatUserResponse } = require("./formatUserData");
 
 const updateUserRating = async (userId) => {
   const user = await User.findById(userId);
@@ -25,6 +27,7 @@ const updateUserRating = async (userId) => {
   user.ratings.count = ratingCount;
 
   await user.save();
+  await sendUserUpdate(formatUserResponse(user));
 };
 
 module.exports = updateUserRating;

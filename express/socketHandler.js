@@ -50,6 +50,12 @@ const sendApplicationStatusUpdate = async (application) => {
   }
 };
 
+const sendUserUpdate = async (user) => {
+  if (io) {
+    io.to(user.id).emit("userDataWathUpdated", user);
+  }
+};
+
 const sendDeliteApplication = (application, applicationId) => {
   if (io) {
     io.to(application.user).emit("deliteApplication", applicationId);
@@ -77,4 +83,5 @@ module.exports = {
   sendApplicationStatusUpdate,
   notifyNewApplication,
   sendDeliteApplication,
+  sendUserUpdate,
 };
