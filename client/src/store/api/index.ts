@@ -35,6 +35,8 @@ interface IApi {
     completeApplication: string;
     acceptApplication: string;
     deliteApplication: string;
+    getCommentsByUserId: string;
+    getMyComments: string;
   };
 }
 export const api: IApi = {
@@ -74,6 +76,8 @@ export const api: IApi = {
     completeApplication: "application/completeApplication",
     acceptApplication: "application/acceptApplication",
     deliteApplication: "application/deliteApplication",
+    getCommentsByUserId: "application/getCommentsByUserId",
+    getMyComments: "application/getMyComments",
   },
 };
 

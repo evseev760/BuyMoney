@@ -20,10 +20,15 @@ import { DeliteDialog } from "components/Dialogs/Delite";
 import SwipeableListItem from "components/SwipeableListItemProps";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { IconStatus, IconTitle, Label, Value } from "components/Styles/Styles";
 
 interface ApplicationProps {
   application: Application;
-  completeApplicationHandle: (applicationId: string, rating: number) => void;
+  completeApplicationHandle: (
+    applicationId: string,
+    rating: number,
+    comment: string
+  ) => void;
   acceptApplicationHandle: (applicationId: string) => void;
   deliteApplicationHandle: (applicationId: string) => void;
   completeApplicationIsLoading: string[];
@@ -65,9 +70,9 @@ export const ApplicationComponent = (props: ApplicationProps) => {
           application.partnerData?.phoneNumber
       );
   };
-  const onComplite = (rating: number) => {
+  const onComplite = (rating: number, comment: string) => {
     if (!application._id) return;
-    completeApplicationHandle(application._id, rating);
+    completeApplicationHandle(application._id, rating, comment);
   };
   const onAccept = () => {
     acceptApplicationHandle(application._id);
@@ -267,56 +272,7 @@ const ApplicationBody = styled(Paper)`
     align-items: center;
   `}
 `;
-const Label = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    color: ${theme.palette.text.secondary};
-    font-size: 14px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    font-weight: 300;
-    gap: 8px;
-    & * {
-      color: ${theme.palette.text.secondary};
-    }
-  `}
-`;
-const Value = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    color: ${theme.palette.text.primary};
-    font-size: 16px;
-    flex: 1;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-weight: 300;
-  `}
-`;
-const IconTitle = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    color: ${theme.palette.text.primary};
-    font-size: 14px;
-    flex: 1;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-weight: 300;
-    & svg {
-      fill: ${theme.palette.button.primary};
-      width: 30px;
-      height: 30px;
-    }
-  `}
-`;
-const IconStatus = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    & svg {
-      fill: ${theme.palette.button.primary};
-      width: 20px;
-      height: 20px;
-    }
-  `}
-`;
+
 const Column = styled.div`
   display: flex;
   flex-direction: column;

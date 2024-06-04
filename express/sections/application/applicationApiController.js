@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Application = require("../../models/Application");
 const {
   sendApplicationStatusUpdate,
@@ -159,7 +160,7 @@ class applicationApiController {
   };
   completeApplication = async (req, res) => {
     try {
-      const { applicationId, rating } = req.body;
+      const { applicationId, rating, comment } = req.body;
       const userId = req.user.id;
 
       const application = await Application.findById(applicationId);
@@ -175,9 +176,11 @@ class applicationApiController {
       if (application.status === "PENDING") {
         if (application.user === userId) {
           application.rating.buyer = rating;
+          application.comment.buyer = comment;
           application.status = "CONFIRMATION";
         } else if (application.seller === userId) {
           application.rating.seller = rating;
+          application.comment.seller = comment;
           application.status = "CONFIRMATION";
         } else {
           return res
@@ -187,9 +190,11 @@ class applicationApiController {
       } else if (application.status === "CONFIRMATION") {
         if (application.user === userId) {
           application.rating.buyer = rating;
+          application.comment.buyer = comment;
           application.status = "COMPLETED";
         } else if (application.seller === userId) {
           application.rating.seller = rating;
+          application.comment.seller = comment;
           application.status = "COMPLETED";
         } else {
           return res
@@ -269,6 +274,91 @@ class applicationApiController {
       res.status(200).json({ message: "Заявка успешно удалена" });
     } catch (e) {
       // console.log(e);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  };
+  getCommentsByUserId = async (req, res) => {
+    const userId = req.query.userId;
+    try {
+      const applications = await Application.find({
+        $or: [{ user: userId }, { seller: userId }],
+      })
+        .populate("user seller", "nickname avatar ratings")
+        .sort({ updatedAt: -1 });
+
+      const comments = applications
+        .map((application) => {
+          let otherUser;
+          let grade;
+          let comment;
+
+          if (application.user._id.toString() === userId) {
+            otherUser = application.seller;
+            grade = application.rating.seller;
+            comment = application.comment.seller;
+          } else {
+            otherUser = application.user;
+            grade = application.rating.buyer;
+            comment = application.comment.buyer;
+          }
+
+          return {
+            grade: grade,
+            comment: comment,
+            nickname: otherUser.nickname,
+            avatar: otherUser.avatar,
+            ratings: otherUser.ratings,
+            updatedAt: application.updatedAt,
+          };
+        })
+        .filter((application) => application.grade);
+
+      res.status(200).json(comments);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  };
+  getMyComments = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+      const applications = await Application.find({
+        $or: [{ user: userId }, { seller: userId }],
+      })
+        .populate("user seller", "nickname avatar ratings")
+        .sort({ updatedAt: -1 });
+
+      const comments = applications
+        .map((application) => {
+          let otherUser;
+          let grade;
+          let comment;
+
+          if (application.user._id.toString() === userId) {
+            otherUser = application.seller;
+            grade = application.rating.seller;
+            comment = application.comment.seller;
+          } else {
+            otherUser = application.user;
+            grade = application.rating.buyer;
+            comment = application.comment.buyer;
+          }
+
+          return {
+            grade: grade,
+            comment: comment,
+            nickname: otherUser.nickname,
+            avatar: otherUser.avatar,
+            ratings: otherUser.ratings,
+            updatedAt: application.updatedAt,
+          };
+        })
+        .filter((application) => application.grade);
+
+      res.status(200).json(comments);
+    } catch (e) {
+      console.log(e);
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   };

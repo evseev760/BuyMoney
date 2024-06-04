@@ -17,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SwipeableListItem from "components/SwipeableListItemProps";
 import { useTranslation } from "react-i18next";
 import { getLocationTitle } from "utils/location";
+import { InfoRow } from "components/Styles/Styles";
 
 interface OfferViewProps {
   offer: OfferData;
@@ -25,7 +26,7 @@ interface OfferViewProps {
 export const OfferView = (props: OfferViewProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { forPaymentArr } = useCurrencies();
+  const { forPaymentArr, currenciesIsloading } = useCurrencies();
   const { currentUser } = useAppSelector((state) => state.authReducer);
 
   const { offer, isMy } = props;
@@ -43,6 +44,7 @@ export const OfferView = (props: OfferViewProps) => {
   };
 
   const getMainUnit = () => {
+    if (currenciesIsloading) return <Skeleton width={50} />;
     return (
       forPaymentArr.find(
         (item) => item.code === (isRevers ? offer.forPayment : offer.currency)
@@ -51,6 +53,7 @@ export const OfferView = (props: OfferViewProps) => {
   };
 
   const getSecondUnit = () => {
+    if (currenciesIsloading) return <Skeleton width={50} />;
     return (
       forPaymentArr.find(
         (item) => item.code === (isRevers ? offer.currency : offer.forPayment)
@@ -325,13 +328,7 @@ const ButtonContainer = styled.div`
     display: flex;
   `}
 `;
-const InfoRow = styled.div`
-  ${({ theme }: { theme: DefaultTheme }) => css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `}
-`;
+
 const Value = styled.div`
   ${({ theme }: { theme: DefaultTheme }) => css`
     color: ${theme.palette.text.primary};

@@ -20,6 +20,10 @@ const Application = new Schema({
     buyer: { type: Number },
     seller: { type: Number },
   },
+  comment: {
+    buyer: { type: String },
+    seller: { type: String },
+  },
   status: {
     type: String,
     required: true,

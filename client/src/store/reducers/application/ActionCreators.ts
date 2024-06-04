@@ -64,7 +64,7 @@ export const getMyApplications =
 
 export const completeApplication =
   (
-    data: { applicationId: string; rating: number },
+    data: { applicationId: string; rating: number; comment: string },
     callback?: () => void,
     errorCallback?: () => void
   ) =>
@@ -145,6 +145,49 @@ export const deliteApplication =
       errorCallback && errorCallback();
       dispatch(
         applicationSlice.actions.deliteApplicationError(e.response.data.message)
+      );
+    }
+  };
+
+export const getCommentsByUserId =
+  (userId: string, callback?: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(applicationSlice.actions.getCommentsByUserIdFetching());
+      const response = await axios.get(
+        `${API_URL}${api.application.getCommentsByUserId}?userId=${userId}`,
+        auth()
+      );
+      dispatch(
+        applicationSlice.actions.getCommentsByUserIdSuccess(response.data)
+      );
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(
+        applicationSlice.actions.getCommentsByUserIdError(
+          e.response.data.message
+        )
+      );
+    }
+  };
+export const getMyComments =
+  (callback?: () => void, errorCallback?: () => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(applicationSlice.actions.getCommentsByUserIdFetching());
+      const response = await axios.get(
+        `${API_URL}${api.application.getMyComments}`,
+        auth()
+      );
+      dispatch(applicationSlice.actions.getMyCommentsSuccess(response.data));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(
+        applicationSlice.actions.getCommentsByUserIdError(
+          e.response.data.message
+        )
       );
     }
   };
