@@ -4,6 +4,7 @@
   "secretKey": "1c99a0e42119ca9ca43cce1d8aed630b85bfb7f039fb90701f0d669823f1c5ff",
   "walletSecret": "zxUMpnRSaxVSOoePsAeQ1un6nuL9Gk4p",
   "PORT": "443",
+  "PORT_PROD": "3000",
   "WS_PORT": "3002",
   "BOT_TOKEN": "7048530034:AAHBxVCmGKbg2bBgZrTsKzRzt3Wk_6xoMUY",
   "BOT_TOKEN_PROD": "7441285931:AAF2yvQRgE6g7NsextHcfAJAolz8xLvu118",
