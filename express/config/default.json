@@ -4,6 +4,7 @@
   "secretKey": "***REMOVED***",
   "walletSecret": "***REMOVED***",
   "PORT": "443",
+  "PORT_PROD": "3000",
   "WS_PORT": "3002",
   "BOT_TOKEN": "***REMOVED***",
   "BOT_TOKEN_PROD": "***REMOVED***",

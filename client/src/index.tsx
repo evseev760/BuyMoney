@@ -6,7 +6,7 @@ import App from "./App";
 import { setupStore } from "./store";
 import WebApp from "@twa-dev/sdk";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { API_URL } from "config";
+import { ErrorBoundary } from "ErrorBoundary";
 
 const store = setupStore();
 // store.dispatch(api.util.initialize());
@@ -23,7 +23,9 @@ root.render(
   >
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </BrowserRouter>
     </Provider>
   </TonConnectUIProvider>
