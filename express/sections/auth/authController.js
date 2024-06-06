@@ -205,8 +205,34 @@ class authController {
   async sendPhoneNumberInstructions(req, res) {
     try {
       const user = await User.findOne({ _id: req.user.id });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
       await phoneNumberInstructions(telegramBot, user.telegramId);
       res.json({ massage: "success" });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async disableTrading(req, res) {
+    try {
+      const { isDisableTrading } = req.body;
+      const user = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $set: { disableTrading: isDisableTrading } },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await Offer.updateMany(
+        { seller: user._id },
+        { $set: { disableTrading: isDisableTrading } }
+      );
+
+      return res.json(formatUserResponse(user));
     } catch (e) {
       console.log(e);
     }

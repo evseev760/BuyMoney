@@ -27,6 +27,7 @@ const Offer = new Schema(
     paymentMethods: [{ type: String }],
     comment: { type: String },
     createdAt: { type: Number },
+    disableTrading: { type: Boolean, default: false },
     delivery: {
       isDelivered: { type: Boolean },
       price: { type: Number },

@@ -6,7 +6,7 @@ import App from "./App";
 import { setupStore } from "./store";
 import WebApp from "@twa-dev/sdk";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { ErrorBoundary } from "ErrorBoundary";
+import ErrorBoundary from "ErrorBoundary";
 
 const store = setupStore();
 // store.dispatch(api.util.initialize());
@@ -21,12 +21,12 @@ root.render(
       twaReturnUrl: "https://t.me/pocket_money_bot",
     }}
   >
-    <Provider store={store}>
-      <BrowserRouter>
-        <ErrorBoundary>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <BrowserRouter>
           <App />
-        </ErrorBoundary>
-      </BrowserRouter>
-    </Provider>
+        </BrowserRouter>
+      </Provider>
+    </ErrorBoundary>
   </TonConnectUIProvider>
 );

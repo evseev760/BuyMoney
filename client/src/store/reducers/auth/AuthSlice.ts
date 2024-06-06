@@ -6,6 +6,7 @@ interface AuthState {
   error: string;
   isLoading: boolean;
   sendPhoneNumberInstructionsIsLoading: boolean;
+  disableTradingIsLoading: boolean;
   message?: string;
   isAuth: boolean;
   currentUser: CurrentUser;
@@ -18,6 +19,7 @@ const initialState: AuthState = {
   message: "",
   isAuth: false,
   sendPhoneNumberInstructionsIsLoading: false,
+  disableTradingIsLoading: false,
   currentUser: {
     id: "",
     username: "",
@@ -34,6 +36,7 @@ const initialState: AuthState = {
       average: 0,
       count: 0,
     },
+    disableTrading: false,
   },
 };
 
@@ -97,6 +100,17 @@ export const authSlice = createSlice({
     },
     sendPhoneNumberInstructionsError: (state) => {
       state.sendPhoneNumberInstructionsIsLoading = false;
+    },
+
+    disableTradingFetching: (state) => {
+      state.disableTradingIsLoading = true;
+    },
+    disableTradingSuccess: (state, action: PayloadAction<CurrentUser>) => {
+      state.disableTradingIsLoading = false;
+      state.currentUser = action.payload;
+    },
+    disableTradingError: (state) => {
+      state.disableTradingIsLoading = false;
     },
   },
 });

@@ -37,11 +37,11 @@ const Mainpage = () => {
       },
     },
 
-    {
-      label: t("notifications"),
-      icon: <NotificationsNoneOutlinedIcon />,
-      handleClick: () => {},
-    },
+    // {
+    //   label: t("notifications"),
+    //   icon: <NotificationsNoneOutlinedIcon />,
+    //   handleClick: () => {},
+    // },
     {
       label: "FAQ",
       icon: <LiveHelpOutlinedIcon />,

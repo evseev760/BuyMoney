@@ -13,6 +13,7 @@ const formatUserResponse = (user) => ({
   ratings: user.ratings,
   isAnOffice: user.isAnOffice,
   delivery: user.delivery,
+  disableTrading: user.disableTrading,
 });
 module.exports = {
   formatUserResponse,
