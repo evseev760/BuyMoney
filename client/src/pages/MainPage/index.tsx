@@ -45,7 +45,9 @@ const Mainpage = () => {
     {
       label: "FAQ",
       icon: <LiveHelpOutlinedIcon />,
-      handleClick: () => {},
+      handleClick: () => {
+        navigate(RouteNames.FAQ);
+      },
     },
   ];
   return (

@@ -8,6 +8,7 @@ import { MyOffers } from "pages/MyOffers";
 import EditOffer from "pages/EditOffer";
 import { AccountSettings } from "pages/AccountSettings";
 import { OfferDetails } from "pages/OfferDetails";
+import { Faq } from "pages/Faq";
 
 const Mainpage = lazy(() => import("pages/MainPage"));
 const Offers = lazy(() => import("pages/Offers"));
@@ -24,6 +25,7 @@ export enum RouteNames {
   EDITOFFER = "/editOffer",
   ACCOUNTSETTINGS = "/accountSettings",
   OFFERDETAILS = "/offerDetails",
+  FAQ = "/faq",
 }
 
 const Fallback = () => {
@@ -122,6 +124,16 @@ export const Router = () => {
               <MainContainer>
                 <Suspense fallback={<Fallback />}>
                   <OfferDetails />
+                </Suspense>
+              </MainContainer>
+            }
+          />
+          <Route
+            path={`${RouteNames.FAQ}`}
+            element={
+              <MainContainer>
+                <Suspense fallback={<Fallback />}>
+                  <Faq />
                 </Suspense>
               </MainContainer>
             }

@@ -15,7 +15,6 @@ router.post(
 );
 router.post("/disableTrading", authMiddleware, controller.disableTrading);
 router.post("/updateUserData", authMiddleware, controller.updateUserData);
-
 router.post(
   "/updateUserLocation",
   authMiddleware,

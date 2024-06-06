@@ -88,5 +88,24 @@
   "review": "Review",
   "share": "Share",
   "disableTradingOnAlert": "Your ads have been temporarily hidden",
-  "disableTradingOffAlert": "Your ads are visible again"
+  "disableTradingOffAlert": "Your ads are visible again",
+  "faq": {
+    "question1": "How does your application work?",
+    "answer1": "Our application is a p2p cash marketplace where users can create ads for selling cash and respond to them. When interests match, we connect them in a Telegram chat to discuss the deal. Users can leave reviews and earn a reputation.",
+
+    "question2": "How do I create a currency sale ad?",
+    "answer2": "To create an ad, users need to provide their location, go to the 'Sell' section, and fill out the form. Ads will be linked to the specified location and shown to nearby buyers. Users can edit or delete their ads at any time.",
+
+    "question3": "How do I find a suitable ad for buying currency?",
+    "answer3": "To find a suitable ad, go to the 'Buy' section and use the filters to select the currency for purchase, the currency for payment, payment methods, amount, and distance from your location. If an ad matches your filters, it will be shown to you along with the deal terms, seller's rating, and reviews from previous partners.",
+
+    "question4": "What happens after I find a suitable ad?",
+    "answer4": "After finding a suitable ad, click 'Buy', fill in the amount, and confirm the request. The seller will receive a notification and can accept or decline the request. If the request is accepted, you will be provided with links to Telegram chats for further discussion of the meeting and deal details.",
+
+    "question5": "How do I complete the deal and leave a review?",
+    "answer5": "After completing the deal, both parties should confirm this in the app, leave ratings, and write comments for each other. If one party completes the deal, the other party will be notified and should confirm the completion within 24 hours, otherwise, the deal will automatically complete with a rating of 5 without a comment.",
+
+    "question6": "How can I ensure my safety during meetings?",
+    "answer6": "To ensure safety, do not agree to meet in questionable places. Choose public and well-lit locations for meetings and always inform your close ones about your plans."
+  }
 }
