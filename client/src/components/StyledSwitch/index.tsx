@@ -3,13 +3,15 @@ import styled, { css, DefaultTheme } from "styled-components";
 interface StyledSwitchProps {
   isOn: boolean;
   handleChangeSwitch: (value: boolean) => void;
+  disabled?: boolean;
 }
 export const StyledSwitch = (props: StyledSwitchProps) => {
-  const { isOn, handleChangeSwitch } = props;
+  const { isOn, handleChangeSwitch, disabled } = props;
   return (
     <StyledSwitchComponent
       checked={isOn}
       onChange={(e: any) => handleChangeSwitch(e.target.checked)}
+      disabled={disabled}
     />
   );
 };

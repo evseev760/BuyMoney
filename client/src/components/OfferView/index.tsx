@@ -83,6 +83,17 @@ export const OfferView = (props: OfferViewProps) => {
         : (offer.distance / 1000).toFixed(1)
     );
   };
+  const goToOfferDrtails = () =>
+    navigate(
+      `${RouteNames.OFFERDETAILS}/${offer._id}/${offer.sellerData._id}`,
+      {
+        state: {
+          from: isMy
+            ? `${RouteNames.MYOFFERS}`
+            : `${RouteNames.OFFERS}#${offer._id}`,
+        },
+      }
+    );
   const deliteOfferHandel = () => {
     dispatch(deliteOffer({ offerId: offer._id }));
   };
@@ -94,7 +105,7 @@ export const OfferView = (props: OfferViewProps) => {
       >
         <Container id={offer._id}>
           <StyledHeader>
-            <ColumnContainer>
+            <ColumnContainer onClick={goToOfferDrtails}>
               <PriceRow>
                 <Price value={getViewPrice()} />
                 <span>{getMainUnit()}</span>
@@ -133,7 +144,7 @@ export const OfferView = (props: OfferViewProps) => {
           </StyledHeader>
           <StyledBody>
             {!isMy && (
-              <InfoRow>
+              <InfoRow onClick={goToOfferDrtails}>
                 <LeftBlock>
                   <Label>
                     <Avatar
@@ -180,16 +191,7 @@ export const OfferView = (props: OfferViewProps) => {
             )}
 
             <div style={{ marginBottom: "8px" }}></div>
-            <StyledInfoContainer
-              onClick={() =>
-                navigate(
-                  `${RouteNames.OFFERDETAILS}/${offer._id}/${offer.sellerData._id}`,
-                  {
-                    state: { from: `${RouteNames.OFFERS}#${offer._id}` },
-                  }
-                )
-              }
-            >
+            <StyledInfoContainer>
               {!!offer.paymentMethods?.length && (
                 <InfoRow>
                   <LeftBlock>

@@ -1,29 +1,115 @@
-import React, { useState, useEffect } from "react";
+import React, { Component, ReactNode } from "react";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { useTg } from "hooks/useTg";
 
-export const ErrorBoundary = ({ children }: { children: JSX.Element }) => {
-  const [hasError, setHasError] = useState(false);
+const GlobalStyle = createGlobalStyle`
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: ${(props) => props.theme.bg_color};
+    color: ${(props) => props.theme.text_color};
+  }
+`;
 
-  useEffect(() => {
-    const handleError = () => {
-      setHasError(true);
-    };
+const Container = styled.div`
+  text-align: center;
+  padding: 0 16px;
+`;
 
-    window.addEventListener("error", handleError);
+const Title = styled.h3`
+  /* font-size: 3rem; */
+`;
 
-    return () => {
-      window.removeEventListener("error", handleError);
-    };
-  }, []);
+const Message = styled.p`
+  font-size: 1.2rem;
+`;
 
-  if (hasError) {
-    return (
-      <iframe
-        title="Not Found"
-        src="/notFound.html"
-        style={{ width: "100%", height: "100vh", border: "none" }}
-      ></iframe>
-    );
+const ReloadButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: ${(props) => props.theme.button_color};
+  color: ${(props) => props.theme.button_text_color};
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const ErrorScreen = () => {
+  const { themeParams, user } = useTg();
+  const textRu = {
+    title: "Что-то пошло не так",
+    message: "Мы уже устраняем проблему, пожалуйста, попробуйте позже",
+    button: "Перезагрузить",
+  };
+
+  const textEn = {
+    title: "Something went wrong",
+    message: "We are already fixing this, please try again later",
+    button: "Reload",
+  };
+
+  const texts = user?.language_code === "ru" ? textRu : textEn;
+
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
+  return (
+    <Container>
+      <Title>{texts.title}</Title>
+      <Message>{texts.message}</Message>
+      <ReloadButton onClick={reloadPage}>{texts.button}</ReloadButton>
+    </Container>
+  );
+};
+
+class ErrorBoundary extends Component<
+  { children: ReactNode; themeParams: any },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; themeParams: any }) {
+    super(props);
+    this.state = { hasError: false };
   }
 
-  return <>{children}</>;
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+
+  render() {
+    const { hasError } = this.state;
+    const { children, themeParams } = this.props;
+
+    if (hasError) {
+      return (
+        <ThemeProvider theme={themeParams}>
+          <GlobalStyle />
+          <ErrorScreen />
+        </ThemeProvider>
+      );
+    }
+
+    return children;
+  }
+}
+
+const ThemedErrorBoundary = ({ children }: { children: ReactNode }) => {
+  const { themeParams } = useTg();
+
+  return <ErrorBoundary themeParams={themeParams}>{children}</ErrorBoundary>;
 };
+
+export default ThemedErrorBoundary;

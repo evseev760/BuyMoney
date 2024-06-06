@@ -19,19 +19,23 @@ import { StyledSwitch } from "components/StyledSwitch";
 import { UserInfo } from "components/UserInfo";
 import { useTranslation } from "react-i18next";
 import { getMyComments } from "store/reducers/application/ActionCreators";
+import { disableTrading } from "store/reducers/auth/ActionCreators";
 import { Reviews } from "components/Reviews";
 import { TabsComponent } from "components/TabsComponent";
 
 export const MyOffers = () => {
-  const { currentUser } = useAppSelector((state) => state.authReducer);
+  const { currentUser, disableTradingIsLoading } = useAppSelector(
+    (state) => state.authReducer
+  );
   const { myOffers, offersIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
   const { myReviews, reviewsIsLoading } = useAppSelector(
     (state) => state.applicationReducer
   );
-  const { t } = useTranslation();
   const { price } = useAppSelector((state) => state.currencyReducer);
+
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isOn, setIsOn] = useState<boolean>(true);
@@ -50,6 +54,10 @@ export const MyOffers = () => {
     };
   }, []);
   const handleChangeSwitch = (value: boolean) => {
+    const calback = () => {
+      alert(t(value ? "disableTradingOffAlert" : "disableTradingOnAlert"));
+    };
+    dispatch(disableTrading({ isDisableTrading: !value }, calback));
     setIsOn(value);
   };
   const listArr = [
@@ -66,8 +74,9 @@ export const MyOffers = () => {
       handleClick: () => {},
       value: (
         <StyledSwitch
-          isOn={isOn}
-          handleChangeSwitch={(e: any) => handleChangeSwitch(e.target.checked)}
+          isOn={!currentUser.disableTrading}
+          handleChangeSwitch={handleChangeSwitch}
+          disabled={disableTradingIsLoading}
         />
       ),
     },

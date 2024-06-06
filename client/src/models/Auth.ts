@@ -23,6 +23,7 @@ export interface CurrentUser {
     coordinates: number[];
     type: string;
   };
+  disableTrading: boolean;
 }
 
 export interface UpdateUserData {

@@ -101,3 +101,25 @@ export const sendPhoneNumberInstructions =
       dispatch(authSlice.actions.sendPhoneNumberInstructionsError());
     }
   };
+
+export const disableTrading =
+  (
+    data: { isDisableTrading: boolean },
+    callback?: () => void,
+    errorCallback?: () => void
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(authSlice.actions.disableTradingFetching());
+      const response = await axios.post(
+        `${API_URL}${api.auth.disableTrading}`,
+        data,
+        auth()
+      );
+      dispatch(authSlice.actions.disableTradingSuccess(response.data));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(authSlice.actions.disableTradingError());
+    }
+  };

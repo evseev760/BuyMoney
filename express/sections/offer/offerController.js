@@ -119,6 +119,7 @@ class offerController {
         paymentMethods,
         forPayment,
         location: user.location,
+        disableTrading: user.disableTrading,
         delivery,
         applications: [],
       });
@@ -209,7 +210,7 @@ class offerController {
         }
       });
       filter.seller = { $ne: mongoose.Types.ObjectId(req.user.id) };
-      filter.tradingDisabled = { $ne: true };
+      filter.disableTrading = { $ne: true };
 
       let offers;
       if (

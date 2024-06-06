@@ -86,5 +86,7 @@
   "available": "Доступна",
   "no": "Нет",
   "review": "Отзыв",
-  "share": "Поделиться"
+  "share": "Поделиться",
+  "disableTradingOnAlert": "Ваши объявления были временно скрыты",
+  "disableTradingOffAlert": "Ваши объявления снова отображаются"
 }

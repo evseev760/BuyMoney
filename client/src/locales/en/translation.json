@@ -86,5 +86,7 @@
   "available": "Available",
   "no": "No",
   "review": "Review",
-  "share": "Share"
+  "share": "Share",
+  "disableTradingOnAlert": "Your ads have been temporarily hidden",
+  "disableTradingOffAlert": "Your ads are visible again"
 }

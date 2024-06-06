@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const config = require("config");
+const fs = require("fs");
 const compression = require("compression");
 const { createServer } = require("http");
 
