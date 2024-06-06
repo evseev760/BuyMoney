@@ -5,9 +5,11 @@ import { updateUserLocation } from "store/reducers/auth/ActionCreators";
 import { Skeleton } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
 import { getLocationTitle } from "utils/location";
+import { useTg } from "hooks/useTg";
 
 export const LocationComponent = () => {
   const { t } = useTranslation();
+  const { showAlert } = useTg();
   const { currentUser, isLoading } = useAppSelector(
     (state) => state.authReducer
   );
@@ -22,11 +24,11 @@ export const LocationComponent = () => {
         },
         (error) => {
           console.error(error);
-          alert(t("geolocationErrorAlert"));
+          showAlert(t("geolocationErrorAlert"));
         }
       );
     } else {
-      alert(t("geolocationErrorAlert"));
+      showAlert(t("geolocationErrorAlert"));
     }
   };
   return isLoading ? (

@@ -61,6 +61,9 @@ export const useTg = () => {
     const url = `https://t.me/${id}`;
     WebApp.openTelegramLink(url);
   };
+  const showAlert = (text: string) => {
+    WebApp.showAlert(text);
+  };
   const isMobile = ["android", "ios"].includes(WebApp.platform);
   return {
     onClose,
@@ -72,6 +75,7 @@ export const useTg = () => {
     setBackButtonCallBack,
     offBackButtonCallBack,
     openTelegramLink,
+    showAlert,
     isMobile,
     tg: WebApp,
     user: WebApp.initDataUnsafe?.user,

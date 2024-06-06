@@ -169,7 +169,7 @@ export const OfferDetails = () => {
         value: <Primary>{currentOfferData?.delivery.price}</Primary>,
         isLoading: offerIsLoading,
       },
-  ].filter((item) => !!item);
+  ]?.filter((item) => !!item);
   const tabsArray = [t("offerDetails"), t("reviews")];
   return (
     <StyledContainer>

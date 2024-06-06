@@ -131,7 +131,7 @@ export const Filter = ({ drawerCallback, isOpenDrawer }: FilterProps) => {
     const getMethods = () => {
       if (paymentMethods) {
         return paymentMethods.includes(value)
-          ? paymentMethods.filter((item) => item !== value)
+          ? paymentMethods?.filter((item) => item !== value)
           : [...paymentMethods, value];
       } else {
         return [value];

@@ -68,45 +68,38 @@ const MyDealsWrapped = () => {
       label: t("completed"),
     },
   ];
-  const drawers: Drawers = useMemo(
-    () => ({
-      dealsType: (
-        <CurrencySelect
-          handleSelect={handleDealsType}
-          currentValue={dealsType}
-          array={dealsTypes}
-        />
-      ),
-    }),
-    [dealsType, dealsTypes]
-  );
+  const drawers: Drawers = {
+    dealsType: (
+      <CurrencySelect
+        handleSelect={handleDealsType}
+        currentValue={dealsType}
+        array={dealsTypes}
+      />
+    ),
+  };
 
-  const applicationsArr = useMemo(
-    () =>
-      myApplications.filter((application) => {
-        const isSell = currentUser.id === application.seller;
-        return (
-          (dealsType === "active" &&
-            (application.status === "PENDING" ||
-              application.status === "NEW" ||
-              (application.status === "CONFIRMATION" &&
-                isSell &&
-                !application.rating.seller) ||
-              (application.status === "CONFIRMATION" &&
-                !isSell &&
-                !application.rating.buyer))) ||
-          (dealsType === "completed" &&
-            (application.status === "COMPLETED" ||
-              (application.status === "CONFIRMATION" &&
-                isSell &&
-                application.rating.seller) ||
-              (application.status === "CONFIRMATION" &&
-                !isSell &&
-                application.rating.buyer)))
-        );
-      }),
-    [myApplications, dealsType]
-  );
+  const applicationsArr = myApplications?.filter((application) => {
+    const isSell = currentUser.id === application.seller;
+    return (
+      (dealsType === "active" &&
+        (application.status === "PENDING" ||
+          application.status === "NEW" ||
+          (application.status === "CONFIRMATION" &&
+            isSell &&
+            !application.rating.seller) ||
+          (application.status === "CONFIRMATION" &&
+            !isSell &&
+            !application.rating.buyer))) ||
+      (dealsType === "completed" &&
+        (application.status === "COMPLETED" ||
+          (application.status === "CONFIRMATION" &&
+            isSell &&
+            application.rating.seller) ||
+          (application.status === "CONFIRMATION" &&
+            !isSell &&
+            application.rating.buyer)))
+    );
+  });
   return myApplicationsIsloading ? (
     <OfferViewSkeleton />
   ) : (

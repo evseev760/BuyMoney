@@ -23,6 +23,7 @@ import {
 } from "store/reducers/verification/ActionCreators";
 import { useAppDispatch } from "hooks/redux";
 import { TonProof } from "models/Verify";
+import { useTg } from "hooks/useTg";
 
 interface BackendTokenContextType {
   token: string | null;
@@ -50,6 +51,7 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
   const [tonConnectUI] = useTonConnectUI();
   const interval = useRef<ReturnType<typeof setInterval> | undefined>();
   const dispatch = useAppDispatch();
+  const { showAlert } = useTg();
   const localStorageKey = "walletToken";
 
   useEffect(() => {
@@ -85,7 +87,7 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
           setToken(result);
           localStorage.setItem(localStorageKey, result);
         } else {
-          alert("Please try another wallet");
+          showAlert("Please try another wallet");
           tonConnectUI.disconnect();
         }
       });
@@ -107,12 +109,12 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
           setToken(result);
           localStorage.setItem(localStorageKey, result);
         } else {
-          alert("Please try another wallet");
+          showAlert("Please try another wallet");
           tonConnectUI.disconnect();
         }
       });
     } else {
-      alert("Please try another wallet");
+      showAlert("Please try another wallet");
       tonConnectUI.disconnect();
     }
   }, [wallet, isConnectionRestored, setToken]);

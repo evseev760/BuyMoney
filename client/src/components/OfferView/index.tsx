@@ -236,32 +236,33 @@ export const OfferView = (props: OfferViewProps) => {
                   </RightBlock>
                 </InfoRow>
               )}
-              {!!offer?.delivery?.distance && (
-                <InfoRow>
-                  <LeftBlock>
-                    <Label>{t("delivery")}</Label>
-                  </LeftBlock>
-                  <RightBlock>
-                    <Value>
-                      <span>{t("upTo")}</span>
-                      <Price value={offer?.delivery?.distance} />
-                      <span>km</span>
-                      {!!offer?.delivery.price ? (
-                        <Label>
-                          <Secondary>
-                            <Price value={offer?.delivery?.price} />
-                          </Secondary>
-                          <span>
-                            {isRevers ? getMainUnit() : getSecondUnit()}
-                          </span>
-                        </Label>
-                      ) : (
-                        <Label></Label>
-                      )}
-                    </Value>
-                  </RightBlock>
-                </InfoRow>
-              )}
+              {!!offer?.delivery?.isDelivered &&
+                !!offer?.delivery?.distance && (
+                  <InfoRow>
+                    <LeftBlock>
+                      <Label>{t("delivery")}</Label>
+                    </LeftBlock>
+                    <RightBlock>
+                      <Value>
+                        <span>{t("upTo")}</span>
+                        <Price value={offer?.delivery?.distance} />
+                        <span>km</span>
+                        {!!offer?.delivery.price ? (
+                          <Label>
+                            <Secondary>
+                              <Price value={offer?.delivery?.price} />
+                            </Secondary>
+                            <span>
+                              {isRevers ? getMainUnit() : getSecondUnit()}
+                            </span>
+                          </Label>
+                        ) : (
+                          <Label></Label>
+                        )}
+                      </Value>
+                    </RightBlock>
+                  </InfoRow>
+                )}
               {getLocationTitle(currentUser.location) !==
                 getLocationTitle(offer.location) && (
                 <InfoRow>

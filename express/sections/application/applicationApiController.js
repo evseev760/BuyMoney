@@ -311,7 +311,7 @@ class applicationApiController {
             updatedAt: application.updatedAt,
           };
         })
-        .filter((application) => application.grade);
+        ?.filter((application) => application.grade);
 
       res.status(200).json(comments);
     } catch (e) {
@@ -354,7 +354,7 @@ class applicationApiController {
             updatedAt: application.updatedAt,
           };
         })
-        .filter((application) => application.grade);
+        ?.filter((application) => application.grade);
 
       res.status(200).json(comments);
     } catch (e) {

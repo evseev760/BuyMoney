@@ -39,8 +39,12 @@ export const MyOffers = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isOn, setIsOn] = useState<boolean>(true);
-  const { onToggleBackButton, setBackButtonCallBack, offBackButtonCallBack } =
-    useTg();
+  const {
+    onToggleBackButton,
+    setBackButtonCallBack,
+    offBackButtonCallBack,
+    showAlert,
+  } = useTg();
   const [currentTab, setCurrentTab] = useState<number>(0);
   const backButtonHandler = () => navigate(RouteNames.MAIN);
 
@@ -55,7 +59,7 @@ export const MyOffers = () => {
   }, []);
   const handleChangeSwitch = (value: boolean) => {
     const calback = () => {
-      alert(t(value ? "disableTradingOffAlert" : "disableTradingOnAlert"));
+      showAlert(t(value ? "disableTradingOffAlert" : "disableTradingOnAlert"));
     };
     dispatch(disableTrading({ isDisableTrading: !value }, calback));
     setIsOn(value);
