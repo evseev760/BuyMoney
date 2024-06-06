@@ -49,7 +49,7 @@ async function getCriptoCurrenciesApi(isCripto) {
     const fiatUrl = "https://pro-api.coinmarketcap.com/v1/fiat/map";
     const response = await axios.get(isCripto ? url : fiatUrl, conf);
     const currencies = response.data.data;
-    console.log(currencies.filter((item) => item.symbol === "TON"));
+    console.log(currencies?.filter((item) => item.symbol === "TON"));
     return currencies;
   } catch (error) {
     console.error("Ошибка при получении валюты:", error);

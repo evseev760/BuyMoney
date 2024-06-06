@@ -10,7 +10,7 @@ const { validationResult } = require("express-validator");
 
 const calculateOfferPrices = async (offers) => {
   const cryptoPairs = offers
-    .filter((offer) => offer.interestPrice)
+    ?.filter((offer) => offer.interestPrice)
     .map((offer) => ({
       forPayment: offer.forPayment,
       currency: offer.currency,

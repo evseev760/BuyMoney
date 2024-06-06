@@ -112,15 +112,15 @@ export const offerSlice = createSlice({
       ];
     },
     deliteOfferSuccess: (state, action: PayloadAction<string>) => {
-      state.deliteOfferIsLoading = state.deliteOfferIsLoading.filter(
+      state.deliteOfferIsLoading = state.deliteOfferIsLoading?.filter(
         (id) => id !== action.payload
       );
-      state.myOffers = state.myOffers.filter(
+      state.myOffers = state.myOffers?.filter(
         (item) => item._id !== action.payload
       );
     },
     deliteOfferError: (state, action: PayloadAction<string>) => {
-      state.deliteOfferIsLoading = state.deliteOfferIsLoading.filter(
+      state.deliteOfferIsLoading = state.deliteOfferIsLoading?.filter(
         (id) => id !== action.payload
       );
       state.error = action.payload;

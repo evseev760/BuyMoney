@@ -26,6 +26,7 @@ const Title = styled.h3`
 
 const Message = styled.p`
   font-size: 1.2rem;
+  max-width: 300px;
 `;
 
 const ReloadButton = styled.button`
@@ -74,7 +75,7 @@ const ErrorScreen = () => {
 
 class ErrorBoundary extends Component<
   { children: ReactNode; themeParams: any },
-  { hasError: boolean }
+  { hasError: boolean; error?: Error }
 > {
   constructor(props: { children: ReactNode; themeParams: any }) {
     super(props);
@@ -82,7 +83,7 @@ class ErrorBoundary extends Component<
   }
 
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true };
+    return { hasError: true, error: error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -90,7 +91,7 @@ class ErrorBoundary extends Component<
   }
 
   render() {
-    const { hasError } = this.state;
+    const { hasError, error } = this.state;
     const { children, themeParams } = this.props;
 
     if (hasError) {
@@ -98,6 +99,13 @@ class ErrorBoundary extends Component<
         <ThemeProvider theme={themeParams}>
           <GlobalStyle />
           <ErrorScreen />
+          <Message>
+            {error?.name}
+            <br />
+            {error?.message}
+            <br />
+            {error?.stack}
+          </Message>
         </ThemeProvider>
       );
     }

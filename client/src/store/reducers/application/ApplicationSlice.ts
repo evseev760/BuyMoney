@@ -146,13 +146,13 @@ export const applicationSlice = createSlice({
     },
     completeApplicationSuccess: (state, action: PayloadAction<string>) => {
       state.completeApplicationIsLoading =
-        state.completeApplicationIsLoading.filter(
+        state.completeApplicationIsLoading?.filter(
           (id) => id !== action.payload
         );
     },
     completeApplicationError: (state, action: PayloadAction<string>) => {
       state.completeApplicationIsLoading =
-        state.completeApplicationIsLoading.filter(
+        state.completeApplicationIsLoading?.filter(
           (id) => id !== action.payload
         );
     },
@@ -165,19 +165,19 @@ export const applicationSlice = createSlice({
     },
     deliteApplicationSuccess: (state, action: PayloadAction<string>) => {
       state.deliteApplicationIsLoading =
-        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
-      state.myApplications = state.myApplications.filter(
+        state.deliteApplicationIsLoading?.filter((id) => id !== action.payload);
+      state.myApplications = state.myApplications?.filter(
         (item) => item._id !== action.payload
       );
     },
     deliteApplicationError: (state, action: PayloadAction<string>) => {
       state.deliteApplicationIsLoading =
-        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
+        state.deliteApplicationIsLoading?.filter((id) => id !== action.payload);
       state.error = action.payload;
     },
     shouldDeliteApplication: (state, action: PayloadAction<string>) => {
       state.deliteApplicationIsLoading =
-        state.deliteApplicationIsLoading.filter((id) => id !== action.payload);
+        state.deliteApplicationIsLoading?.filter((id) => id !== action.payload);
       state.myApplications = state.myApplications.map((item) =>
         item._id === action.payload ? { ...item, shouldDelite: true } : item
       );

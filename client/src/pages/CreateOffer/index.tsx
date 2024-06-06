@@ -204,7 +204,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     const getMethods = () => {
       if (newOffer?.paymentMethods) {
         return newOffer.paymentMethods.includes(value)
-          ? newOffer.paymentMethods.filter((item) => item !== value)
+          ? newOffer.paymentMethods?.filter((item) => item !== value)
           : [...newOffer.paymentMethods, value];
       } else {
         return [value];
