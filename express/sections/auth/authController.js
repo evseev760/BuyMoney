@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const i18next = require("../../i18n");
 const User = require("../../models/User");
 const Offer = require("../../models/Offer");
 const jwt = require("jsonwebtoken");
@@ -208,6 +209,7 @@ class authController {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+      i18next.changeLanguage(user.languageCode);
       await phoneNumberInstructions(telegramBot, user.telegramId);
       res.json({ massage: "success" });
     } catch (e) {
@@ -231,6 +233,26 @@ class authController {
         { seller: user._id },
         { $set: { disableTrading: isDisableTrading } }
       );
+
+      return res.json(formatUserResponse(user));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async changeLanguage(req, res) {
+    try {
+      const { language } = req.body;
+      console.log(555, language);
+      const user = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $set: { languageCode: language } },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
       return res.json(formatUserResponse(user));
     } catch (e) {

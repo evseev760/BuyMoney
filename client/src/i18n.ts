@@ -11,8 +11,8 @@ const resources = {
 };
 
 i18n
-  .use(LanguageDetector) // Определяет язык
-  .use(initReactI18next) // Инициализация react-i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
   .init({
     resources,
     fallbackLng: WebApp.initDataUnsafe.user?.language_code || "en", //,

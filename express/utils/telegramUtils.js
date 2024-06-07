@@ -1,4 +1,4 @@
-// const telegramBot = require("../telegramBot");
+const i18next = require("../i18n");
 const Currency = require("../models/Currency");
 const Cripto = require("../models/Cripto");
 
@@ -10,6 +10,29 @@ const getUserChatUrl = (user) => {
   } else {
     return null;
   }
+};
+const fixNumber = (formattedValue) => {
+  const parts = String(formattedValue).split(".");
+  let integerPart = parts[0];
+  let decimalPart = parts[1] || "";
+
+  const significantDigitsBeforeDecimal = integerPart.replace(/^0+/, "").length;
+
+  if (significantDigitsBeforeDecimal > 0) {
+    decimalPart = decimalPart.slice(0, 2);
+  } else {
+    const firstSignificantDigitIndex = decimalPart.search(/[1-9]/);
+    if (firstSignificantDigitIndex !== -1) {
+      decimalPart = decimalPart.slice(0, firstSignificantDigitIndex + 4);
+    } else {
+      decimalPart = "";
+    }
+  }
+
+  decimalPart = decimalPart.replace(/0+$/, "");
+
+  const result = integerPart + (decimalPart ? `.${decimalPart}` : "");
+  return result;
 };
 
 const sendApplicationMessage = async (
@@ -26,24 +49,27 @@ const sendApplicationMessage = async (
   const paymentMethodItem = forPaymentItem?.paymentMethodsList?.find(
     (item) => item.code === application.paymentMethod
   )?.label;
-
+  i18next.changeLanguage(sellerUser.languageCode);
   const message =
-    `У вас новая заявка!
-    🏷️ Цена: ${application.price}
-    💰 Сумма: ${application.quantity}
-    💱 Валюта: ${currencyItem.label}
-    💸 К оплате: ${forPaymentItem.label}
+    `${i18next.t("application_message.new_application")}
+    💰 ${i18next.t("application_message.quantity", {
+      quantity: `${fixNumber(application.quantity)} ${currencyItem.label}`,
+    })}
+    💸 ${i18next.t("application_message.for_payment", {
+      forPaymentLabel: `${fixNumber(
+        (1 / application.price) * application.quantity
+      )} ${forPaymentItem.label}`,
+    })}
     ` +
     (paymentMethodItem
-      ? `💳 Способ оплаты: ${paymentMethodItem}
+      ? `💳 ${i18next.t("application_message.payment_method", {
+          paymentMethod: paymentMethodItem,
+        })}
     `
       : "") +
-    `👤 Покупатель: ${
-      buyerUser.ratings.average.toFixed(2) +
-      "/" +
-      buyerUser.ratings.count +
-      " ⭐"
-    }`;
+    `👤 ${i18next.t("application_message.buyer", {
+      username: buyerUser.nickname,
+    })}`;
 
   const sentMessage = await telegramBot.sendMessage(
     sellerUser.telegramId,
@@ -53,7 +79,7 @@ const sendApplicationMessage = async (
         inline_keyboard: [
           [
             {
-              text: "	✅ Принять заявку",
+              text: "✅ Принять заявку",
               callback_data: `${application._id}`,
             },
           ],
@@ -77,12 +103,12 @@ const editApplicationMessage = async (
 ) => {
   const buyerChatUrl = getUserChatUrl(buyerUser);
   const sellerChatUrl = getUserChatUrl(sellerUser);
-
+  i18next.changeLanguage(sellerUser.languageCode);
   const newKeyboard = {
     inline_keyboard: [
       [
         {
-          text: "💬 Перейти к чату с покупателем",
+          text: `💬 ${i18next.t("go_to_buyer_chat")}`,
           url: buyerChatUrl,
         },
       ],
@@ -96,7 +122,11 @@ const editApplicationMessage = async (
   });
 
   // Отправляем сообщение покупателю
-  const buyerMessage = `Заявка на сумму ${application.quantity} ${application.currency} принята, доступен чат с продавцом!`;
+  i18next.changeLanguage(buyerUser.languageCode);
+  const buyerMessage = i18next.t("application_message.accepted", {
+    quantity: application.quantity,
+    currency: application.currency,
+  });
   const sentMessage = await telegramBot.sendMessage(
     buyerUser.telegramId,
     buyerMessage,
@@ -105,7 +135,7 @@ const editApplicationMessage = async (
         inline_keyboard: [
           [
             {
-              text: "💬 Перейти к чату с продавцом",
+              text: `💬 ${i18next.t("go_to_seller_chat")}`,
               url: sellerChatUrl,
             },
           ],
@@ -127,11 +157,12 @@ const deliteApplicationMessage = async (
   sellerUser
 ) => {
   try {
-    const newKeyboard = {
+    i18next.changeLanguage(sellerUser.languageCode);
+    let newKeyboard = {
       inline_keyboard: [
         [
           {
-            text: "Заявка была удалена",
+            text: i18next.t("application_message.deleted"),
             callback_data: "!",
           },
         ],
@@ -145,7 +176,17 @@ const deliteApplicationMessage = async (
         message_id: application.messageId.seller,
       });
     }
-
+    i18next.changeLanguage(buyerUser.languageCode);
+    newKeyboard = {
+      inline_keyboard: [
+        [
+          {
+            text: i18next.t("application_message.deleted"),
+            callback_data: "!",
+          },
+        ],
+      ],
+    };
     await telegramBot.editMessageReplyMarkup(newKeyboard, {
       chat_id: buyerUser.telegramId,
       message_id: application.messageId.buyer,
@@ -156,17 +197,15 @@ const deliteApplicationMessage = async (
 };
 
 const phoneNumberInstructions = async (bot, chatId) => {
-  await bot.sendMessage(
-    chatId,
-    "Чтобы отправить свой номер телефона, нажмите на кнопку 'Поделиться номером' ниже.",
-    {
-      reply_markup: {
-        keyboard: [[{ text: "Поделиться номером", request_contact: true }]],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    }
-  );
+  await bot.sendMessage(chatId, i18next.t("send_phone_instructions"), {
+    reply_markup: {
+      keyboard: [
+        [{ text: i18next.t("share_phone_button"), request_contact: true }],
+      ],
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
+  });
 };
 
 module.exports = {

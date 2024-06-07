@@ -3,6 +3,7 @@ const config = require("config");
 
 const User = require("./models/User");
 const Offer = require("./models/Offer");
+const i18next = require("./i18n");
 const Application = require("./models/Application");
 const { getAvatar, getGeolocationData } = require("./utils/apiService");
 const { editApplicationMessage } = require("./utils/telegramUtils");
@@ -15,9 +16,11 @@ const bot = new TelegramBot(token, { polling: true });
 // bot.telegram.setWebhook(`${webAppUrl}/bot${token}`);
 
 async function requestLocation(chatId) {
-  await bot.sendMessage(chatId, "Пожалуйста, отправьте свою геолокацию.", {
+  await bot.sendMessage(chatId, i18next.t("request_location"), {
     reply_markup: {
-      keyboard: [[{ text: "Отправить геолокацию", request_location: true }]],
+      keyboard: [
+        [{ text: i18next.t("send_location_button"), request_location: true }],
+      ],
       resize_keyboard: true,
       one_time_keyboard: true,
     },
@@ -55,39 +58,42 @@ bot.on("message", async (msg) => {
         });
         await user.save();
       }
-
+      i18next.changeLanguage(user.languageCode);
       if (!msg.chat.username && !user.phoneNumber) {
-        await bot.sendMessage(
-          chatId,
-          "Чтобы другие пользователи могли с вами связаться, пожалуйста, создайте юзернейм в Telegram или поделитесь своим номером телефона.",
-          {
-            reply_markup: {
-              keyboard: [
-                [{ text: "Поделиться номером", request_contact: true }],
+        await bot.sendMessage(chatId, i18next.t("phone_number_prompt"), {
+          reply_markup: {
+            keyboard: [
+              [
+                {
+                  text: i18next.t("share_phone_button"),
+                  request_contact: true,
+                },
               ],
-              resize_keyboard: true,
-              one_time_keyboard: true,
-            },
-          }
-        );
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: true,
+          },
+        });
       } else {
-        await bot.sendMessage(
-          chatId,
-          "Добро пожаловать! Отправьте свою геолокацию.",
-          {
-            reply_markup: {
-              keyboard: [
-                [{ text: "Отправить геолокацию", request_location: true }],
+        console.log(5555, user.languageCode);
+        await bot.sendMessage(chatId, i18next.t("welcome_message"), {
+          reply_markup: {
+            keyboard: [
+              [
+                {
+                  text: i18next.t("send_location_button"),
+                  request_location: true,
+                },
               ],
-              resize_keyboard: true,
-              one_time_keyboard: true,
-            },
-          }
-        );
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: true,
+          },
+        });
       }
     } catch (error) {
       console.error("Ошибка при обработке команды /start:", error);
-      bot.sendMessage(chatId, "Произошла ошибка при обработке вашего запроса.");
+      bot.sendMessage(chatId, i18next.t("request_error"));
     }
   }
 });
@@ -105,13 +111,6 @@ bot.on("callback_query", async (query) => {
   await editApplicationMessage(bot, application, buyerUser, sellerUser);
 });
 
-bot.on("web_app_data", (msg) => {
-  const chatId = msg.chat.id;
-  const data = JSON.parse(msg.web_app_data.data);
-  const { latitude, longitude } = data;
-
-  bot.sendMessage(chatId, `Latitude: ${latitude}, Longitude: ${longitude}`);
-});
 bot.on("contact", async (msg) => {
   const chatId = msg.chat.id;
   const phoneNumber = msg.contact.phone_number;
@@ -122,18 +121,23 @@ bot.on("contact", async (msg) => {
       { phoneNumber: phoneNumber },
       { new: true }
     );
-
+    i18next.changeLanguage(user.languageCode);
     if (user) {
-      console.log("Номер телефона пользователя успешно обновлен:", phoneNumber);
+      console.log("Номер телефона пользователя успешно обновлен");
 
       if (!user.location || !user.location.coordinates.length) {
         await bot.sendMessage(
           chatId,
-          "Спасибо за предоставленный номер телефона! Теперь, пожалуйста, отправьте свою геолокацию.",
+          i18next.t("update_phone_number_ask_location"),
           {
             reply_markup: {
               keyboard: [
-                [{ text: "Отправить геолокацию", request_location: true }],
+                [
+                  {
+                    text: i18next.t("send_location_button"),
+                    request_location: true,
+                  },
+                ],
               ],
               resize_keyboard: true,
               one_time_keyboard: true,
@@ -141,17 +145,14 @@ bot.on("contact", async (msg) => {
           }
         );
       } else {
-        await bot.sendMessage(chatId, "Ваш номер телефона успешно обновлен!");
+        await bot.sendMessage(chatId, i18next.t("update_phone_number_success"));
       }
     } else {
       console.error("Пользователь с telegramId не найден:", chatId);
     }
   } catch (error) {
     console.error("Ошибка при обновлении номера телефона пользователя:", error);
-    bot.sendMessage(
-      chatId,
-      "Произошла ошибка при обновлении вашего номера телефона. Попробуйте еще раз позже."
-    );
+    bot.sendMessage(chatId, i18next.t("update_phone_number_error"));
   }
 });
 
@@ -160,8 +161,9 @@ bot.on("location", async (msg) => {
   const latitude = msg.location.latitude;
   const longitude = msg.location.longitude;
   const geolocationData = await getGeolocationData(latitude, longitude);
+  let user;
   try {
-    const user = await User.findOneAndUpdate(
+    user = await User.findOneAndUpdate(
       { telegramId: chatId },
       {
         location: {
@@ -196,7 +198,7 @@ bot.on("location", async (msg) => {
     } else {
       const avatar = await getAvatar(msg.chat.id);
       const nickname = generateNickname();
-      const newUser = new User({
+      const user = new User({
         telegramId: msg.chat.id,
 
         username: msg.chat.username,
@@ -216,17 +218,14 @@ bot.on("location", async (msg) => {
         avatar,
         nickname,
       });
-      await newUser.save();
+      await user.save();
       console.log(`Пользователь с telegramId ${chatId} не найден.`);
     }
-
-    bot.sendMessage(chatId, "Спасибо! Местоположение упешно обновлено!");
+    i18next.changeLanguage(user.languageCode);
+    bot.sendMessage(chatId, i18next.t("location_update_success"));
   } catch (error) {
     console.error("Ошибка при обновлении местоположения пользователя:", error);
-    bot.sendMessage(
-      chatId,
-      "Произошла ошибка при обновлении вашего местоположения. Попробуйте еще раз позже."
-    );
+    bot.sendMessage(chatId, i18next.t("location_update_error"));
   }
 });
 

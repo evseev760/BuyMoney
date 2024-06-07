@@ -6,6 +6,8 @@ const config = require("config");
 const fs = require("fs");
 const compression = require("compression");
 const { createServer } = require("http");
+const i18next = require("./i18n");
+const middleware = require("i18next-http-middleware");
 
 const { initializeSocket } = require("./socketHandler");
 
@@ -17,6 +19,7 @@ const applicationApiRouter = require("./sections/application/applicationApiRoute
 
 const app = express();
 
+app.use(middleware.handle(i18next));
 app.use(cors());
 app.use(express.json());
 app.use(compression());

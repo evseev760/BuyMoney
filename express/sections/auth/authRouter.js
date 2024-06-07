@@ -20,5 +20,6 @@ router.post(
   authMiddleware,
   controller.updateUserLocation
 );
+router.post("/changeLanguage", authMiddleware, controller.changeLanguage);
 
 module.exports = router;

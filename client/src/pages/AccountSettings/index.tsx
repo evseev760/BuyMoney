@@ -3,6 +3,7 @@ import { StyledSwitch } from "components/StyledSwitch";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeliveryDiningOutlinedIcon from "@mui/icons-material/DeliveryDiningOutlined";
 import SocialDistanceOutlinedIcon from "@mui/icons-material/SocialDistanceOutlined";
+import LanguageIcon from "@mui/icons-material/Language";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useNavigate } from "react-router-dom";
@@ -10,14 +11,24 @@ import { useTg } from "hooks/useTg";
 import { RouteNames } from "router";
 
 import { UpdateUserData } from "models/Auth";
-import { updateUserData } from "store/reducers/auth/ActionCreators";
+import {
+  fetchChangeLanguage,
+  updateUserData,
+} from "store/reducers/auth/ActionCreators";
 import { useTranslation } from "react-i18next";
 import styled, { css, DefaultTheme } from "styled-components";
 import CurrencyInput from "react-currency-input-field";
+import { TonConnectButton } from "@tonconnect/ui-react";
+import { DrawerComponent } from "components/Drawer";
+import { CurrencySelect } from "components/selectCurrency";
+import { getLabel, SelectItem } from "utils/Currency";
+import { changeLanguage } from "i18next";
 
 export const AccountSettings = () => {
   const { t } = useTranslation();
-  const { currentUser } = useAppSelector((state) => state.authReducer);
+  const { currentUser, changeLanguageIsLoading } = useAppSelector(
+    (state) => state.authReducer
+  );
   const [isAnOffice, setIsAnOffice] = useState<boolean>(currentUser.isAnOffice);
   const [isDelivered, setIsDelivered] = useState<boolean>(
     currentUser?.delivery?.isDelivered
@@ -25,6 +36,23 @@ export const AccountSettings = () => {
   const [distance, setDistance] = useState<number | undefined>(
     currentUser?.delivery?.distance
   );
+  interface Drawers {
+    language: JSX.Element;
+  }
+  type Draver = "language" | undefined;
+
+  const languages: SelectItem[] = [
+    {
+      code: "en",
+      label: "English",
+    },
+    {
+      code: "ru",
+      label: "Русский",
+    },
+  ];
+
+  const [currentDrawer, setCurrentDrawer] = useState<Draver>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { onToggleBackButton, setBackButtonCallBack, offBackButtonCallBack } =
@@ -63,6 +91,14 @@ export const AccountSettings = () => {
   };
 
   const listArr = [
+    {
+      label: t("language"),
+      icon: <LanguageIcon />,
+      handleClick: () => setCurrentDrawer("language"),
+      value: getLabel(languages, currentUser.languageCode),
+      isLoading: changeLanguageIsLoading,
+      isSelect: true,
+    },
     {
       label: t("thereIsAnOffice"),
       icon: <BusinessOutlinedIcon />,
@@ -105,10 +141,34 @@ export const AccountSettings = () => {
       disable: !isDelivered,
     },
   ];
+  const onLanguageChange = (value: string) => {
+    dispatch(
+      fetchChangeLanguage({ language: value }, () => changeLanguage(value))
+    );
+    setCurrentDrawer(undefined);
+  };
+
+  const drawers: Drawers = {
+    language: (
+      <CurrencySelect
+        handleSelect={onLanguageChange}
+        currentValue={currentUser.languageCode}
+        array={languages}
+      />
+    ),
+  };
 
   return (
     <>
+      <ButtonContainer>
+        <StyledTonConnectButton />
+      </ButtonContainer>
       <ListDividers listArr={listArr} />
+      <DrawerComponent
+        isOpen={!!currentDrawer}
+        onClose={() => setCurrentDrawer(undefined)}
+        component={currentDrawer ? drawers[currentDrawer] : <></>}
+      />
     </>
   );
 };
@@ -127,5 +187,31 @@ const StiledCurrencyInput = styled(CurrencyInput)<{ size: number }>`
     padding: 0;
     outline: none;
     border: none;
+  `}
+`;
+const StyledTonConnectButton = styled(TonConnectButton)`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    & button {
+      flex-grow: 1;
+      height: 32px;
+      border-radius: 12px;
+      background-color: ${theme.palette.button.primary} !important;
+      & * {
+        color: ${theme.palette.buttonText.primary} !important;
+      }
+      & svg {
+        fill: ${theme.palette.buttonText.primary} !important;
+      }
+    }
+  `}
+`;
+const ButtonContainer = styled.div`
+  ${({ theme }: { theme: DefaultTheme }) => css`
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+    /* padding: 0 16px; */
   `}
 `;

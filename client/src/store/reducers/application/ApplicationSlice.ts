@@ -28,6 +28,7 @@ export interface CreateApplicationRequest {
   price: number;
   offerId: string;
   seller: string;
+  distance?: number;
 }
 interface UserRatings {
   average: number;

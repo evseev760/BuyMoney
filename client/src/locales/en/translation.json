@@ -89,6 +89,9 @@
   "share": "Share",
   "disableTradingOnAlert": "Your ads have been temporarily hidden",
   "disableTradingOffAlert": "Your ads are visible again",
+  "applicationSuccess": "The application has been successfully created! We will notify you when the seller accepts it",
+  "applicationError": "An error occurred while creating",
+  "language": "Language",
   "faq": {
     "question1": "How does your application work?",
     "answer1": "Our application is a p2p cash marketplace where users can create ads for selling cash and respond to them. When interests match, we connect them in a Telegram chat to discuss the deal. Users can leave reviews and earn a reputation.",
