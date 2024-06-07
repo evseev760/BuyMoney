@@ -9,7 +9,7 @@ router.get("/getMyApplications", authMiddleware, controller.getMyApplications);
 router.post(
   "/completeApplication",
   authMiddleware,
-  // monitorSuspiciousActivity,
+  monitorSuspiciousActivity,
   controller.completeApplication
 );
 router.post("/acceptApplication", authMiddleware, controller.acceptApplication);

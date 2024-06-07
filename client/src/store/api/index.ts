@@ -55,7 +55,7 @@ export const api: IApi = {
     changeLanguage: "api/auth/changeLanguage",
   },
   offer: {
-    createOffer: "api/api/offer/createOffer",
+    createOffer: "api/offer/createOffer",
     editOffer: "api/offer/editOffer",
     getOffers: "api/offer/getOffers",
     getMyOffers: "api/offer/getMyOffers",

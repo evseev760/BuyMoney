@@ -61,6 +61,7 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     offBackButtonCallBack,
     onToggleMainButton,
     offMainButtonCallBack,
+    showAlert,
   } = useTg();
   const { setLocalValue, LocalStorageKey } = useLocalStorage();
   const dispatch = useAppDispatch();
@@ -125,9 +126,14 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       dispatch(clearNewOffer());
       navigate(RouteNames.MYOFFERS);
     };
-    const onError = () => {
+    const onError = (code?: number) => {
       tg.MainButton.hideProgress();
       onToggleMainButton(false, createText);
+      if (code === 409) {
+        showAlert(t("offerAlreadyExists"));
+      } else {
+        showAlert(t("applicationError"));
+      }
     };
     tg.MainButton.showProgress();
     const price = newOffer?.price ? 1 / newOffer.price : undefined;

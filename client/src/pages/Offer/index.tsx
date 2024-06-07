@@ -139,10 +139,14 @@ export const Offer = () => {
       showAlert(t("applicationSuccess"));
       navigate(RouteNames.MAIN);
     };
-    const onError = () => {
+    const onError = (code?: number) => {
       tg.MainButton.hideProgress();
       onToggleMainButton(false, t("buy"));
-      showAlert(t("applicationError"));
+      if (code === 409) {
+        showAlert(t("applicationAlreadyExists"));
+      } else {
+        showAlert(t("applicationError"));
+      }
       navigate(RouteNames.OFFERS);
     };
     tg.MainButton.showProgress();

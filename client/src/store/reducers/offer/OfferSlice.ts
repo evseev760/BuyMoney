@@ -56,7 +56,10 @@ const initialState: IOfferState = {
   lastOfferReqest: {},
   deliteOfferIsLoading: [],
 };
-
+const roundNumber = (num: number, decimalPlaces = 2) => {
+  const factor = Math.pow(10, decimalPlaces);
+  return Math.round(num * factor) / factor;
+};
 export const offerSlice = createSlice({
   name: "auth",
   initialState,
@@ -144,7 +147,7 @@ export const offerSlice = createSlice({
         typeOfPrice = "flex";
       }
       if (offer.interestPrice) {
-        interestPrice = 1 / offer.interestPrice;
+        interestPrice = roundNumber(1 / offer.interestPrice);
       }
       if (offer.price) {
         price = 1 / offer.price;

@@ -4,6 +4,7 @@ import styled, { DefaultTheme, css, useTheme } from "styled-components";
 const Price = ({ value }: { value: number }) => {
   const theme = useTheme();
   const fixNumber = (formattedValue: string) => {
+    formattedValue = formattedValue.replace(/,/g, " ");
     const parts = formattedValue.split(".");
     let integerPart = parts[0];
     let decimalPart = parts[1] || "";

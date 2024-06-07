@@ -95,16 +95,18 @@ class offerController {
         paymentMethods,
         comment,
       } = req.body;
-      // const candidate = await Offer.findOne({
-      //   currency,
-      //   forPayment,
-      //   seller: req.user.id,
-      // });
-      // if (candidate) {
-      //   return res
-      //     .status(400)
-      //     .json({ message: "У вас уже существует оффер с данной валютой" });
-      // }
+      console.log(666, currency, forPayment, req.user.id);
+      const existingOffer = await Offer.findOne({
+        currency,
+        forPayment,
+        seller: req.user.id,
+      });
+      if (existingOffer) {
+        return res.status(409).json({
+          errorCode: "OFFER_CONFLICT",
+          message: "У вас уже существует оффер с данной валютой",
+        });
+      }
       const user = await User.findOne({ _id: req.user.id });
 
       const offer = new Offer({
@@ -155,6 +157,20 @@ class offerController {
       const offer = await Offer.findOne({ _id, seller: req.user.id });
       if (!offer) {
         return res.status(404).json({ message: "Оффер не найден" });
+      }
+
+      const existingOffer = await Offer.findOne({
+        _id: { $ne: _id },
+        seller: req.user.id,
+        currency,
+        forPayment,
+      });
+
+      if (existingOffer) {
+        return res.status(409).json({
+          errorCode: "OFFER_CONFLICT",
+          message: "У вас уже есть оффер с такими же параметрами",
+        });
       }
 
       offer.currency = currency;

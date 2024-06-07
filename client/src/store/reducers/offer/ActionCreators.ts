@@ -51,7 +51,11 @@ export const fetchMyOffers = () => async (dispatch: AppDispatch) => {
 };
 
 export const createOffer =
-  (data: EmptyOfferData, callback: () => void, errorCallback?: () => void) =>
+  (
+    data: EmptyOfferData,
+    callback: () => void,
+    errorCallback?: (code?: number) => void
+  ) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(offerSlice.actions.createOfferFetching());
@@ -63,13 +67,17 @@ export const createOffer =
       dispatch(offerSlice.actions.createOfferSuccess(response.data));
       callback();
     } catch (e: any) {
-      errorCallback && errorCallback();
+      errorCallback && errorCallback(e?.response?.status);
       dispatch(offerSlice.actions.createOfferError(e.response.data.message));
     }
   };
 
 export const editOffer =
-  (data: EmptyOfferData, callback: () => void, errorCallback?: () => void) =>
+  (
+    data: EmptyOfferData,
+    callback: () => void,
+    errorCallback?: (code?: number) => void
+  ) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(offerSlice.actions.createOfferFetching());
@@ -81,7 +89,7 @@ export const editOffer =
       dispatch(offerSlice.actions.createOfferSuccess(response.data));
       callback();
     } catch (e: any) {
-      errorCallback && errorCallback();
+      errorCallback && errorCallback(e?.response?.status);
       dispatch(offerSlice.actions.createOfferError(e.response.data.message));
     }
   };
