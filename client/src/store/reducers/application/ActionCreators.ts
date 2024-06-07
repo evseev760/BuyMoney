@@ -17,7 +17,7 @@ export const createApplication =
   (
     data: CreateApplicationRequest,
     callback: () => void,
-    errorCallback?: () => void
+    errorCallback?: (status?: number) => void
   ) =>
   async (dispatch: AppDispatch) => {
     try {
@@ -33,7 +33,7 @@ export const createApplication =
       // dispatch(fetchOffers());
       callback();
     } catch (e: any) {
-      errorCallback && errorCallback();
+      errorCallback && errorCallback(e?.response?.status);
       dispatch(
         applicationSlice.actions.createApplicationError(e.response.data.message)
       );

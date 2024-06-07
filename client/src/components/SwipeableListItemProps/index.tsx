@@ -68,7 +68,11 @@ const SwipeableListItem: React.FC<SwipeableListItemProps> = ({
   }, [handleClickOutside]);
 
   return (
-    <Container ref={componentRef} themeParams={themeParams}>
+    <Container
+      ref={componentRef}
+      themeParams={themeParams}
+      translateX={translateX}
+    >
       <DeleteIcon
         style={{
           position: "absolute",
@@ -93,6 +97,7 @@ const SwipeableListItem: React.FC<SwipeableListItemProps> = ({
 };
 interface ContainerProps {
   themeParams: any;
+  translateX: number;
 }
 
 interface SwipeableContentProps {
@@ -101,9 +106,10 @@ interface SwipeableContentProps {
 
 const Container = styled.div<ContainerProps>`
   width: 100%;
-  background: ${({ themeParams }) => themeParams.destructive_text_color};
+  background: ${({ translateX, themeParams }) =>
+    translateX ? themeParams.destructive_text_color : "rgba(0,0,0,0)"};
   position: relative;
-  /* border-radius: 12px; */
+  transition: background-color 0.3s;
 `;
 
 const SwipeableContent = styled.div<SwipeableContentProps>`

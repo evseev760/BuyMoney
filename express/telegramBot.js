@@ -58,7 +58,7 @@ bot.on("message", async (msg) => {
         });
         await user.save();
       }
-      i18next.changeLanguage(user.languageCode);
+      await i18next.changeLanguage(user.languageCode);
       if (!msg.chat.username && !user.phoneNumber) {
         await bot.sendMessage(chatId, i18next.t("phone_number_prompt"), {
           reply_markup: {
@@ -75,21 +75,33 @@ bot.on("message", async (msg) => {
           },
         });
       } else {
+        const noHaveLocation =
+          !user.location || !user.location.coordinates.length;
         console.log(5555, user.languageCode);
-        await bot.sendMessage(chatId, i18next.t("welcome_message"), {
-          reply_markup: {
-            keyboard: [
-              [
-                {
-                  text: i18next.t("send_location_button"),
-                  request_location: true,
-                },
+        await bot.sendMessage(chatId, i18next.t("open_application"));
+        await bot.sendMessage(
+          chatId,
+          i18next.t(
+            noHaveLocation ? "request_location" : "update_location_message"
+          ),
+          {
+            reply_markup: {
+              keyboard: [
+                [
+                  {
+                    text: i18next.t("send_location_button"),
+                    request_location: true,
+                  },
+                ],
               ],
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true,
-          },
-        });
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          }
+        );
+        if (noHaveLocation) {
+          await bot.sendMessage(chatId, i18next.t("send_location_description"));
+        }
       }
     } catch (error) {
       console.error("Ошибка при обработке команды /start:", error);
@@ -121,7 +133,7 @@ bot.on("contact", async (msg) => {
       { phoneNumber: phoneNumber },
       { new: true }
     );
-    i18next.changeLanguage(user.languageCode);
+    await i18next.changeLanguage(user.languageCode);
     if (user) {
       console.log("Номер телефона пользователя успешно обновлен");
 
@@ -144,6 +156,7 @@ bot.on("contact", async (msg) => {
             },
           }
         );
+        await bot.sendMessage(chatId, i18next.t("send_location_description"));
       } else {
         await bot.sendMessage(chatId, i18next.t("update_phone_number_success"));
       }
@@ -221,7 +234,7 @@ bot.on("location", async (msg) => {
       await user.save();
       console.log(`Пользователь с telegramId ${chatId} не найден.`);
     }
-    i18next.changeLanguage(user.languageCode);
+    await i18next.changeLanguage(user.languageCode);
     bot.sendMessage(chatId, i18next.t("location_update_success"));
   } catch (error) {
     console.error("Ошибка при обновлении местоположения пользователя:", error);

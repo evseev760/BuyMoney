@@ -78,28 +78,30 @@ const MyDealsWrapped = () => {
     ),
   };
 
-  const applicationsArr = myApplications?.filter((application) => {
-    const isSell = currentUser.id === application.seller;
-    return (
-      (dealsType === "active" &&
-        (application.status === "PENDING" ||
-          application.status === "NEW" ||
-          (application.status === "CONFIRMATION" &&
-            isSell &&
-            !application.rating.seller) ||
-          (application.status === "CONFIRMATION" &&
-            !isSell &&
-            !application.rating.buyer))) ||
-      (dealsType === "completed" &&
-        (application.status === "COMPLETED" ||
-          (application.status === "CONFIRMATION" &&
-            isSell &&
-            application.rating.seller) ||
-          (application.status === "CONFIRMATION" &&
-            !isSell &&
-            application.rating.buyer)))
-    );
-  });
+  const applicationsArr = myApplications
+    ?.filter((application) => {
+      const isSell = currentUser.id === application.seller;
+      return (
+        (dealsType === "active" &&
+          (application.status === "PENDING" ||
+            application.status === "NEW" ||
+            (application.status === "CONFIRMATION" &&
+              isSell &&
+              !application.rating.seller) ||
+            (application.status === "CONFIRMATION" &&
+              !isSell &&
+              !application.rating.buyer))) ||
+        (dealsType === "completed" &&
+          (application.status === "COMPLETED" ||
+            (application.status === "CONFIRMATION" &&
+              isSell &&
+              application.rating.seller) ||
+            (application.status === "CONFIRMATION" &&
+              !isSell &&
+              application.rating.buyer)))
+      );
+    })
+    .sort((a, b) => +b.updatedAt - +a.updatedAt);
   return myApplicationsIsloading ? (
     <OfferViewSkeleton />
   ) : (

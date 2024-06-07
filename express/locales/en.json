@@ -1,7 +1,9 @@
 {
-  "welcome_message": "Welcome! Please send your location.",
+  "update_location_message": "Please update your geolocation data if it has changed",
+  "send_location_description": "Your data will be used to find nearby offers and will remain confidential. We store only approximate coordinates and do not track you in real-time.",
+  "open_application": "Welcome! \n⬇️P2P - Open application",
   "phone_number_prompt": "To allow other users to contact you, please create a username in Telegram or share your phone number.",
-  "request_location": "Please send your location.",
+  "request_location": "Please send your location",
   "send_location_button": "Send location",
   "share_phone_button": "Share phone number",
   "update_phone_number_success": "Your phone number has been successfully updated!",
@@ -10,7 +12,7 @@
   "update_phone_number_ask_location": "Thank you for providing your phone number! Now, please send your location.",
   "location_update_success": "Thank you! Your location has been successfully updated!",
   "location_update_error": "An error occurred while updating your location. Please try again later.",
-  "request_error": "An error occurred while processing your request.",
+  "request_error": "An error occurred while processing your request",
   "application_message": {
     "new_application": "You have a new application!",
     "price": "Price: {{price}}",
@@ -22,7 +24,7 @@
     "accepted": "Application for the amount of {{quantity}} {{currency}} accepted, chat with the seller is available!",
     "deleted": "The application has been deleted"
   },
-  "send_phone_instructions": "To send your phone number, click the 'Share phone number' button below.",
+  "send_phone_instructions": "To send your phone number, click the 'Share phone number' button below",
   "go_to_buyer_chat": "Go to chat with buyer",
   "go_to_seller_chat": "Go to chat with seller"
 }

@@ -45,6 +45,18 @@ class applicationApiController {
       } = req.body;
       const { id, name } = req.user;
       const buyerUser = await User.findOne({ _id: id });
+      const existingApplication = await Application.findOne({
+        currency,
+        offerId,
+        forPayment,
+        seller,
+        status: { $ne: ApplicationStatus.COMPLETED }, // Исключаем удаленные заявки
+      });
+      if (existingApplication) {
+        return res.status(409).json({
+          message: "У вас уже есть активная заявка с такими же параметрами",
+        });
+      }
       const newApplication = {
         quantity,
         user: id,

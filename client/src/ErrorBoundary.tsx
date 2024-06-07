@@ -99,13 +99,13 @@ class ErrorBoundary extends Component<
         <ThemeProvider theme={themeParams}>
           <GlobalStyle />
           <ErrorScreen />
-          <Message>
+          {/* <Message>
             {error?.name}
             <br />
             {error?.message}
             <br />
             {error?.stack}
-          </Message>
+          </Message> */}
         </ThemeProvider>
       );
     }

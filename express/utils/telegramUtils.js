@@ -49,7 +49,7 @@ const sendApplicationMessage = async (
   const paymentMethodItem = forPaymentItem?.paymentMethodsList?.find(
     (item) => item.code === application.paymentMethod
   )?.label;
-  i18next.changeLanguage(sellerUser.languageCode);
+  await i18next.changeLanguage(sellerUser.languageCode);
   const message =
     `${i18next.t("application_message.new_application")}
     💰 ${i18next.t("application_message.quantity", {
@@ -103,7 +103,7 @@ const editApplicationMessage = async (
 ) => {
   const buyerChatUrl = getUserChatUrl(buyerUser);
   const sellerChatUrl = getUserChatUrl(sellerUser);
-  i18next.changeLanguage(sellerUser.languageCode);
+  await i18next.changeLanguage(sellerUser.languageCode);
   const newKeyboard = {
     inline_keyboard: [
       [
@@ -116,13 +116,15 @@ const editApplicationMessage = async (
   };
 
   // Редактируем сообщение в чате продавца
-  await telegramBot.editMessageReplyMarkup(newKeyboard, {
-    chat_id: sellerUser.telegramId,
-    message_id: application.messageId.seller,
-  });
+  if (application.messageId.seller) {
+    await telegramBot.editMessageReplyMarkup(newKeyboard, {
+      chat_id: sellerUser.telegramId,
+      message_id: application.messageId.seller,
+    });
+  }
 
   // Отправляем сообщение покупателю
-  i18next.changeLanguage(buyerUser.languageCode);
+  await i18next.changeLanguage(buyerUser.languageCode);
   const buyerMessage = i18next.t("application_message.accepted", {
     quantity: application.quantity,
     currency: application.currency,
@@ -157,7 +159,7 @@ const deliteApplicationMessage = async (
   sellerUser
 ) => {
   try {
-    i18next.changeLanguage(sellerUser.languageCode);
+    await i18next.changeLanguage(sellerUser.languageCode);
     let newKeyboard = {
       inline_keyboard: [
         [
@@ -176,7 +178,7 @@ const deliteApplicationMessage = async (
         message_id: application.messageId.seller,
       });
     }
-    i18next.changeLanguage(buyerUser.languageCode);
+    await i18next.changeLanguage(buyerUser.languageCode);
     newKeyboard = {
       inline_keyboard: [
         [
@@ -187,10 +189,12 @@ const deliteApplicationMessage = async (
         ],
       ],
     };
-    await telegramBot.editMessageReplyMarkup(newKeyboard, {
-      chat_id: buyerUser.telegramId,
-      message_id: application.messageId.buyer,
-    });
+    if (application.messageId.buyer) {
+      await telegramBot.editMessageReplyMarkup(newKeyboard, {
+        chat_id: buyerUser.telegramId,
+        message_id: application.messageId.buyer,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
