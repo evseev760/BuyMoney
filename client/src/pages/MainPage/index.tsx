@@ -8,20 +8,23 @@ import { Animation, Animations } from "components/Animation";
 import SellOutlinedIcon from "@mui/icons-material/SellOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+// import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "router";
-import { TonConnectButton } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 import { useCurrencies } from "hooks/useCurrencies";
 import { MyDeals } from "components/MyDeals";
 import { useAppSelector } from "hooks/redux";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage, LocalStorageKey } from "hooks/useLocalStorage";
 
 const Mainpage = () => {
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const wallet = useTonWallet();
+  const { getLocalValue } = useLocalStorage();
   const { onToggleBackButton } = useTg();
   useCurrencies();
   useEffect(() => {
@@ -50,6 +53,8 @@ const Mainpage = () => {
       },
     },
   ];
+  const walletToken = getLocalValue(LocalStorageKey.walletToken);
+  console.log(555, wallet);
   return (
     <MainPageContainer className="mainPage_container">
       <Animation
@@ -59,9 +64,11 @@ const Mainpage = () => {
       <Title>{t("mainTitle")}</Title>
       <Description>{t("mainDescription")}</Description>
 
-      <ButtonContainer>
-        <StyledTonConnectButton />
-      </ButtonContainer>
+      {wallet && (
+        <ButtonContainer>
+          <StyledTonConnectButton />
+        </ButtonContainer>
+      )}
       <ButtonsContainer className="mainPage_buttonsContainer">
         <ActionButton
           text={t("buy")}

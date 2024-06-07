@@ -34,15 +34,17 @@ export const Faq = () => {
     { question: t("faq.question6"), answer: t("faq.answer6") },
   ];
   return (
-    <div style={{ borderRadius: "12px", overflow: "hidden" }}>
-      {array.map((item) => (
-        <StyledAccordion elevation={0}>
-          <StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {item.question}
-          </StyledAccordionSummary>
-          <StyledAccordionDetails>{item.answer}</StyledAccordionDetails>
-        </StyledAccordion>
-      ))}
+    <div>
+      <div style={{ borderRadius: "12px", overflow: "hidden" }}>
+        {array.map((item) => (
+          <StyledAccordion elevation={0}>
+            <StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
+              {item.question}
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>{item.answer}</StyledAccordionDetails>
+          </StyledAccordion>
+        ))}
+      </div>
     </div>
   );
 };

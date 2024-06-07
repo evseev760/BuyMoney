@@ -9,6 +9,7 @@ export interface CurrentUser {
   isSuspicious: boolean;
   nickname: string;
   isAnOffice: boolean;
+  languageCode?: string;
   delivery: {
     isDelivered: boolean;
     distance?: number;

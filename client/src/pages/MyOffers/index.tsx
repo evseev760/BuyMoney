@@ -78,7 +78,7 @@ export const MyOffers = () => {
       handleClick: () => {},
       value: (
         <StyledSwitch
-          isOn={!currentUser.disableTrading}
+          isOn={isOn}
           handleChangeSwitch={handleChangeSwitch}
           disabled={disableTradingIsLoading}
         />

@@ -65,7 +65,7 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
       const refreshPayload = async () => {
         tonConnectUI.setConnectRequestParameters({ state: "loading" });
 
-        const value = await dispatch(generatePayload()); // Используем новую функцию генерации payload
+        const value = await dispatch(generatePayload());
         if (!value) {
           tonConnectUI.setConnectRequestParameters(null);
         } else {
@@ -99,7 +99,7 @@ const BackendTokenProvider = ({ children }: { children: React.ReactNode }) => {
       !("error" in wallet.connectItems.tonProof)
     ) {
       const proof: TonProof = {
-        timestamp: wallet.connectItems.tonProof.proof.timestamp.toString(), // Преобразуем timestamp в строку
+        timestamp: wallet.connectItems.tonProof.proof.timestamp.toString(),
         domain: wallet.connectItems.tonProof.proof.domain,
         payload: wallet.connectItems.tonProof.proof.payload,
         signature: wallet.connectItems.tonProof.proof.signature,

@@ -8,6 +8,7 @@ interface IApi {
     updateUserLocation: string;
     sendPhoneNumberInstructions: string;
     disableTrading: string;
+    changeLanguage: string;
   };
   offer: {
     createOffer: string;
@@ -51,6 +52,7 @@ export const api: IApi = {
     updateUserLocation: "api/auth/updateUserLocation",
     sendPhoneNumberInstructions: "api/auth/sendPhoneNumberInstructions",
     disableTrading: "api/auth/disableTrading",
+    changeLanguage: "api/auth/changeLanguage",
   },
   offer: {
     createOffer: "api/api/offer/createOffer",

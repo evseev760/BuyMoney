@@ -12,6 +12,7 @@ const Application = new Schema({
   paymentMethod: { type: String },
   price: { type: Number, required: true },
   updatedAt: { type: Number, default: Date.now },
+  distance: { type: Number },
   messageId: {
     seller: { type: Number },
     buyer: { type: Number },

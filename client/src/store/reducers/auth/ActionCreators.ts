@@ -5,6 +5,7 @@ import { authSlice } from "./AuthSlice";
 
 import { API_URL } from "config";
 import { CurrentUser, UpdateUserData } from "models/Auth";
+import { changeLanguage } from "i18next";
 
 export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
   try {
@@ -12,6 +13,8 @@ export const fetchAuth = (tg: any) => async (dispatch: AppDispatch) => {
 
     const response = await axios.get<any>(`${API_URL}${api.auth.auth}`, auth());
     dispatch(authSlice.actions.authSuccess(response.data.user));
+    response.data.user.languageCode &&
+      changeLanguage(response.data.user.languageCode);
     localStorage.setItem("token", response.data.token);
     if (response?.data.user?.username !== tg?.initDataUnsafe?.user?.username) {
       dispatch(fetchLogin(tg));
@@ -33,6 +36,8 @@ export const fetchLogin = (tg: any) => async (dispatch: AppDispatch) => {
       userData: tg.initData,
       hash: hash,
     });
+    response.data.user.languageCode &&
+      changeLanguage(response.data.user.languageCode);
     dispatch(authSlice.actions.authSuccess(response.data.user));
     localStorage.setItem("token", response.data.token);
   } catch (e: any) {
@@ -121,5 +126,27 @@ export const disableTrading =
     } catch (e: any) {
       errorCallback && errorCallback();
       dispatch(authSlice.actions.disableTradingError());
+    }
+  };
+
+export const fetchChangeLanguage =
+  (
+    data: { language: string },
+    callback?: () => void,
+    errorCallback?: () => void
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(authSlice.actions.changeLanguageFetching());
+      const response = await axios.post(
+        `${API_URL}${api.auth.changeLanguage}`,
+        data,
+        auth()
+      );
+      dispatch(authSlice.actions.changeLanguageSuccess(response.data));
+      callback && callback();
+    } catch (e: any) {
+      errorCallback && errorCallback();
+      dispatch(authSlice.actions.changeLanguageError());
     }
   };

@@ -3,13 +3,14 @@ export enum LocalStorageKey {
   newOfferForPayment = "newOfferForPayment",
   filterCurrency = "filterCurrency",
   filterForPayment = "filterForPayment",
+  walletToken = "walletToken",
 }
 export const useLocalStorage = () => {
   const setLocalValue = (key: LocalStorageKey, value: string) => {
     localStorage.setItem(key, value);
   };
   const getLocalValue = (key: LocalStorageKey) => {
-    localStorage.getItem(key);
+    return localStorage.getItem(key);
   };
 
   return { setLocalValue, getLocalValue, LocalStorageKey };

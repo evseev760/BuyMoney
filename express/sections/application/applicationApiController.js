@@ -41,6 +41,7 @@ class applicationApiController {
         offerId,
         price,
         seller,
+        distance,
       } = req.body;
       const { id, name } = req.user;
       const buyerUser = await User.findOne({ _id: id });
@@ -54,6 +55,7 @@ class applicationApiController {
         forPayment,
         paymentMethod,
         price,
+        distance,
         seller,
         status: ApplicationStatus.NEW,
       };

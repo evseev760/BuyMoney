@@ -7,6 +7,7 @@ interface AuthState {
   isLoading: boolean;
   sendPhoneNumberInstructionsIsLoading: boolean;
   disableTradingIsLoading: boolean;
+  changeLanguageIsLoading: boolean;
   message?: string;
   isAuth: boolean;
   currentUser: CurrentUser;
@@ -20,6 +21,7 @@ const initialState: AuthState = {
   isAuth: false,
   sendPhoneNumberInstructionsIsLoading: false,
   disableTradingIsLoading: false,
+  changeLanguageIsLoading: false,
   currentUser: {
     id: "",
     username: "",
@@ -111,6 +113,17 @@ export const authSlice = createSlice({
     },
     disableTradingError: (state) => {
       state.disableTradingIsLoading = false;
+    },
+
+    changeLanguageFetching: (state) => {
+      state.changeLanguageIsLoading = true;
+    },
+    changeLanguageSuccess: (state, action: PayloadAction<CurrentUser>) => {
+      state.changeLanguageIsLoading = false;
+      state.currentUser = action.payload;
+    },
+    changeLanguageError: (state) => {
+      state.changeLanguageIsLoading = false;
     },
   },
 });

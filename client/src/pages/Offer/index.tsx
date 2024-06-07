@@ -63,6 +63,7 @@ export const Offer = () => {
     offBackButtonCallBack,
     onToggleMainButton,
     offMainButtonCallBack,
+    showAlert,
     tg,
   } = useTg();
   const [isReversePrice, setIsReversePrice] = useState<boolean>(true);
@@ -135,14 +136,24 @@ export const Offer = () => {
       tg.MainButton.hideProgress();
       offMainButtonCallBack(submitCreateOffer);
       onToggleMainButton(false, t("buy"));
+      showAlert(t("applicationSuccess"));
       navigate(RouteNames.MAIN);
     };
     const onError = () => {
       tg.MainButton.hideProgress();
       onToggleMainButton(false, t("buy"));
+      showAlert(t("applicationError"));
+      navigate(RouteNames.OFFERS);
     };
     tg.MainButton.showProgress();
-    if (!isLoading) dispatch(createApplication(application, callback, onError));
+    if (!isLoading)
+      dispatch(
+        createApplication(
+          { ...application, distance: currentOfferData?.distance },
+          callback,
+          onError
+        )
+      );
   }, [application, isLoading]);
 
   const isValidQuantity = () => {

@@ -1,0 +1,28 @@
+{
+  "welcome_message": "Welcome! Please send your location.",
+  "phone_number_prompt": "To allow other users to contact you, please create a username in Telegram or share your phone number.",
+  "request_location": "Please send your location.",
+  "send_location_button": "Send location",
+  "share_phone_button": "Share phone number",
+  "update_phone_number_success": "Your phone number has been successfully updated!",
+  "user_not_found": "User with telegramId not found: {{chatId}}",
+  "update_phone_number_error": "An error occurred while updating your phone number. Please try again later.",
+  "update_phone_number_ask_location": "Thank you for providing your phone number! Now, please send your location.",
+  "location_update_success": "Thank you! Your location has been successfully updated!",
+  "location_update_error": "An error occurred while updating your location. Please try again later.",
+  "request_error": "An error occurred while processing your request.",
+  "application_message": {
+    "new_application": "You have a new application!",
+    "price": "Price: {{price}}",
+    "quantity": "Amount: {{quantity}}",
+    "currency": "Currency: {{currencyLabel}}",
+    "for_payment": "To pay: {{forPaymentLabel}}",
+    "payment_method": "Payment method: {{paymentMethod}}",
+    "buyer": "Buyer: {{username}}",
+    "accepted": "Application for the amount of {{quantity}} {{currency}} accepted, chat with the seller is available!",
+    "deleted": "The application has been deleted"
+  },
+  "send_phone_instructions": "To send your phone number, click the 'Share phone number' button below.",
+  "go_to_buyer_chat": "Go to chat with buyer",
+  "go_to_seller_chat": "Go to chat with seller"
+}
