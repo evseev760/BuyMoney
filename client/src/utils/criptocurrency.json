@@ -3,11 +3,11 @@
     "label": "USDT",
     "code": "tether",
     "paymentMethodsList": [
-      { "label": "USDT (TRC-20)", "code": "trc20" },
-      { "label": "USDT (ERC-20)", "code": "erc20" },
-      { "label": "USDT (BEP-20)", "code": "bep20" },
-      { "label": "USDT (TON)", "code": "ton" },
-      { "label": "USDT (OMNI)", "code": "omni" }
+      { "label": "TRC-20", "code": "trc20" },
+      { "label": "ERC-20", "code": "erc20" },
+      { "label": "BEP-20", "code": "bep20" },
+      { "label": "TON", "code": "ton" },
+      { "label": "OMNI", "code": "omni" }
     ]
   },
   {

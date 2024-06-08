@@ -68,6 +68,7 @@ export const useCurrencies = () => {
     if (value && value >= 70 && value <= 150) {
       return true;
     }
+    if (!value) return true;
     return false;
   };
   const getLabel = (value?: string) => {

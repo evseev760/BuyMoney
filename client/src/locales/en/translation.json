@@ -49,6 +49,7 @@
   "active": "Active",
   "completed": "Completed",
   "myDeals": "My deals",
+  "deals": "Deals",
   "noActive": "You have no active deals yet",
   "noCompleted": "You have no completed deals yet",
   "goToChat": "Go to chat",
@@ -94,6 +95,7 @@
   "language": "Language",
   "applicationAlreadyExists": "You already have an active application for this ad",
   "offerAlreadyExists": "You already have an ad with these parameters",
+  "priceTooltipText": "Specify the price within 70%-150% of the market price",
   "faq": {
     "question1": "How does your application work?",
     "answer1": "Our application is a p2p cash marketplace where users can create ads for selling cash and respond to them. When interests match, we connect them in a Telegram chat to discuss the deal. Users can leave reviews and earn a reputation.",

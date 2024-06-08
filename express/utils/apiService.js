@@ -15,7 +15,7 @@ const getAvatar = async (id) => {
 };
 
 const getGeolocationData = async (latitude, longitude) => {
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`;
 
   try {
     const response = await axios.get(url);

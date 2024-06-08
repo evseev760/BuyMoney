@@ -155,15 +155,20 @@ class currencyApiController {
           (item) => item.slug === currency.code
         );
         if (foundCurrency) {
-          await Cripto.create({
-            cmcId: foundCurrency.id,
-            name: foundCurrency.name,
+          const existingCurrency = await Cripto.findOne({
             slug: foundCurrency.slug,
-            symbol: foundCurrency.symbol,
-            label: currency.label,
-            code: foundCurrency.slug,
-            paymentMethodsList: currency.paymentMethodsList,
           });
+          if (!existingCurrency) {
+            await Cripto.create({
+              cmcId: foundCurrency.id,
+              name: foundCurrency.name,
+              slug: foundCurrency.slug,
+              symbol: foundCurrency.symbol,
+              label: currency.label,
+              code: foundCurrency.slug,
+              paymentMethodsList: currency.paymentMethodsList,
+            });
+          }
         } else {
           console.log(5555, currency.label);
         }
@@ -171,15 +176,20 @@ class currencyApiController {
       for (const fiat of data.fiat) {
         const foundFiat = fiatArr.find((item) => item.symbol === fiat.label);
         if (foundFiat) {
-          await Currency.create({
-            cmcId: foundFiat.id,
-            name: foundFiat.name,
-            sign: foundFiat.sign,
+          const existingFiat = await Currency.findOne({
             symbol: foundFiat.symbol,
-            label: fiat.label,
-            code: fiat.label,
-            paymentMethodsList: fiat.paymentMethodsList,
           });
+          if (!existingFiat) {
+            await Currency.create({
+              cmcId: foundFiat.id,
+              name: foundFiat.name,
+              sign: foundFiat.sign,
+              symbol: foundFiat.symbol,
+              label: fiat.label,
+              code: fiat.label,
+              paymentMethodsList: fiat.paymentMethodsList,
+            });
+          }
         } else {
           console.log(6666, fiat.label);
         }

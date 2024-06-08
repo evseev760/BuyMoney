@@ -7,8 +7,9 @@ import {
   SwapButton,
   Title,
 } from "components/Styles/Styles";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Tooltip } from "@material-ui/core";
 
 interface FlexPriceProps {
   onChange: (value: number) => void;
@@ -23,6 +24,8 @@ interface FlexPriceProps {
 export const FixPriceInput = (props: FlexPriceProps) => {
   const { t } = useTranslation();
   const [showInput, setShowInput] = useState(true);
+  const [tooltipText, setTooltipText] = useState("");
+  const timeoutIdRef = useRef<any>(null);
   const {
     onChange,
     value,
@@ -45,6 +48,24 @@ export const FixPriceInput = (props: FlexPriceProps) => {
       return () => clearTimeout(timer);
     }
   }, [showInput]);
+  useEffect(() => {
+    if (!isValid) {
+      timeoutIdRef.current = setTimeout(() => {
+        setTooltipText(t("priceTooltipText"));
+      }, 2000);
+    } else {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
+      setTooltipText("");
+    }
+
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
+    };
+  }, [isValid]);
   const handleSwap = () => {
     if (value && value !== 0) {
       const newValue = 1 / value;
@@ -58,19 +79,25 @@ export const FixPriceInput = (props: FlexPriceProps) => {
   ) : (
     <Container>
       <Title>{t("fixPriceLabel")}</Title>
-
-      <StiledCurrencyInput
-        placeholder={`${isReversePrice ? t("giveBack") : t("getIt")} ${t(
-          "for1"
-        )} ${isReversePrice ? secondCurrency : firstCurrency} `}
-        defaultValue={value}
-        decimalsLimit={10}
-        onValueChange={handleChange}
-        isValid={isValid}
-      />
-
+      <Tooltip
+        open={!!tooltipText}
+        title={tooltipText}
+        arrow
+        placement="top-start"
+      >
+        <StiledCurrencyInput
+          placeholder={`${isReversePrice ? t("giveBack") : t("getIt")} ${t(
+            "for1"
+          )} ${isReversePrice ? secondCurrency : firstCurrency} `}
+          defaultValue={value}
+          decimalsLimit={10}
+          onValueChange={handleChange}
+          isValid={isValid}
+        />
+      </Tooltip>
       <StyledSuffix isValid={isValid}>
-        {isReversePrice ? firstCurrency : secondCurrency}
+        <span>{isReversePrice ? firstCurrency : secondCurrency}</span>
+
         <SwapButton onClick={handleSwap}>
           <SwapHorizIcon />
         </SwapButton>

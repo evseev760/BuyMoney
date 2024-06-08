@@ -11,6 +11,7 @@ import {
   addNewApplicationEvent,
   deliteApplicationEvent,
   shouldDeliteApplicationEvent,
+  setLastApplicationsReqest,
 } from "store/reducers/application/ActionCreators";
 import socket from "socket";
 import { userDataWathUpdated } from "store/reducers/auth/ActionCreators";
@@ -24,6 +25,7 @@ export const useApplication = () => {
     myApplicationsIsloading,
     completeApplicationIsLoading,
     deliteApplicationIsLoading,
+    lastApplicationsReqest,
   } = useAppSelector((state) => state.applicationReducer);
 
   useEffect(() => {
@@ -53,8 +55,20 @@ export const useApplication = () => {
     };
   }, []);
 
+  const getMyApplicationsHandle = () => {
+    const timestamp = new Date().getTime();
+    const needPast = 1 * 60 * 1000;
+    if (timestamp - Number(lastApplicationsReqest.timestamp) < needPast) return;
+    try {
+      dispatch(getMyApplications());
+      dispatch(setLastApplicationsReqest({ timestamp }));
+    } catch (error) {
+      return;
+    }
+  };
+
   useEffect(() => {
-    dispatch(getMyApplications());
+    getMyApplicationsHandle();
   }, [dispatch]);
 
   return {

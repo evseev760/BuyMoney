@@ -4,7 +4,6 @@ import Container from "@material-ui/core/Container";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import styled, { DefaultTheme, css } from "styled-components";
 import { Tabs } from "@material-ui/core";
-import { TonConnectButton } from "@tonconnect/ui-react";
 
 const useStyles = makeStyles(() =>
   createStyles({
