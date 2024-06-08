@@ -396,11 +396,14 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
       </Container>
     );
   }
-  if (!currentUser.location?.coordinates[0]) {
-    <Container>
-      <LocationComponent />
-      <NoResults text={t("noResults3")} />
-    </Container>;
+
+  if (!currentUser.location?.coordinates?.length) {
+    return (
+      <Container>
+        <LocationComponent />
+        <NoResults text={t("noResults3")} />
+      </Container>
+    );
   }
   return (
     <>

@@ -296,6 +296,8 @@ class applicationApiController {
     try {
       const applications = await Application.find({
         $or: [{ user: userId }, { seller: userId }],
+        isExcludedFromRating: { $ne: true },
+        status: "COMPLETED",
       })
         .populate("user seller", "nickname avatar ratings")
         .sort({ updatedAt: -1 });
@@ -339,6 +341,8 @@ class applicationApiController {
     try {
       const applications = await Application.find({
         $or: [{ user: userId }, { seller: userId }],
+        isExcludedFromRating: { $ne: true },
+        status: "COMPLETED",
       })
         .populate("user seller", "nickname avatar ratings")
         .sort({ updatedAt: -1 });
