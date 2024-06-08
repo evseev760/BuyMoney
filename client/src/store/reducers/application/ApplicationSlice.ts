@@ -43,6 +43,9 @@ export interface ReviewDetails {
   ratings: UserRatings;
   updatedAt: number;
 }
+export interface LastApplicationsReqest {
+  timestamp?: number;
+}
 export interface ApplicationState {
   application: CreateApplicationRequest;
   isLoading: boolean;
@@ -51,6 +54,7 @@ export interface ApplicationState {
   reviews: ReviewDetails[];
   myReviews: ReviewDetails[];
   myApplications: Application[];
+  lastApplicationsReqest: LastApplicationsReqest;
   myApplicationsIsloading: boolean;
   completeApplicationIsLoading: string[];
   deliteApplicationIsLoading: string[];
@@ -76,6 +80,7 @@ const initialState: ApplicationState = {
   myApplicationsIsloading: false,
   completeApplicationIsLoading: [],
   deliteApplicationIsLoading: [],
+  lastApplicationsReqest: {},
 };
 
 const statusSort = {
@@ -208,6 +213,12 @@ export const applicationSlice = createSlice({
           (a, b) => statusSort[a.status] - statusSort[b.status]
         );
       }
+    },
+    setLastApplicationsReqest: (
+      state,
+      action: PayloadAction<{ data: LastApplicationsReqest }>
+    ) => {
+      state.lastApplicationsReqest = action.payload.data;
     },
   },
 });

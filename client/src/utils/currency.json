@@ -212,6 +212,15 @@
     ]
   },
   {
+    "label": "GEL",
+    "paymentMethodsList": [
+      { "label": "Bank of Georgia", "code": "bankofgeorgia" },
+      { "label": "TBC Bank", "code": "tbcbank" },
+      { "label": "Credo Bank", "code": "credobank" },
+      { "label": "Liberty Bank", "code": "libertybank" }
+    ]
+  },
+  {
     "label": "IDR",
     "paymentMethodsList": [
       { "label": "BCA", "code": "bca" },
@@ -488,6 +497,26 @@
       { "label": "Advcash", "code": "advcash" },
       { "label": "Perfect Money", "code": "perfectmoney" },
       { "label": "Яндекс.Деньги", "code": "yandexmoney" }
+    ]
+  },
+
+  {
+    "label": "TRY",
+    "paymentMethodsList": [
+      { "label": "OlduBil", "code": "oldubil" },
+      { "label": "Ziraat", "code": "ziraat" },
+      { "label": "Ozan", "code": "ozan" },
+      { "label": "Papara", "code": "papara" },
+      { "label": "VkifBank", "code": "vkifbank" },
+      { "label": "DenizBank", "code": "denizbank" },
+      { "label": "IsBank", "code": "isbank" },
+      { "label": "Kuveyt Turk", "code": "kuveytturk" },
+      { "label": "Garanti", "code": "garanti" },
+      { "label": "AkBank", "code": "akbank" },
+      { "label": "QNB", "code": "qnb" },
+      { "label": "HalkBank", "code": "halkbank" },
+      { "label": "Albaraka", "code": "albaraka" },
+      { "label": "Ininal", "code": "ininal" }
     ]
   },
   {

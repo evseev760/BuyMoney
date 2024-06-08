@@ -18,7 +18,7 @@ root.render(
   <TonConnectUIProvider
     manifestUrl={"https://pocketmoneytg.ru/tonconnect-manifest.json"}
     actionsConfiguration={{
-      twaReturnUrl: "https://t.me/pocket_money_bot",
+      twaReturnUrl: "https://t.me/BuyMoneyBot",
     }}
   >
     <ErrorBoundary>

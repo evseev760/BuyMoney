@@ -3,6 +3,7 @@ import {
   Application,
   applicationSlice,
   CreateApplicationRequest,
+  LastApplicationsReqest,
 } from "./ApplicationSlice";
 import { API_URL } from "config";
 import { api, auth } from "store/api";
@@ -207,4 +208,8 @@ export const deliteApplicationEvent =
 export const shouldDeliteApplicationEvent =
   (applicationId: string) => async (dispatch: AppDispatch) => {
     dispatch(applicationSlice.actions.shouldDeliteApplication(applicationId));
+  };
+export const setLastApplicationsReqest =
+  (data: LastApplicationsReqest) => async (dispatch: AppDispatch) => {
+    dispatch(applicationSlice.actions.setLastApplicationsReqest({ data }));
   };

@@ -5,7 +5,7 @@ import { UserInfo } from "components/UserInfo";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useCurrencies } from "hooks/useCurrencies";
 import { useTg } from "hooks/useTg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
@@ -18,11 +18,13 @@ import { ReviewSkeleton } from "components/OfferView/Skeleton";
 import { Reviews } from "components/Reviews";
 import { NoResults } from "components/NoResults";
 import { getCommentsByUserId } from "store/reducers/application/ActionCreators";
+import { MyDeals } from "components/MyDeals";
 
 export const OfferDetails = () => {
   const { currentOfferData, offerIsLoading } = useAppSelector(
     (state) => state.offerReducer
   );
+  const { currentUser } = useAppSelector((state) => state.authReducer);
   const location = useLocation();
   const { t } = useTranslation();
   const { id, userId } = useParams();
@@ -40,6 +42,10 @@ export const OfferDetails = () => {
   const dispatch = useAppDispatch();
   const [currentTab, setCurrentTab] = useState<number>(0);
   const wayBack = location.state?.from || "/";
+  const isMy = useMemo(
+    () => userId === currentUser.id,
+    [userId, currentUser.id]
+  );
   const backButtonHandler = () => navigate(wayBack);
 
   useEffect(() => {
@@ -79,7 +85,7 @@ export const OfferDetails = () => {
       handleClick: () => {},
       value: !!currentOfferData?.price ? (
         <Primary>
-          <Price value={1 / currentOfferData?.price} /> ${forPayment}
+          <Price value={1 / currentOfferData?.price} /> {forPayment}
         </Primary>
       ) : (
         <></>
@@ -91,7 +97,7 @@ export const OfferDetails = () => {
       handleClick: () => {},
       value: !!currentOfferData?.price ? (
         <Primary>
-          <Price value={currentOfferData?.price} /> ${currency}
+          <Price value={currentOfferData?.price} /> {currency}
         </Primary>
       ) : (
         <></>
@@ -170,7 +176,7 @@ export const OfferDetails = () => {
         isLoading: offerIsLoading,
       },
   ]?.filter((item) => !!item);
-  const tabsArray = [t("offerDetails"), t("reviews")];
+  const tabsArray = [t("offerDetails"), isMy ? t("deals") : t("reviews")];
   return (
     <StyledContainer>
       <UserInfo currentUser={currentOfferData?.sellerData} />
@@ -192,6 +198,13 @@ export const OfferDetails = () => {
               {currentOfferData?.comment}
             </CommentPaper>
           )}
+        </>
+      ) : isMy ? (
+        <>
+          <MyDeals
+            offerId={currentOfferData?._id}
+            title={`${currency} → ${forPayment}`}
+          />
         </>
       ) : (
         <>

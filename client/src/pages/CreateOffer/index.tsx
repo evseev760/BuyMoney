@@ -150,9 +150,11 @@ const CreateOffer = ({ isEdit }: { isEdit?: boolean }) => {
     if (!newOffer) return;
     const isValidPriceCondition =
       (newOffer.typeOfPrice === "fix" &&
-        isValidPrice(marketPrice, newOffer.price)) ||
+        isValidPrice(marketPrice, newOffer.price) &&
+        newOffer.price) ||
       (newOffer.typeOfPrice === "flex" &&
-        isValidInterestPrice(newOffer.interestPrice));
+        isValidInterestPrice(newOffer.interestPrice) &&
+        newOffer.interestPrice);
 
     if (
       isValidPriceCondition &&

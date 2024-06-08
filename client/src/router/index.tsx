@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { MainContainer } from "components/Containers/MainContainer";
 import { useAppSelector } from "hooks/redux";
 import { Backdrop, CircularProgress } from "@mui/material";
@@ -43,7 +43,18 @@ const Fallback = () => {
 
 export const Router = () => {
   const { isAuth } = useAppSelector((state) => state.authReducer);
+  // const navigate = useNavigate();
+  // const handleStartParameter = () => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const start = urlParams.get("startattach");
+  //   if (start) {
+  //     navigate(`/${start}`);
+  //   }
+  // };
 
+  // React.useEffect(() => {
+  //   handleStartParameter();
+  // }, []);
   return (
     <>
       {isAuth ? (

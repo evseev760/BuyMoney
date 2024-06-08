@@ -17,13 +17,19 @@ import styled, { css, DefaultTheme } from "styled-components";
 import { SelectItem, getLabel } from "utils/Currency";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTranslation } from "react-i18next";
+import { Application } from "store/reducers/application/ApplicationSlice";
 
 type Draver = "dealsType" | undefined;
 interface Drawers {
   dealsType: JSX.Element;
 }
+export interface MyDealsProps {
+  offerId?: string;
+  title?: string;
+}
 
-const MyDealsWrapped = () => {
+const MyDealsWrapped = (props: MyDealsProps) => {
+  const { offerId, title } = props;
   const { t } = useTranslation();
   const { currentUser } = useAppSelector((state) => state.authReducer);
   const [currentDrawer, setCurrentDrawer] = useState<Draver>();
@@ -77,31 +83,41 @@ const MyDealsWrapped = () => {
       />
     ),
   };
-
-  const applicationsArr = myApplications
-    ?.filter((application) => {
-      const isSell = currentUser.id === application.seller;
+  const isMatchingStatus = (
+    application: Application,
+    dealsType: string,
+    isSell: boolean
+  ) => {
+    if (dealsType === "active") {
       return (
-        (dealsType === "active" &&
-          (application.status === "PENDING" ||
-            application.status === "NEW" ||
-            (application.status === "CONFIRMATION" &&
-              isSell &&
-              !application.rating.seller) ||
-            (application.status === "CONFIRMATION" &&
-              !isSell &&
-              !application.rating.buyer))) ||
-        (dealsType === "completed" &&
-          (application.status === "COMPLETED" ||
-            (application.status === "CONFIRMATION" &&
-              isSell &&
-              application.rating.seller) ||
-            (application.status === "CONFIRMATION" &&
-              !isSell &&
-              application.rating.buyer)))
+        application.status === "PENDING" ||
+        application.status === "NEW" ||
+        (application.status === "CONFIRMATION" &&
+          ((isSell && !application.rating.seller) ||
+            (!isSell && !application.rating.buyer)))
       );
-    })
-    .sort((a, b) => +b.updatedAt - +a.updatedAt);
+    } else if (dealsType === "completed") {
+      return (
+        application.status === "COMPLETED" ||
+        (application.status === "CONFIRMATION" &&
+          ((isSell && application.rating.seller) ||
+            (!isSell && application.rating.buyer)))
+      );
+    }
+    return false;
+  };
+  const applicationsArr = useMemo(() => {
+    return myApplications
+      ?.filter((application) => {
+        const isSell = currentUser.id === application.seller;
+        const offerIdFilter = offerId ? application.offerId === offerId : true;
+
+        return (
+          offerIdFilter && isMatchingStatus(application, dealsType, isSell)
+        );
+      })
+      .sort((a, b) => +b.updatedAt - +a.updatedAt);
+  }, [myApplications, offerId, dealsType, currentUser.id]);
   return myApplicationsIsloading ? (
     <OfferViewSkeleton />
   ) : (
@@ -115,7 +131,7 @@ const MyDealsWrapped = () => {
             disableRipple
             onClick={() => changeDrawer("dealsType")}
           >
-            <ListItemText primary={t("myDeals")} />
+            <ListItemText primary={title ? title : t("myDeals")} />
             <StyledValue>
               {getLabel(dealsTypes, dealsType)} <ArrowDropDownIcon />
             </StyledValue>

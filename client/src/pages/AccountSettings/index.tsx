@@ -160,9 +160,9 @@ export const AccountSettings = () => {
 
   return (
     <>
-      <ButtonContainer>
+      {/* <ButtonContainer>
         <StyledTonConnectButton />
-      </ButtonContainer>
+      </ButtonContainer> */}
       <ListDividers listArr={listArr} />
       <DrawerComponent
         isOpen={!!currentDrawer}
