@@ -3,7 +3,7 @@ const User = require("../../models/User");
 const Offer = require("../../models/Offer");
 const Cripto = require("../../models/Cripto");
 const { getCryptoPrice } = require("../../utils/apiService");
-// const Proposal = require("../../models/Application");
+const Application = require("../../models/Application");
 const telegramBot = require("../../telegramBot");
 
 const { validationResult } = require("express-validator");
@@ -119,6 +119,7 @@ class offerController {
         typeOfPrice,
         interestPrice,
         paymentMethods,
+        createdAt: Date.now(),
         forPayment,
         location: user.location,
         disableTrading: user.disableTrading,
@@ -299,7 +300,9 @@ class offerController {
         ]);
       }
       const updatedOffers = await calculateOfferPrices(offers);
-      res.json(updatedOffers);
+      const sortedOffers = updatedOffers.sort((a, b) => b.price - a.price);
+
+      res.json(sortedOffers);
     } catch (e) {
       console.log(e);
     }
@@ -429,6 +432,7 @@ class offerController {
             "sellerData.authDate": 0,
           },
         },
+        { $sort: { createdAt: -1 } },
       ]);
 
       const updatedOffers = await calculateOfferPrices(myOffers);
@@ -456,6 +460,10 @@ class offerController {
           .json({ message: "Вы не имеете прав для удаления этого объявления" });
       }
 
+      await Application.deleteMany({
+        offerId,
+        status: { $nin: ["COMPLETED"] },
+      });
       await offer.remove();
 
       res.status(200).json({ message: "success" });
@@ -464,65 +472,6 @@ class offerController {
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   };
-
-  // async getPrice(req, res) {
-  //   try {
-  //     const errors = validationResult(req);
-  //     if (!errors.isEmpty()) {
-  //       return res.status(400).json({ message: "Ошибка запроса", errors });
-  //     }
-  //     const response = await getCryptoPrice(req.query.crypto, req.query.fiat);
-  //     res.json(response);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-  // async getProposals(req, res) {
-  //   try {
-  //     const errors = validationResult(req);
-  //     if (!errors.isEmpty()) {
-  //       return res
-  //         .status(400)
-  //         .json({ message: "Ошибка запроса заявок", errors });
-  //     }
-  //     const proposals = await Proposal.find({ offer: req.params.offerId });
-
-  //     res.json(proposals);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-
-  // async addProposal(req, res) {
-  //   try {
-  //     const errors = validationResult(req);
-  //     if (!errors.isEmpty()) {
-  //       return res
-  //         .status(400)
-  //         .json({ message: "Ошибка при создании чата", errors });
-  //     }
-  //     const { offerId, quantity, createdAt } = req.body;
-
-  //     const user = await User.findOne({ _id: req.user.id });
-  //     const proposal = new Proposal({
-  //       user: user.id,
-  //       username: user.username,
-  //       quantity,
-  //       offerId,
-  //       createdAt,
-  //     });
-  //     await proposal.save();
-
-  //     await Offer.updateOne(
-  //       { id: offerId },
-  //       { $push: { proposals: proposal.id } }
-  //     );
-  //     return res.json({ message: "Заявка отправлена" });
-  //   } catch (e) {
-  //     console.log(e);
-  //     res.status(400).json({ message: "Proposal error", err: e });
-  //   }
-  // }
 }
 
 module.exports = new offerController();
