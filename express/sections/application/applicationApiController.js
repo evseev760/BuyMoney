@@ -138,19 +138,16 @@ class applicationApiController {
         return res.status(400).json({ message: "Заявка не найдена" });
       }
 
-      // Проверяем, что статус заявки является NEW
       if (application.status !== "NEW") {
         return res.status(400).json({ message: "Заявка не в статусе NEW" });
       }
 
-      // Проверяем, что текущий пользователь является продавцом в этой заявке
       if (application.seller !== userId) {
         return res
           .status(403)
           .json({ message: "Вы не являетесь продавцом этой заявки" });
       }
 
-      // Обновляем статус заявки на PENDING
       application.status = "PENDING";
       await application.save();
 
@@ -182,7 +179,6 @@ class applicationApiController {
         return res.status(400).json({ message: "Заявка не найдена" });
       }
 
-      // Проверка статуса заявки и выставление оценок
       if (application.status === "COMPLETED") {
         return res.status(400).json({ message: "Заявка уже завершена" });
       }
@@ -222,7 +218,6 @@ class applicationApiController {
 
       await application.save();
 
-      // Обновляем рейтинг пользователя только если заявка не исключена
       if (!application.isExcludedFromRating) {
         if (application.status === "COMPLETED") {
           if (application.rating.buyer) {
@@ -250,10 +245,7 @@ class applicationApiController {
               application.user === userId ? "Покупатель" : "Продавец"
             } подтвердил сделку! Заявка переведена в завершенные!`
           : undefined;
-      // const applicationWithPartnerData = await applicationWithPartner(
-      //   application,
-      //   userId
-      // );
+
       sendApplicationStatusUpdate(application);
       message && telegramBot.sendMessage(sellerUser.telegramId, message);
       res.status(200).json({ message: "complited" });
@@ -272,7 +264,6 @@ class applicationApiController {
         return res.status(400).json({ message: "Заявка не найдена" });
       }
 
-      // Проверяем, что текущий пользователь является либо покупателем, либо продавцом в этой заявке
       if (application.user !== userId && application.seller !== userId) {
         return res
           .status(403)
@@ -287,7 +278,6 @@ class applicationApiController {
 
       res.status(200).json({ message: "Заявка успешно удалена" });
     } catch (e) {
-      // console.log(e);
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   };

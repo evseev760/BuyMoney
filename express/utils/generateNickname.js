@@ -1,6 +1,5 @@
 const { uniqueNamesGenerator, adjectives } = require("unique-names-generator");
 
-// Создание словарей для растений, созвездий и небесных тел
 const futuristicWords = [
   "Neon",
   "Byte",

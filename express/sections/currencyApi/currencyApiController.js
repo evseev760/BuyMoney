@@ -6,25 +6,6 @@ const { getCryptoPrice } = require("../../utils/apiService");
 
 const { validationResult } = require("express-validator");
 
-// const conf = {
-//   headers: {
-//     "X-CMC_PRO_API_KEY": config.get("X-CMC_PRO_API_KEY"),
-//   },
-// };
-
-// async function getCryptoPrice(cryptoCurrency, currency) {
-//   try {
-//     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${cryptoCurrency}&convert=${currency}`;
-//     const response = await axios.get(url, conf);
-//     const price = response.data;
-
-//     return price;
-//   } catch (error) {
-//     console.error("Ошибка при получении цены криптовалюты:", error);
-//     throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
-//   }
-// }
-
 async function getCurrenciesApi() {
   try {
     const url = `https://pro-api.coinmarketcap.com/v1/fiat/map`;

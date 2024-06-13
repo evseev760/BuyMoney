@@ -1,4 +1,3 @@
-// apiService.js
 const axios = require("axios");
 const config = require("config");
 const conf = {
@@ -42,7 +41,6 @@ const getCryptoPrice = async (cryptoCurrency, currency) => {
     const cacheKey = `${cryptoCurrency}-${currency}`;
     const currentTime = Date.now();
 
-    // Проверяем, есть ли закешированное значение и не истек ли срок его действия (5 минут)
     if (
       cache[cacheKey] &&
       currentTime - cache[cacheKey].timestamp < 60 * 60 * 1000
@@ -50,12 +48,10 @@ const getCryptoPrice = async (cryptoCurrency, currency) => {
       return cache[cacheKey].price;
     }
 
-    // Если кешировано значение нет или срок его действия истек, делаем запрос к API
     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${cryptoCurrency}&convert=${currency}`;
     const response = await axios.get(url, conf);
     const price = response.data.data[cryptoCurrency].quote[currency].price;
 
-    // Сохраняем результат в кеш с текущим временным штампом
     cache[cacheKey] = {
       price: price,
       timestamp: currentTime,
@@ -64,20 +60,8 @@ const getCryptoPrice = async (cryptoCurrency, currency) => {
     return price;
   } catch (error) {
     console.error("Ошибка при получении цены криптовалюты:", error);
-    throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
+    throw error;
   }
 };
-// const getCryptoPrice = async (cryptoCurrency, currency) => {
-//   try {
-//     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${cryptoCurrency}&convert=${currency}`;
-//     const response = await axios.get(url, conf);
-//     const price = response.data;
-
-//     return price;
-//   } catch (error) {
-//     console.error("Ошибка при получении цены криптовалюты:", error);
-//     throw error; // Пробрасываем ошибку дальше, чтобы обработать ее на уровне вызывающего кода
-//   }
-// };
 
 module.exports = { getAvatar, getGeolocationData, getCryptoPrice };
