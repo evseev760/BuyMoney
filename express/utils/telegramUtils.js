@@ -88,7 +88,6 @@ const sendApplicationMessage = async (
     }
   );
 
-  // Сохраняем chatId и messageId в заявке
   application.messageId = {
     seller: sentMessage.message_id,
   };
@@ -115,7 +114,6 @@ const editApplicationMessage = async (
     ],
   };
 
-  // Редактируем сообщение в чате продавца
   if (application.messageId.seller) {
     await telegramBot.editMessageReplyMarkup(newKeyboard, {
       chat_id: sellerUser.telegramId,
@@ -123,7 +121,6 @@ const editApplicationMessage = async (
     });
   }
 
-  // Отправляем сообщение покупателю
   await i18next.changeLanguage(buyerUser.languageCode);
   const buyerMessage = i18next.t("application_message.accepted", {
     quantity: application.quantity,
@@ -171,7 +168,6 @@ const deliteApplicationMessage = async (
       ],
     };
 
-    // Редактируем сообщение в чате продавца
     if (application.messageId.seller) {
       await telegramBot.editMessageReplyMarkup(newKeyboard, {
         chat_id: sellerUser.telegramId,

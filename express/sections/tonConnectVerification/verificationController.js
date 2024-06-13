@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 
 const secret = "my_secret_key";
-const ttl = 3600 * 1000; // 1 час в миллисекундах
+const ttl = 3600 * 1000;
 const tonProofPrefix = "ton-proof-item-v2/";
 const tonConnectPrefix = "ton-connect";
 

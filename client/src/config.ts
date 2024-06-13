@@ -1,5 +1,5 @@
-const envName = "production";
-// const envName = "development";
+// const envName = "production";
+const envName = "development";
 export const API_URL =
   process.env.NODE_ENV === envName
     ? `https://pocketmoneytg.ru/`
