@@ -1,0 +1,16 @@
+{
+  "dbUrl": "DB_URL",
+  "dbUrlProd": "DB_URL_PROD",
+  "secretKey": "SECRET_KEY",
+  "walletSecret": "WALLET_SECRET",
+  "PORT": "PORT",
+  "PORT_PROD": "PORT_PROD",
+  "WS_PORT": "WS_PORT",
+  "BOT_TOKEN": "BOT_TOKEN",
+  "BOT_TOKEN_PROD": "BOT_TOKEN_PROD",
+  "APP_URL": "APP_URL",
+  "APP_DOMEN": "APP_DOMEN",
+  "APP_URL_PROD": "APP_URL_PROD",
+  "APP_DOMEN_PROD": "APP_DOMEN_PROD",
+  "X-CMC_PRO_API_KEY": "X_CMC_PRO_API_KEY"
+}

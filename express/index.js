@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config();
 const config = require("config");
 const fs = require("fs");
 const compression = require("compression");
@@ -67,7 +68,7 @@ if (isProduction) {
     res.status(404).sendFile(path.join(__dirname, "./public", "notFound.html"));
   });
 }
-
+console.log(5555, dbUrl);
 const start = async () => {
   try {
     await mongoose.connect(dbUrl, {
