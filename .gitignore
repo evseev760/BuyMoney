@@ -8,6 +8,7 @@ client/package-lock 2.json
 client/package-lock 3.json
 .gitignore
 client/yarn.lock
+express/.env
 
 # Logs
 logs
